@@ -12,22 +12,39 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CC.Providers;
+using CC.Models;
 
 namespace CC
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class LoginPage : Window
+    public partial class LoginPage : Page
     {
+        public UserProvider userProvider { get; set; }
+
         public LoginPage()
         {
             InitializeComponent();
+
+            userProvider = new UserProvider();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var user = userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Text.Trim());
 
+            if (!string.IsNullOrEmpty(user.UserId))
+            {
+                App.User = user;
+
+                this.NavigationService.Content = null;
+            }
+            else
+            {
+                ErrorLabel.Content = "Invalid credentials";
+            }
         }
     }
 }

@@ -12,3 +12,34 @@ C:\Users\dparsa\Documents\my docs\C&C\c and c\c and c\obj\Debug\CC.Properties.Re
 C:\Users\dparsa\Documents\my docs\C&C\c and c\c and c\obj\Debug\CC.csproj.GenerateResource.cache
 C:\Users\dparsa\Documents\my docs\C&C\c and c\c and c\obj\Debug\CC.exe
 C:\Users\dparsa\Documents\my docs\C&C\c and c\c and c\obj\Debug\CC.pdb
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\bin\Debug\CC.exe.config
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\bin\Debug\CC.exe
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\bin\Debug\CC.pdb
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\AntigenPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\ArrayPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\BatchPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CCPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CreateUserPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\LoginPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\Main.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\ReportPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\UpdateUserPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\UserManagementPage.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\App.g.cs
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CC_MarkupCompile.cache
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CC_MarkupCompile.lref
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\AntigenPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\ArrayPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\BatchPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CCPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CreateUserPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\LoginPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\Main.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\ReportPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\UpdateUserPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\UserManagementPage.baml
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CC.g.resources
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CC.Properties.Resources.resources
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CC.csproj.GenerateResource.cache
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CC.exe
+C:\Users\dparsa\Documents\my docs\CC\CAndC\c and c\obj\Debug\CC.pdb

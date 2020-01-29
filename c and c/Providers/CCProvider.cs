@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CC.Providers
 {
-    public class CalControlProvider
+    public class CCProvider
     {
 
     }

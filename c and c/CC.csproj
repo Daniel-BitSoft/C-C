@@ -55,11 +55,56 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AntigenPage.xaml.cs">
+      <DependentUpon>AntigenPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ArrayPage.xaml.cs">
+      <DependentUpon>ArrayPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BatchPage.xaml.cs">
+      <DependentUpon>BatchPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CCPage.xaml.cs">
+      <DependentUpon>CCPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserPage.xaml.cs">
+      <DependentUpon>UserPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Main.xaml.cs">
+      <DependentUpon>Main.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\DeleteUserResponse.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Providers\CalControlProvider.cs" />
-    <Compile Include="Providers\NegativeControlProvider.cs" />
-    <Compile Include="Providers\SecurityProvider.cs" />
+    <Compile Include="Providers\AntigensProvider.cs" />
+    <Compile Include="Providers\CCProvider.cs" />
+    <Compile Include="Providers\ArrayProvider.cs" />
+    <Compile Include="Providers\UserProvider.cs" />
+    <Compile Include="ReportPage.xaml.cs">
+      <DependentUpon>ReportPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserManagementPage.xaml.cs">
+      <DependentUpon>UserManagementPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="AntigenPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ArrayPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BatchPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CCPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LoginPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,6 +117,18 @@
       <DependentUpon>LoginPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Main.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserManagementPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -1,4 +1,4 @@
-﻿<Window x:Class="CC.LoginPage"
+﻿<Page x:Class="CC.LoginPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,6 +12,7 @@
         <TextBox Name="PasswordTxt" HorizontalAlignment="Left" Height="23" Margin="304,200,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
         <TextBlock HorizontalAlignment="Left" Margin="225,163,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="229,201,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top"/>
+        <Label Name="ErrorLabel" Content="" HorizontalAlignment="Left" Margin="304,326,0,0" VerticalAlignment="Top" Width="221"/>
 
     </Grid>
-</Window>
+</Page>

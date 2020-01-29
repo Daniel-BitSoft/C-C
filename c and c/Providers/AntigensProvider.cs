@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CC.Providers
 {
-    class NegativeControlProvider
+    public class AntigensProvider
     {
+
     }
 }

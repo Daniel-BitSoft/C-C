@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace CC.Providers
 {
-    public class SecurityProvider
+    public class UserProvider
     {
         public User ValidateCredentials(string username, string password)
         {
             // validate credentials
 
-            return new User { FirstName = "firstname", IsFirstLogin = false, UserId = Guid.NewGuid().ToString() };
+            return new User { FirstName = "firstname", IsFirstLogin = false, IsAdmin = true, UserId = Guid.NewGuid().ToString() };
 
         }
 
