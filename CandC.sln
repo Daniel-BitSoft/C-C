@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CC", "c and c\CC.csproj", "{B5A52450-1CA7-4CD6-825E-EB1D1BD3A11D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CC", "candc\CC.csproj", "{B5A52450-1CA7-4CD6-825E-EB1D1BD3A11D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
