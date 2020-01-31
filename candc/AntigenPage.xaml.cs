@@ -78,12 +78,7 @@ namespace CC
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveButton.Visibility = Visibility.Hidden;
-            CancelButton.Visibility = Visibility.Hidden;
-
-            CreateButton.Visibility = Visibility.Visible;
-            EditButton.Visibility = Visibility.Visible;
-            crudMode = CrudMode.Unknown;
+            SetViewMode();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
