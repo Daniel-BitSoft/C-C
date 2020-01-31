@@ -12,6 +12,8 @@ namespace CC
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class Entities : DbContext
     {
@@ -25,10 +27,16 @@ namespace CC
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AntigenAudit> AntigenAudits { get; set; }
         public virtual DbSet<Antigen> Antigens { get; set; }
-        public virtual DbSet<ArrayAntigen> ArrayAntigen { get; set; }
+        public virtual DbSet<ArrayAntigen> ArrayAntigens { get; set; }
         public virtual DbSet<Array> Arrays { get; set; }
-        public virtual DbSet<CC> CC { get; set; }
+        public virtual DbSet<CalibControl> CalibControls { get; set; }
         public virtual DbSet<User> Users { get; set; }
+    
+        public virtual ObjectResult<GetAntigensNotAssingedToBatch_Result> GetAntigensNotAssingedToBatch()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAntigensNotAssingedToBatch_Result>("GetAntigensNotAssingedToBatch");
+        }
     }
 }

@@ -8,7 +8,7 @@
     <ProjectGuid>{B5A52450-1CA7-4CD6-825E-EB1D1BD3A11D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>CC</RootNamespace>
-    <AssemblyName>CC</AssemblyName>
+    <AssemblyName>CAndC</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -44,11 +44,16 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -68,16 +73,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Antigen.cs">
-      <DependentUpon>CCDataModel.tt</DependentUpon>
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AntigenAudit.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="AntigenPage.xaml.cs">
       <DependentUpon>AntigenPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Array.cs">
-      <DependentUpon>CCDataModel.tt</DependentUpon>
+      <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="ArrayAntigen.cs">
-      <DependentUpon>CCDataModel.tt</DependentUpon>
+      <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="ArrayPage.xaml.cs">
       <DependentUpon>ArrayPage.xaml</DependentUpon>
@@ -85,29 +93,40 @@
     <Compile Include="BatchPage.xaml.cs">
       <DependentUpon>BatchPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CC.cs">
-      <DependentUpon>CCDataModel.tt</DependentUpon>
+    <Compile Include="CalibControl.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
-    <Compile Include="CCDataModel.Context.cs">
+    <Compile Include="CCData.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CCDataModel.Context.tt</DependentUpon>
+      <DependentUpon>CCData.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="CCDataModel.cs">
+    <Compile Include="CCData.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CCDataModel.tt</DependentUpon>
+      <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
-    <Compile Include="CCDataModel.Designer.cs">
+    <Compile Include="CCData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CCDataModel.edmx</DependentUpon>
+      <DependentUpon>CCData.edmx</DependentUpon>
     </Compile>
     <Compile Include="CCPage.xaml.cs">
       <DependentUpon>CCPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Constants\LogConsts.cs" />
+    <Compile Include="Constants\Messages.cs" />
+    <Compile Include="GetAntigensNotAssingedToBatch_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AntigenResponse.cs" />
+    <Compile Include="Models\AntigensResponse.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\CrudMode.cs" />
+    <Compile Include="Models\LogObject.cs" />
+    <Compile Include="Providers\Logger.cs" />
     <Compile Include="User.cs">
-      <DependentUpon>CCDataModel.tt</DependentUpon>
+      <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
@@ -190,12 +209,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="CCDataModel.edmx">
+    <EntityDeploy Include="CCData.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>CCDataModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>CCData.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="CCDataModel.edmx.diagram">
-      <DependentUpon>CCDataModel.edmx</DependentUpon>
+    <None Include="CCData.edmx.diagram">
+      <DependentUpon>CCData.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -207,19 +226,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CCDataModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CCDataModel.edmx</DependentUpon>
-      <LastGenOutput>CCDataModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="CCDataModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CCDataModel.edmx</DependentUpon>
-      <LastGenOutput>CCDataModel.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Content Include="CCData.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CCData.edmx</DependentUpon>
+      <LastGenOutput>CCData.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="CCData.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CCData.edmx</DependentUpon>
+      <LastGenOutput>CCData.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

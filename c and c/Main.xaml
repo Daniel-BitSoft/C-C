@@ -8,7 +8,7 @@
         WindowState="Maximized"
         Title="Main" MinHeight="800" MaxHeight="1200" Height="800" Width="1200">
     <Grid>
-        <Menu VerticalAlignment="Top" HorizontalAlignment='Stretch' Height="30" Margin="0,0,0,0" Foreground="Black" FontSize="14">
+        <Menu VerticalAlignment="Top" Name="MainMenu" Visibility="Hidden" HorizontalAlignment='Stretch' Height="30" Margin="0,0,0,0" Foreground="Black" FontSize="14">
             <MenuItem Header="Create" IsTabStop="False">
                 <MenuItem Name="CalibMenuButton" Header="Calibrator" IsTabStop="False" Click="CalibMenuButton_Click"/>
                 <MenuItem Name="NegMenuButton" Header="Negative" IsTabStop="False" Click="NegMenuButton_Click"/>
@@ -17,12 +17,12 @@
                 <MenuItem Name="ArrayMenuButton" Header="Array" IsTabStop="False" Click="ArrayMenuButton_Click"/>
             </MenuItem>
             <MenuItem Header="Search/Edit" IsTabStop="False">
-                <MenuItem Name="SearchBatchButton" Header="Batch" IsTabStop="False" Click=""/>
-                <MenuItem Name="SearchCalibButton" Header="Negative" IsTabStop="False" Click=""/>
-                <MenuItem Name="SearchNegButton" Header="Positive" IsTabStop="False" Click=""/>
-                <MenuItem Name="SearchPosButton" Header="Antigen" IsTabStop="False" Click=""/>
-                <MenuItem Name="SearchPlateButton" Header="Plate" IsTabStop="False" Click=""/>
-                <MenuItem Name="SearchArrayButton" Header="Array" IsTabStop="False" Click=""/>
+                <MenuItem Name="SearchBatchButton" Header="Batch" IsTabStop="False" />
+                <MenuItem Name="SearchCalibButton" Header="Negative" IsTabStop="False" />
+                <MenuItem Name="SearchNegButton" Header="Positive" IsTabStop="False" />
+                <MenuItem Name="SearchPosButton" Header="Antigen" IsTabStop="False" />
+                <MenuItem Name="SearchPlateButton" Header="Plate" IsTabStop="False" />
+                <MenuItem Name="SearchArrayButton" Header="Array" IsTabStop="False" />
             </MenuItem>
             <MenuItem Header="Assign" IsTabStop="False">
                 <MenuItem Name="AssignBatchButton" Header="Batch" IsTabStop="False" Click="AssignBatchButton_Click"/>

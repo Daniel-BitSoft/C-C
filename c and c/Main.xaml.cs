@@ -37,9 +37,10 @@ namespace CC
             if (App.User != null && string.IsNullOrEmpty(userLabel.Text))
             {
                 userLabel.Text = $"User: {App.User.FirstName}";
+                MainMenu.Visibility = Visibility.Visible;
             } 
 
-            if (App.User != null && App.User.IsAdmin)
+            if (App.User != null && App.User.IsAdmin.HasValue && App.User.IsAdmin.Value)
             {
                 AdminMenu.Visibility = Visibility.Visible;
             }

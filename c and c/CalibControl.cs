@@ -12,7 +12,7 @@ namespace CC
     using System;
     using System.Collections.Generic;
     
-    public partial class CC
+    public partial class CalibControl
     {
         public string CCId { get; set; }
         public string LotNumber { get; set; }

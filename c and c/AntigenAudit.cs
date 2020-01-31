@@ -12,13 +12,12 @@ namespace CC
     using System;
     using System.Collections.Generic;
     
-    public partial class Antigen
+    public partial class AntigenAudit
     {
+        public int AntigenAuditId { get; set; }
         public string AntigenId { get; set; }
-        public string AntigenName { get; set; }
-        public string CreatedBy { get; set; }
-        public System.DateTime CreatedDt { get; set; }
+        public string PreviousAntigenName { get; set; }
         public string UpdatedBy { get; set; }
-        public Nullable<System.DateTime> UpdatedDt { get; set; }
+        public System.DateTime UpdatedDt { get; set; }
     }
 }
