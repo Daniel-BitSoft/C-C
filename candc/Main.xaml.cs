@@ -19,14 +19,14 @@ namespace CC
     /// </summary>
     public partial class Main : Window
     {
-        LoginPage loginPage; 
+        LoginPage loginPage;
 
         public Main()
         {
             InitializeComponent();
 
             // initial pages
-            loginPage = new LoginPage(); 
+            loginPage = new LoginPage();
 
             // Navigate to first page which is login
             frame.Navigate(loginPage);
@@ -34,13 +34,13 @@ namespace CC
 
         private void frame_LoadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
-            if (App.User != null && string.IsNullOrEmpty(userLabel.Text))
+            if (App.LoggedInUser != null && string.IsNullOrEmpty(userLabel.Text))
             {
-                userLabel.Text = $"User: {App.User.FirstName}";
+                userLabel.Text = $"User: {App.LoggedInUser.FirstName}";
                 MainMenu.Visibility = Visibility.Visible;
-            } 
+            }
 
-            if (App.User != null && App.User.IsAdmin.HasValue && App.User.IsAdmin.Value)
+            if (App.LoggedInUser != null && App.LoggedInUser.IsAdmin.HasValue && App.LoggedInUser.IsAdmin.Value)
             {
                 AdminMenu.Visibility = Visibility.Visible;
             }
@@ -57,7 +57,7 @@ namespace CC
 
         private void CalibMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(App.cCPage); 
+            frame.Navigate(App.cCPage);
         }
 
         private void NegMenuButton_Click(object sender, RoutedEventArgs e)
@@ -77,17 +77,27 @@ namespace CC
 
         private void ArrayMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(App.arrayPage); 
+            frame.Navigate(App.arrayPage);
         }
 
         private void AssignBatchButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(App.batchPage); 
+            frame.Navigate(App.batchPage);
         }
 
         private void AddUserButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(App.userPage); 
-        } 
+            frame.Navigate(App.userPage);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            List<Task> loadDataTasks = new List<Task>();
+
+            loadDataTasks.Add(App.UserProvider.UpdateUsersList());
+
+
+            Task.WaitAll(loadDataTasks.ToArray());
+        }
     }
 }

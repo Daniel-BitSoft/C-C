@@ -5,10 +5,28 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="UserManagementPage">
+      d:DesignHeight="700" d:DesignWidth="800"
+      Title="UserManagementPage" Background="White"
+      Loaded="Page_Loaded"
+      GotFocus="Page_GotFocus">
 
-    <Grid>
-        
+    <Grid >
+        <Grid Name="RadioBtnGrid"  VerticalAlignment="Top" HorizontalAlignment="Center" Margin="136,25,155,0" Width="509" Height="30" >
+            <RadioButton Name="ActiveUsersRadBtn" Checked="ActiveUsersRadBtn_Checked" Content="Active Users" HorizontalAlignment="Left" Margin="37,6,0,0" VerticalAlignment="Top"/>
+            <RadioButton Name="DisabledUserRadBtn" Checked="DisabledUserRadBtn_Checked" Content="Disabled Users" HorizontalAlignment="Left" Margin="129,6,0,0" VerticalAlignment="Top"/>
+            <Label Content="View:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Name="SearchTextBox" HorizontalAlignment="Left" Height="23" Margin="379,3,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" KeyDown="SearchTextBox_KeyDown"/>
+            <Label Content="Search:" HorizontalAlignment="Left" Margin="331,0,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <DataGrid Name="UsersGrid" HorizontalAlignment="Left" IsReadOnly="True" AutoGenerateColumns="False" Height="500" Margin="136,82,0,0" VerticalAlignment="Top" Width="509">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="NameCol" Header="NAME" Binding="{Binding Path=FullName}" Width="1*"/>
+                <DataGridTextColumn x:Name="EmailCol" Header="EMAIL" Binding="{Binding Path=Email}" Width="1*"/>
+                <DataGridCheckBoxColumn x:Name="AdminCol" Header="ADMIN" Binding="{Binding Path=IsAdmin}" Width="1*"/>
+                <DataGridCheckBoxColumn x:Name="DisableCol" Header="DISABLE" Binding="{Binding Path=IsDisabled}" Width="1*"/>
+                <DataGridCheckBoxColumn x:Name="DeleteCol" Header="DELETE" Binding="{Binding Path=IsDeleted}" Width="1*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Name="EditButton" Content="Edit User" Click="EditButton_Click" HorizontalAlignment="Left" Margin="549,626,0,0" VerticalAlignment="Top" Width="96"/>
     </Grid>
 </Page>

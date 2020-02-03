@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>CC</RootNamespace>
     <AssemblyName>CAndC</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -17,6 +17,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -90,6 +94,9 @@
     <Compile Include="ArrayPage.xaml.cs">
       <DependentUpon>ArrayPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Audit.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="BatchPage.xaml.cs">
       <DependentUpon>BatchPage.xaml</DependentUpon>
     </Compile>
@@ -114,8 +121,10 @@
     <Compile Include="CCPage.xaml.cs">
       <DependentUpon>CCPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Constants\AuditTypes.cs" />
     <Compile Include="Constants\LogConsts.cs" />
     <Compile Include="Constants\Messages.cs" />
+    <Compile Include="Constants\UsersConsts.cs" />
     <Compile Include="GetAntigensNotAssingedToBatch_Result.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
@@ -124,6 +133,7 @@
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CrudMode.cs" />
     <Compile Include="Models\LogObject.cs" />
+    <Compile Include="Models\UsersResponse.cs" />
     <Compile Include="Providers\Logger.cs" />
     <Compile Include="User.cs">
       <DependentUpon>CCData.tt</DependentUpon>

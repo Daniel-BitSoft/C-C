@@ -1,11 +1,5 @@
-﻿using CC.Models;
+﻿using AutoMapper;
 using CC.Providers;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace CC
@@ -15,7 +9,10 @@ namespace CC
     /// </summary>
     public partial class App : Application
     {
-        public static User User { get; set; }
+        public static User LoggedInUser { get; set; }
+
+        public static Entities dbcontext = new Entities();
+        public static IMapper mapper;
 
         // providers
         public static AntigensProvider AntigensProvider = new AntigensProvider();
@@ -32,5 +29,25 @@ namespace CC
         public static ReportPage reportPage = new ReportPage();
         public static UserPage userPage = new UserPage();
 
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            InitializeAutoMapper();
+            base.OnStartup(e);
+        }
+
+        private void InitializeAutoMapper()
+        {
+            var mapperConfig = GetMapperDefinition();
+            mapper = mapperConfig.CreateMapper();
+        }
+
+        public MapperConfiguration GetMapperDefinition()
+        {
+            return new MapperConfiguration(config =>
+            {
+                config.CreateMap<User, Models.User>()
+                .ForMember(dest => dest.FullName, scr => scr.MapFrom<string>(x => $"{x.FirstName} {x.LastName}"));
+            });
+        }
     }
 }

@@ -33,6 +33,7 @@ namespace CC
         public virtual DbSet<Array> Arrays { get; set; }
         public virtual DbSet<CalibControl> CalibControls { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Audit> Audits { get; set; }
     
         public virtual ObjectResult<GetAntigensNotAssingedToBatch_Result> GetAntigensNotAssingedToBatch()
         {

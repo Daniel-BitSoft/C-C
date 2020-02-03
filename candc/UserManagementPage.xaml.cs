@@ -24,5 +24,47 @@ namespace CC
         {
             InitializeComponent();
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            ActiveUsersRadBtn.IsChecked = true;
+        }
+
+        private void ActiveUsersRadBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            DisabledUserRadBtn.IsChecked = false;
+            RefreshGridData(App.UserProvider.ActiveUsers);
+        }
+
+        private void DisabledUserRadBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            ActiveUsersRadBtn.IsChecked = false;
+            RefreshGridData(App.UserProvider.DisabledUsers);
+        }
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var users = App.UserProvider.GetUserByUsername(SearchTextBox.Text.Trim(), ActiveUsersRadBtn.IsChecked.HasValue && ActiveUsersRadBtn.IsChecked.Value);
+                RefreshGridData(users);
+            }
+        }
+
+        private void RefreshGridData(List<CC.User> users)
+        {
+            UsersGrid.ItemsSource = App.mapper.Map<List<Models.User>>(users);
+            UsersGrid.Items.Refresh();
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(App.userPage);
+        }
+
+        private void Page_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

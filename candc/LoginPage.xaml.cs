@@ -35,10 +35,8 @@ namespace CC
         {
             var user = userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Text.Trim());
 
-            if (!string.IsNullOrEmpty(user.UserId))
-            {
-                App.User = user;
-
+            if (user != null)
+            {  
                 this.NavigationService.Content = null;
             }
             else

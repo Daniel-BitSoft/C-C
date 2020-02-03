@@ -25,7 +25,7 @@ namespace CC
         public Nullable<bool> IsFirstLogin { get; set; }
         public System.DateTime CreatedDt { get; set; }
         public string CreatedBy { get; set; }
-        public System.DateTime UpdatedDt { get; set; }
+        public Nullable<System.DateTime> UpdatedDt { get; set; }
         public string UpdatedBy { get; set; }
     }
 }

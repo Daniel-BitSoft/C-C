@@ -27,7 +27,6 @@ namespace CC
         public AntigenPage()
         {
             InitializeComponent();
-            LoadAntigens();
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)

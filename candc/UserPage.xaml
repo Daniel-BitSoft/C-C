@@ -6,9 +6,27 @@
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="UserPage">
+      Title="UserPage" Background="White"
+      Loaded="Page_Loaded">
 
     <Grid>
-        
+        <Label Name="TitelText" Content="Add New User" HorizontalAlignment="Left" Margin="87,39,0,0" VerticalAlignment="Top"/>
+        <Label Content="First Name" HorizontalAlignment="Left" Margin="106,90,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="FirstNameTextbox" HorizontalAlignment="Left" Height="23" Margin="243,93,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
+        <Label Content="Last Name" HorizontalAlignment="Left" Margin="106,125,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="LastNameTextbox" HorizontalAlignment="Left" Height="23" Margin="243,128,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
+        <Label Content="Email" HorizontalAlignment="Left" Margin="106,160,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="EmailTextbox" HorizontalAlignment="Left" Height="23" Margin="243,163,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
+        <Label Content="Re-Enter Email" HorizontalAlignment="Left" Margin="106,195,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="ConfirmEmailTextbox" HorizontalAlignment="Left" Height="23" Margin="243,198,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
+        <Label Content="Temporary Password" HorizontalAlignment="Left" Margin="106,230,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="TemporaryPassTextBox" HorizontalAlignment="Left" Height="23" Margin="243,233,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
+        <RadioButton Name="UserRadioBtn" GroupName="Role" Content="User" HorizontalAlignment="Left" Margin="106,276,0,0" VerticalAlignment="Top"/>
+        <RadioButton Name="AdminRadioBtn" GroupName="Role" Content="Admin" HorizontalAlignment="Left" Margin="171,276,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="LockCheckbox" Content="Locked" HorizontalAlignment="Left" Margin="106,312,0,0" VerticalAlignment="Top"/>
+        <Button Name="SaveButton" Click="SaveButton_Click" Content="Save Changes" HorizontalAlignment="Left" Margin="106,395,0,0" VerticalAlignment="Top" Width="87"/>
+        <Button Name="DeleteButton" Click="DeleteButton_Click" Visibility="Hidden" Content="Delete" Background="Red" HorizontalAlignment="Left" Margin="342,358,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Name="ResetPasswordButton" Click="ResetPasswordButton_Click" Content="Reset Password" HorizontalAlignment="Left" Margin="310,395,0,0" VerticalAlignment="Top" Width="107"/>
+        <CheckBox Name="DisabledCheckbox" Content="Disable" HorizontalAlignment="Left" Margin="106,346,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Page>

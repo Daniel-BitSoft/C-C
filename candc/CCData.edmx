@@ -51,6 +51,17 @@
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
           <Property Name="UpdatedDt" Type="datetime" />
         </EntityType>
+        <EntityType Name="Audit">
+          <Key>
+            <PropertyRef Name="AuditId" />
+          </Key>
+          <Property Name="AuditId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="UpdatedDt" Type="datetime" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="RecordId" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="CalibControl">
           <Key>
             <PropertyRef Name="CCId" />
@@ -87,7 +98,7 @@
           <Property Name="IsFirstLogin" Type="bit" />
           <Property Name="CreatedDt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="36" Nullable="false" />
-          <Property Name="UpdatedDt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDt" Type="datetime" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
         </EntityType>
         <Function Name="GetAntigensNotAssingedToBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -96,6 +107,7 @@
           <EntitySet Name="Antigens" EntityType="Self.Antigens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ArrayAntigen" EntityType="Self.ArrayAntigen" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Arrays" EntityType="Self.Arrays" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CalibControl" EntityType="Self.CalibControl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -185,7 +197,7 @@
           <Property Name="IsFirstLogin" Type="Boolean" />
           <Property Name="CreatedDt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UpdatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
           <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
@@ -196,6 +208,7 @@
           <EntitySet Name="CalibControls" EntityType="Self.CalibControl" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <FunctionImport Name="GetAntigensNotAssingedToBatch" ReturnType="Collection(CCModel.GetAntigensNotAssingedToBatch_Result)" />
+          <EntitySet Name="Audits" EntityType="CCModel.Audit" />
         </EntityContainer>
         <ComplexType Name="GetAntigensNotAssingedToBatch_Result">
           <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="32" />
@@ -211,6 +224,17 @@
           <Property Type="String" Name="UpdatedBy1" Nullable="true" MaxLength="32" />
           <Property Type="DateTime" Name="UpdatedDt1" Nullable="true" Precision="23" />
         </ComplexType>
+        <EntityType Name="Audit">
+          <Key>
+            <PropertyRef Name="AuditId" />
+          </Key>
+          <Property Name="AuditId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="RecordId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -325,6 +349,18 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Audits">
+            <EntityTypeMapping TypeName="CCModel.Audit">
+              <MappingFragment StoreEntitySet="Audit">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="AuditId" ColumnName="AuditId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
