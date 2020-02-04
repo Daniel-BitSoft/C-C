@@ -51,20 +51,16 @@ namespace CC
             }
         }
 
-        private void RefreshGridData(List<CC.User> users)
+        private void RefreshGridData(List<User> users)
         {
-            UsersGrid.ItemsSource = App.mapper.Map<List<Models.User>>(users);
+            UsersGrid.ItemsSource = users;
             UsersGrid.Items.Refresh();
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
+            App.userPage.User = UsersGrid.SelectedItem as User;
             NavigationService.Navigate(App.userPage);
-        }
-
-        private void Page_GotFocus(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

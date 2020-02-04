@@ -17,9 +17,9 @@
         <TextBox x:Name="LastNameTextbox" HorizontalAlignment="Left" Height="23" Margin="243,128,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
         <Label Content="Email" HorizontalAlignment="Left" Margin="106,160,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="EmailTextbox" HorizontalAlignment="Left" Height="23" Margin="243,163,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
-        <Label Content="Re-Enter Email" HorizontalAlignment="Left" Margin="106,195,0,0" VerticalAlignment="Top"/>
+        <Label Name="ConfEmailLabel" Content="Re-Enter Email" HorizontalAlignment="Left" Margin="106,195,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="ConfirmEmailTextbox" HorizontalAlignment="Left" Height="23" Margin="243,198,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
-        <Label Content="Temporary Password" HorizontalAlignment="Left" Margin="106,230,0,0" VerticalAlignment="Top"/>
+        <Label Name="TempPassLabel" Content="Temporary Password" HorizontalAlignment="Left" Margin="106,230,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="TemporaryPassTextBox" HorizontalAlignment="Left" Height="23" Margin="243,233,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="174"/>
         <RadioButton Name="UserRadioBtn" GroupName="Role" Content="User" HorizontalAlignment="Left" Margin="106,276,0,0" VerticalAlignment="Top"/>
         <RadioButton Name="AdminRadioBtn" GroupName="Role" Content="Admin" HorizontalAlignment="Left" Margin="171,276,0,0" VerticalAlignment="Top"/>

@@ -7,8 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="800"
       Title="UserManagementPage" Background="White"
-      Loaded="Page_Loaded"
-      GotFocus="Page_GotFocus">
+      Loaded="Page_Loaded">
 
     <Grid >
         <Grid Name="RadioBtnGrid"  VerticalAlignment="Top" HorizontalAlignment="Center" Margin="136,25,155,0" Width="509" Height="30" >
@@ -20,7 +19,8 @@
         </Grid>
         <DataGrid Name="UsersGrid" HorizontalAlignment="Left" IsReadOnly="True" AutoGenerateColumns="False" Height="500" Margin="136,82,0,0" VerticalAlignment="Top" Width="509">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="NameCol" Header="NAME" Binding="{Binding Path=FullName}" Width="1*"/>
+                <DataGridTextColumn x:Name="NameCol" Header="NAME" Binding="{Binding Path=FirstName}" Width="1*"/>
+                <DataGridTextColumn x:Name="LNameCol" Header="LAST NAME" Binding="{Binding Path=LastName}" Width="1*"/>
                 <DataGridTextColumn x:Name="EmailCol" Header="EMAIL" Binding="{Binding Path=Email}" Width="1*"/>
                 <DataGridCheckBoxColumn x:Name="AdminCol" Header="ADMIN" Binding="{Binding Path=IsAdmin}" Width="1*"/>
                 <DataGridCheckBoxColumn x:Name="DisableCol" Header="DISABLE" Binding="{Binding Path=IsDisabled}" Width="1*"/>

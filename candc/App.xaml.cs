@@ -45,8 +45,7 @@ namespace CC
         {
             return new MapperConfiguration(config =>
             {
-                config.CreateMap<User, Models.User>()
-                .ForMember(dest => dest.FullName, scr => scr.MapFrom<string>(x => $"{x.FirstName} {x.LastName}"));
+
             });
         }
     }

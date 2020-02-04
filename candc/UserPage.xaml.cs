@@ -99,9 +99,15 @@ namespace CC
                 FirstNameTextbox.Text = User.FirstName;
                 LastNameTextbox.Text = User.LastName;
                 EmailTextbox.Text = User.Username;
-
+                AdminRadioBtn.IsChecked = User.IsAdmin.HasValue && User.IsAdmin.Value;
+                UserRadioBtn.IsChecked = !User.IsAdmin.HasValue || !User.IsAdmin.Value;
                 LockCheckbox.IsChecked = User.IsLocked.HasValue && User.IsLocked.Value;
                 DisabledCheckbox.IsChecked = User.IsDisabled.HasValue && User.IsDisabled.Value;
+
+                ConfirmEmailTextbox.Visibility = Visibility.Hidden;
+                ConfEmailLabel.Visibility = Visibility.Hidden;
+                TemporaryPassTextBox.Visibility = Visibility.Hidden;
+                TempPassLabel.Visibility = Visibility.Hidden;
             }
         }
 
@@ -109,13 +115,14 @@ namespace CC
         {
             if (MessageBox.Show("This will assign a new password to user and unlocks it. Are you sure you want to reset user's password?", "RESET", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                User.Password = !string.IsNullOrEmpty(TemporaryPassTextBox.Text) ? UsersConsts.DefaultTempPassword : TemporaryPassTextBox.Text.Trim();
+                TemporaryPassTextBox.Visibility = Visibility.Visible;
+                TempPassLabel.Visibility = Visibility.Visible;
+                TemporaryPassTextBox.Text = UsersConsts.DefaultTempPassword;
+                DisabledCheckbox.IsChecked = false;
+
+                User.Password = UsersConsts.DefaultTempPassword;
                 User.IsLocked = false;
                 User.IsFirstLogin = true;
-
-                App.UserProvider.UpdateUser(User);
-
-                MessageBox.Show($"Successfully reset password. Temporary password is set to '{UsersConsts.DefaultTempPassword}'");
             }
         }
     }
