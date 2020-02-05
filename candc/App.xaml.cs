@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CC.Providers;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace CC
@@ -47,6 +49,17 @@ namespace CC
             {
 
             });
+        }
+
+        public static async Task RefreshData()
+        {
+            List<Task> loadDataTasks = new List<Task>();
+
+            if (App.LoggedInUser.IsAdmin)
+                loadDataTasks.Add(App.UserProvider.UpdateUsersList());
+
+
+            Task.WaitAll(loadDataTasks.ToArray());
         }
     }
 }

@@ -134,6 +134,7 @@
     <Compile Include="Models\CrudMode.cs" />
     <Compile Include="Models\LogObject.cs" />
     <Compile Include="Models\UsersResponse.cs" />
+    <Compile Include="Providers\CryptoProvider.cs" />
     <Compile Include="Providers\Logger.cs" />
     <Compile Include="User.cs">
       <DependentUpon>CCData.tt</DependentUpon>

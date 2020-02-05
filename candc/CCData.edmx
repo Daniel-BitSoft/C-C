@@ -92,10 +92,10 @@
           <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="IsAdmin" Type="bit" />
-          <Property Name="IsLocked" Type="bit" />
-          <Property Name="IsDisabled" Type="bit" />
-          <Property Name="IsFirstLogin" Type="bit" />
+          <Property Name="IsAdmin" Type="bit" Nullable="false" />
+          <Property Name="IsLocked" Type="bit" Nullable="false" />
+          <Property Name="IsDisabled" Type="bit" Nullable="false" />
+          <Property Name="RequirePasswordChange" Type="bit" Nullable="false" />
           <Property Name="CreatedDt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="UpdatedDt" Type="datetime" />
@@ -191,14 +191,14 @@
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="IsAdmin" Type="Boolean" />
-          <Property Name="IsLocked" Type="Boolean" />
-          <Property Name="IsDisabled" Type="Boolean" />
-          <Property Name="IsFirstLogin" Type="Boolean" />
+          <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+          <Property Name="IsDisabled" Type="Boolean" Nullable="false" />
           <Property Name="CreatedDt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
           <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="RequirePasswordChange" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AntigenAudits" EntityType="Self.AntigenAudit" />
@@ -315,6 +315,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CCModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="RequirePasswordChange" ColumnName="RequirePasswordChange" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -323,7 +324,6 @@
                 <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
                 <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
                 <ScalarProperty Name="IsDisabled" ColumnName="IsDisabled" />
-                <ScalarProperty Name="IsFirstLogin" ColumnName="IsFirstLogin" />
                 <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />

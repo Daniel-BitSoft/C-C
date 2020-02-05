@@ -77,7 +77,7 @@ namespace CC
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (User.IsDisabled.HasValue && User.IsDisabled.Value)
+            if (User.IsDisabled)
             {
                 if (MessageBox.Show("This will DELETE the user forever. Are you sure you want to continue?", "DELETE", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
@@ -99,10 +99,10 @@ namespace CC
                 FirstNameTextbox.Text = User.FirstName;
                 LastNameTextbox.Text = User.LastName;
                 EmailTextbox.Text = User.Username;
-                AdminRadioBtn.IsChecked = User.IsAdmin.HasValue && User.IsAdmin.Value;
-                UserRadioBtn.IsChecked = !User.IsAdmin.HasValue || !User.IsAdmin.Value;
-                LockCheckbox.IsChecked = User.IsLocked.HasValue && User.IsLocked.Value;
-                DisabledCheckbox.IsChecked = User.IsDisabled.HasValue && User.IsDisabled.Value;
+                AdminRadioBtn.IsChecked = User.IsAdmin;
+                UserRadioBtn.IsChecked = !User.IsAdmin;
+                LockCheckbox.IsChecked = User.IsLocked;
+                DisabledCheckbox.IsChecked = User.IsDisabled;
 
                 ConfirmEmailTextbox.Visibility = Visibility.Hidden;
                 ConfEmailLabel.Visibility = Visibility.Hidden;
@@ -122,7 +122,7 @@ namespace CC
 
                 User.Password = UsersConsts.DefaultTempPassword;
                 User.IsLocked = false;
-                User.IsFirstLogin = true;
+                User.RequirePasswordChange = true;
             }
         }
     }

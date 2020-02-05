@@ -1,9 +1,7 @@
 ﻿using CC.Constants;
-using CC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CC.Providers
@@ -20,7 +18,7 @@ namespace CC.Providers
         public async Task UpdateUsersList()
         {
             var users = GetAllUsers();
-            DisabledUsers = users.Where(a => a.IsDisabled.HasValue && a.IsDisabled.Value).ToList();
+            DisabledUsers = users.Where(a => a.IsDisabled).ToList();
             ActiveUsers = users.Except(DisabledUsers).ToList();
         }
 
@@ -29,7 +27,8 @@ namespace CC.Providers
 
             try
             {
-                var user = App.dbcontext.Users.FirstOrDefault(a => a.Username == username.Trim() && a.Password == password.Trim());
+                var hashedpassword = CryptoProvider.HashPassword(password);
+                var user = App.dbcontext.Users.FirstOrDefault(a => a.Username == username.Trim() && a.Password == hashedpassword);
                 if (user != null)
                     App.LoggedInUser = user;
 
@@ -54,8 +53,8 @@ namespace CC.Providers
                 user.CreatedBy = App.LoggedInUser.UserId;
                 user.CreatedDt = DateTime.Now;
                 user.UserId = Guid.NewGuid().ToString();
-                user.IsFirstLogin = true;
-                user.Password = string.IsNullOrEmpty(user.Password) ? UsersConsts.DefaultTempPassword : user.Password;
+                user.RequirePasswordChange = true;
+                user.Password = string.IsNullOrEmpty(user.Password) ? CryptoProvider.HashPassword(UsersConsts.DefaultTempPassword) : CryptoProvider.HashPassword(user.Password);
 
                 App.dbcontext.Users.Add(user);
                 App.dbcontext.SaveChanges();
@@ -80,6 +79,10 @@ namespace CC.Providers
             {
                 user.UpdatedBy = App.LoggedInUser.UserId;
                 user.UpdatedDt = DateTime.Now;
+                if(user.RequirePasswordChange)
+                {
+                    user.Password = CryptoProvider.HashPassword(user.Password);
+                }
 
                 Audit audit = new Audit
                 {
@@ -120,7 +123,7 @@ namespace CC.Providers
                     UpdatedBy = App.LoggedInUser.UserId,
                     UpdatedDt = DateTime.Now
                 };
-                App.dbcontext.Audits.Add(audit);  
+                App.dbcontext.Audits.Add(audit);
 
                 App.dbcontext.SaveChanges();
             }

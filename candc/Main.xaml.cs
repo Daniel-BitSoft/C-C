@@ -40,7 +40,7 @@ namespace CC
                 MainMenu.Visibility = Visibility.Visible;
             }
 
-            if (App.LoggedInUser != null && App.LoggedInUser.IsAdmin.HasValue && App.LoggedInUser.IsAdmin.Value)
+            if (App.LoggedInUser != null && App.LoggedInUser.IsAdmin)
             {
                 AdminMenu.Visibility = Visibility.Visible;
             }
@@ -92,12 +92,7 @@ namespace CC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            List<Task> loadDataTasks = new List<Task>();
-
-            loadDataTasks.Add(App.UserProvider.UpdateUsersList());
-
-
-            Task.WaitAll(loadDataTasks.ToArray());
+            
         }
     }
 }

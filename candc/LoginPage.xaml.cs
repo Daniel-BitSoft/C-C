@@ -33,11 +33,14 @@ namespace CC
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var user = userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Text.Trim());
+            userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Text.Trim());
 
-            if (user != null)
-            {  
-                this.NavigationService.Content = null;
+            if (App.LoggedInUser != null)
+            {
+                NavigationService.Content = null;
+
+                // show animation while refreshing data
+                App.RefreshData().Wait();
             }
             else
             {
