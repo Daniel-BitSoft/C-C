@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CC.Providers;
 using CC.Models;
+using CC.Constants;
 
 namespace CC
 {
@@ -24,6 +25,45 @@ namespace CC
     {
         public UserProvider userProvider { get; set; }
 
+        private string mode;
+        public string Mode
+        {
+            get { return mode; }
+            set
+            {
+                mode = value;
+
+                switch (mode)
+                {
+                    case "Login":
+                        MainGrid.Visibility = Visibility.Hidden;
+                        LoadingLabel.Visibility = Visibility.Visible;
+                        break;
+                    case "ChangePassRequired":
+                        MainGrid.Visibility = Visibility.Hidden;
+                        LoadingLabel.Visibility = Visibility.Hidden;
+                        ChangePassGrid.Visibility = Visibility.Visible;
+                        ErrorLabel.Content = string.Empty;
+                        break;
+                    case "WrongPass":
+                        MainGrid.Visibility = Visibility.Visible;
+                        LoadingLabel.Visibility = Visibility.Hidden;
+                        ErrorLabel.Content = "Invalid Credentials";
+                        break;
+                    case "ChangePass":
+                        ChangePassGrid.Visibility = Visibility.Hidden;
+                        LoadingLabel.Visibility = Visibility.Visible;
+                        break;
+                    case "ChangePassFailed":
+                        ChangePassGrid.Visibility = Visibility.Visible;
+                        LoadingLabel.Visibility = Visibility.Hidden;
+                        break;
+
+                }
+
+            }
+        }
+
         public LoginPage()
         {
             InitializeComponent();
@@ -33,19 +73,64 @@ namespace CC
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Mode = "Login";
             userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Text.Trim());
 
             if (App.LoggedInUser != null)
             {
-                NavigationService.Content = null;
-
-                // show animation while refreshing data
-                App.RefreshData().Wait();
+                if (App.LoggedInUser.RequirePasswordChange)
+                {
+                    Mode = "ChangePassRequired";
+                }
+                else
+                    PrepareEnvironment();
             }
             else
             {
-                ErrorLabel.Content = "Invalid credentials";
+                Mode = "WrongPass";
             }
+        }
+
+        private void ChangePassButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (PassTextbox.Text.Trim() != ConfPassTextbox.Text.Trim())
+            {
+                ErrorLabel.Content = "Password does not match in text boxes above";
+                return;
+            }
+
+            // show animated wait until db read tasks are done 
+            Mode = "ChangePass";
+
+            // update password
+            try
+            {
+                App.LoggedInUser.Password = PassTextbox.Text.Trim();
+                App.LoggedInUser.RequirePasswordChange = false;
+                var response = userProvider.UpdateUser(App.LoggedInUser, AuditEvents.PasswordChanged.ToString());
+
+                if (!string.IsNullOrEmpty(response))
+                {
+                    ErrorLabel.Content = response;
+                    Mode = "ChangePassFailed";
+                }
+                else
+                    PrepareEnvironment();
+            }
+            catch (Exception ex)
+            {
+                var logNumber = ex.Data["logNumber"];
+                MessageBox.Show($"{Messages.Exception} - logNumber={logNumber}");
+            }
+        }
+
+        private void PrepareEnvironment()
+        {
+            App.RefreshData();
+            Task.WaitAll(App.loadDataTasks.ToArray());
+
+            // show main page after db read rasks are done
+            NavigationService.Content = null;
         }
     }
 }

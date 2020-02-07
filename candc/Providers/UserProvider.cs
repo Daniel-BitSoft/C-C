@@ -27,12 +27,17 @@ namespace CC.Providers
 
             try
             {
-                var hashedpassword = CryptoProvider.HashPassword(password);
-                var user = App.dbcontext.Users.FirstOrDefault(a => a.Username == username.Trim() && a.Password == hashedpassword);
+                var user = App.dbcontext.Users.FirstOrDefault(a => a.Username == username.Trim());
                 if (user != null)
-                    App.LoggedInUser = user;
+                {
+                    if (CryptoProvider.ValidatePassword(password, user.Password))
+                    {
+                        App.LoggedInUser = user;
+                        return user;
+                    }
+                }
 
-                return user;
+                return null;
             }
             catch (Exception ex)
             {
@@ -46,20 +51,28 @@ namespace CC.Providers
             }
         }
 
-        public void CreateUser(User user)
+        public string CreateUser(User user)
         {
             try
             {
-                user.CreatedBy = App.LoggedInUser.UserId;
-                user.CreatedDt = DateTime.Now;
-                user.UserId = Guid.NewGuid().ToString();
-                user.RequirePasswordChange = true;
-                user.Password = string.IsNullOrEmpty(user.Password) ? CryptoProvider.HashPassword(UsersConsts.DefaultTempPassword) : CryptoProvider.HashPassword(user.Password);
+                var existinguser = App.dbcontext.Users.FirstOrDefault(a => a.Username == user.Username.Trim());
+                if (existinguser == null)
+                {
+                    user.CreatedBy = App.LoggedInUser.UserId;
+                    user.CreatedDt = DateTime.Now;
+                    user.UserId = Guid.NewGuid().ToString();
+                    user.RequirePasswordChange = true;
+                    user.Password = string.IsNullOrEmpty(user.Password) ? CryptoProvider.HashPassword(UsersConsts.DefaultTempPassword) : CryptoProvider.HashPassword(user.Password);
 
-                App.dbcontext.Users.Add(user);
-                App.dbcontext.SaveChanges();
+                    App.dbcontext.Users.Add(user);
+                    App.dbcontext.SaveChanges();
 
-                ActiveUsers.Add(user);
+                    ActiveUsers.Add(user);
+                }
+                else
+                {
+                    return Messages.UsernameTaken;
+                }
             }
             catch (Exception ex)
             {
@@ -71,34 +84,41 @@ namespace CC.Providers
                 ex.Data.Add(nameof(logNumber), logNumber);
                 throw ex;
             }
+
+            return string.Empty;
         }
 
-        public void UpdateUser(User user)
+        public string UpdateUser(User user, string auditEvent = null)
         {
             try
             {
-                user.UpdatedBy = App.LoggedInUser.UserId;
-                user.UpdatedDt = DateTime.Now;
-                if(user.RequirePasswordChange)
+                var existinguser = App.dbcontext.Users.FirstOrDefault(a => a.Username == user.Username.Trim());
+                if (existinguser == null || existinguser.UserId == user.UserId)
                 {
+                    user.UpdatedBy = App.LoggedInUser.UserId;
+                    user.UpdatedDt = DateTime.Now;
                     user.Password = CryptoProvider.HashPassword(user.Password);
+
+                    Audit audit = new Audit
+                    {
+                        RecordId = user.UserId,
+                        Type = AuditTypes.User.ToString(),
+                        Description = auditEvent,
+                        UpdatedBy = App.LoggedInUser.UserId,
+                        UpdatedDt = DateTime.Now
+                    };
+
+                    App.dbcontext.Audits.Add(audit); 
+                    App.dbcontext.SaveChanges();
                 }
-
-                Audit audit = new Audit
+                else
                 {
-                    RecordId = user.UserId,
-                    Type = AuditTypes.User.ToString(),
-                    Description = "User is modified",
-                    UpdatedBy = App.LoggedInUser.UserId,
-                    UpdatedDt = DateTime.Now
-                };
-                App.dbcontext.Audits.Add(audit);
-
-                App.dbcontext.SaveChanges();
+                    return Messages.UsernameTaken;
+                }
             }
             catch (Exception ex)
             {
-                var logNumber = Logger.Log(nameof(CreateUser), new Dictionary<string, object>
+                var logNumber = Logger.Log(nameof(UpdateUser), new Dictionary<string, object>
                 {
                     { LogConsts.Exception, ex }
                 });
@@ -106,6 +126,8 @@ namespace CC.Providers
                 ex.Data.Add(nameof(logNumber), logNumber);
                 throw ex;
             }
+
+            return null;
         }
 
         public void DeleteUser(User user)
@@ -119,17 +141,16 @@ namespace CC.Providers
                 {
                     RecordId = user.UserId,
                     Type = AuditTypes.User.ToString(),
-                    Description = "User is deleted",
+                    Description = AuditEvents.UserDeleted.ToString(),
                     UpdatedBy = App.LoggedInUser.UserId,
                     UpdatedDt = DateTime.Now
                 };
-                App.dbcontext.Audits.Add(audit);
-
+                App.dbcontext.Audits.Add(audit); 
                 App.dbcontext.SaveChanges();
             }
             catch (Exception ex)
             {
-                var logNumber = Logger.Log(nameof(GetAllUsers), new Dictionary<string, object>
+                var logNumber = Logger.Log(nameof(DeleteUser), new Dictionary<string, object>
                 {
                     { LogConsts.Exception, ex }
                 });
@@ -172,7 +193,7 @@ namespace CC.Providers
             }
             catch (Exception ex)
             {
-                var logNumber = Logger.Log(nameof(GetAllUsers), new Dictionary<string, object>
+                var logNumber = Logger.Log(nameof(GetUserByUsername), new Dictionary<string, object>
                 {
                     { LogConsts.Exception, ex }
                 });

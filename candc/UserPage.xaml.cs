@@ -31,6 +31,7 @@ namespace CC
 
         private void PrepareNewCustomer()
         {
+            User = null;
             FirstNameTextbox.Text =
             LastNameTextbox.Text =
             EmailTextbox.Text =
@@ -46,33 +47,64 @@ namespace CC
 
             TemporaryPassTextBox.Visibility = Visibility.Visible;
             TemporaryPassTextBox.Text = UsersConsts.DefaultTempPassword;
+
+            DeleteButton.Visibility = Visibility.Hidden;
+            ResetPasswordButton.Visibility = Visibility.Hidden;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IsNew)
+            try
             {
-                App.UserProvider.CreateUser(new User
+                if (IsNew)
                 {
-                    FirstName = FirstNameTextbox.Text.Trim(),
-                    LastName = LastNameTextbox.Text.Trim(),
-                    Username = EmailTextbox.Text.Trim(),
-                    IsAdmin = AdminRadioBtn.IsChecked.HasValue && AdminRadioBtn.IsChecked.Value,
-                    Password = TemporaryPassTextBox.Text.Trim()
-                });
+                    var response = App.UserProvider.CreateUser(new User
+                    {
+                        FirstName = FirstNameTextbox.Text.Trim(),
+                        LastName = LastNameTextbox.Text.Trim(),
+                        Username = EmailTextbox.Text.Trim(),
+                        IsAdmin = AdminRadioBtn.IsChecked.HasValue && AdminRadioBtn.IsChecked.Value,
+                        Password = TemporaryPassTextBox.Text.Trim()
+                    });
+
+                    if (!string.IsNullOrEmpty(response))
+                    {
+                        MessageBox.Show(response, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    AuditEvents auditEvent = AuditEvents.CustomerUpdated;
+                    if (User.IsDisabled != (DisabledCheckbox.IsChecked.HasValue && DisabledCheckbox.IsChecked.Value))
+                    {
+                        auditEvent = AuditEvents.UserAccessChanged;
+                    }
+                    if (User.IsAdmin != (AdminRadioBtn.IsChecked.HasValue && AdminRadioBtn.IsChecked.Value))
+                    {
+                        auditEvent = AuditEvents.AdminPrivilegeChanged;
+                    }
+                    if (TemporaryPassTextBox.Visibility == Visibility.Visible)
+                    {
+                        auditEvent = AuditEvents.PasswordReset;
+                    }
+
+                    User.FirstName = FirstNameTextbox.Text.Trim();
+                    User.LastName = LastNameTextbox.Text.Trim();
+                    User.Username = EmailTextbox.Text.Trim();
+                    User.IsAdmin = AdminRadioBtn.IsChecked.HasValue && AdminRadioBtn.IsChecked.Value;
+                    User.IsDisabled = DisabledCheckbox.IsChecked.HasValue && DisabledCheckbox.IsChecked.Value;
+
+                    App.UserProvider.UpdateUser(User, auditEvent.ToString());
+                }
+
+                App.UserProvider.UpdateUsersList().Wait();
+                NavigationService.GoBack();
             }
-            else
+            catch (Exception)
             {
-                User.FirstName = FirstNameTextbox.Text.Trim();
-                User.LastName = LastNameTextbox.Text.Trim();
-                User.Username = EmailTextbox.Text.Trim();
-                User.IsAdmin = AdminRadioBtn.IsChecked.HasValue && AdminRadioBtn.IsChecked.Value;
-                User.IsDisabled = DisabledCheckbox.IsChecked.HasValue && DisabledCheckbox.IsChecked.Value;
-
-                App.UserProvider.UpdateUser(User);
+                MessageBox.Show(Messages.Exception, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            NavigationService.GoBack();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

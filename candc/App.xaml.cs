@@ -15,6 +15,7 @@ namespace CC
 
         public static Entities dbcontext = new Entities();
         public static IMapper mapper;
+        public static List<Task> loadDataTasks;
 
         // providers
         public static AntigensProvider AntigensProvider = new AntigensProvider();
@@ -53,13 +54,18 @@ namespace CC
 
         public static async Task RefreshData()
         {
-            List<Task> loadDataTasks = new List<Task>();
+            loadDataTasks = new List<Task>();
 
             if (App.LoggedInUser.IsAdmin)
                 loadDataTasks.Add(App.UserProvider.UpdateUsersList());
 
+            loadDataTasks.Add(testtask());
 
-            Task.WaitAll(loadDataTasks.ToArray());
+        } 
+
+        public static async Task testtask()
+        {
+            System.Threading.Thread.Sleep(5000);
         }
     }
 }

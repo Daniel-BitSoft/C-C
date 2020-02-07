@@ -62,5 +62,11 @@ namespace CC
             App.userPage.User = UsersGrid.SelectedItem as User;
             NavigationService.Navigate(App.userPage);
         }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.userPage.IsNew = true;
+            NavigationService.Navigate(App.userPage);
+        }
     }
 }

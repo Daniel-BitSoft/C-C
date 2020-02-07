@@ -7,12 +7,22 @@
         mc:Ignorable="d"
         Title="LoginPage" Height="450" Width="800">
     <Grid>
-        <Button Content="Login" HorizontalAlignment="Left" Margin="354,246,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <TextBox Name="UserNameTxt" HorizontalAlignment="Left" Height="23" Margin="304,162,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
-        <TextBox Name="PasswordTxt" HorizontalAlignment="Left" Height="23" Margin="304,200,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
-        <TextBlock HorizontalAlignment="Left" Margin="225,163,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="229,201,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top"/>
-        <Label Name="ErrorLabel" Content="" HorizontalAlignment="Left" Margin="304,326,0,0" VerticalAlignment="Top" Width="221"/>
-
+        <Grid Name="MainGrid" Visibility="Visible">
+            <Button Content="Login" HorizontalAlignment="Left" Margin="354,246,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+            <TextBox Name="UserNameTxt" HorizontalAlignment="Left" Height="23" Margin="304,162,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
+            <TextBox Name="PasswordTxt" HorizontalAlignment="Left" Height="23" Margin="304,200,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
+            <TextBlock HorizontalAlignment="Left" Margin="225,163,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Left" Margin="229,201,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top"/>
+        </Grid> 
+        <Grid Name="ChangePassGrid" Visibility="Hidden">
+            <Button Content="Save" Name="ChangePassButton" Click="ChangePassButton_Click" HorizontalAlignment="Left" Margin="357,280,0,0" VerticalAlignment="Top" Width="75"/>
+            <Label Content="Password: " HorizontalAlignment="Left" Margin="221,162,0,0" VerticalAlignment="Top"/>
+            <Label Content="Confirm Password: " HorizontalAlignment="Left" Margin="221,211,0,0" VerticalAlignment="Top"/>
+            <TextBox MaxLength="50" Name="PassTextbox" HorizontalAlignment="Left" Height="23" Margin="347,162,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="218"/>
+            <TextBox MaxLength="50" Name="ConfPassTextbox" HorizontalAlignment="Left" Height="23" Margin="347,215,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="218"/>
+            <Label Content="Change password" HorizontalAlignment="Left" Margin="347,70,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Label Name="ErrorLabel" Foreground="Red" Content="" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="226,359,0,0" VerticalAlignment="Top" Width="403"/>
+        <Label Name="LoadingLabel" Visibility="Hidden" FontSize="18" Content="Loading data ..." HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Page>
