@@ -2,14 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CC.Providers
 {
     public class ArrayProvider
     {
-        public string CreateArray(Array array, List<Antigen> antigens)
+        public string CreateArray(Array array, Dictionary<string, List<Antigen>> antigensGroups)
         {
             try
             {
@@ -23,15 +21,19 @@ namespace CC.Providers
                     App.dbcontext.Arrays.Add(array);
                     App.dbcontext.SaveChanges();
 
-                    foreach (var antigen in antigens)
-                    {
-                        App.dbcontext.ArrayAntigens.Add(new ArrayAntigen
+                    foreach (var group in antigensGroups)
+                    { 
+                        foreach (var antigen in group.Value)
                         {
-                            AntigenId = antigen.AntigenId,
-                            ArrayId = array.ArrayId,
-                            CreatedBy = App.LoggedInUser.UserId,
-                            CreatedDt = DateTime.Now
-                        });
+                            App.dbcontext.ArrayAntigens.Add(new ArrayAntigen
+                            {
+                                AntigenId = antigen.AntigenId,
+                                ArrayId = array.ArrayId,
+                                Group = group.Key,
+                                CreatedBy = App.LoggedInUser.UserId,
+                                CreatedDt = DateTime.Now
+                            });
+                        }
                     }
                     App.dbcontext.SaveChanges();
                 }
@@ -48,7 +50,7 @@ namespace CC.Providers
                 });
 
                 ex.Data.Add(nameof(logNumber), logNumber);
-                throw ex;
+                return $"{ Messages.Exception} - log: {logNumber}";
             }
 
             return string.Empty;
@@ -80,7 +82,7 @@ namespace CC.Providers
                 {
                     var arrayAntigens = App.dbcontext.ArrayAntigens.Where(a => a.ArrayId == array.ArrayId).ToList();
                     var removedAntigenIds = removedAntigens.Select(a => a.AntigenId).ToList();
-                    App.dbcontext.ArrayAntigens.RemoveRange(arrayAntigens.Where(a=> removedAntigenIds.Contains(a.AntigenId);
+                    App.dbcontext.ArrayAntigens.RemoveRange(arrayAntigens.Where(a => removedAntigenIds.Contains(a.AntigenId)));
 
                     App.dbcontext.SaveChanges();
                 }
@@ -99,7 +101,7 @@ namespace CC.Providers
                         });
                     }
                     App.dbcontext.SaveChanges();
-                }  
+                }
             }
             catch (Exception ex)
             {
@@ -152,11 +154,14 @@ namespace CC.Providers
             }
         }
 
-        public List<CC.Array> GetAllArrays()
+        public List<CC.Array> GetAllArrays(bool returnOnlyMaster)
         {
             try
             {
-                return App.dbcontext.Arrays.ToList();
+                if (returnOnlyMaster)
+                    return App.dbcontext.Arrays.Where(a => string.IsNullOrEmpty(a.MasterArrayId)).ToList();
+                else
+                    return App.dbcontext.Arrays.ToList();
             }
             catch (Exception ex)
             {

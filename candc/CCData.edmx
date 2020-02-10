@@ -33,6 +33,7 @@
           </Key>
           <Property Name="ArrayId" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="AntigenId" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="Group" Type="varchar" MaxLength="10" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="36" />
           <Property Name="CreatedDt" Type="datetime" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
@@ -147,6 +148,7 @@
           <Property Name="CreatedDt" Type="DateTime" Precision="3" />
           <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
+          <Property Name="Group" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Array">
           <Key>
@@ -267,6 +269,7 @@
           <EntitySetMapping Name="ArrayAntigens">
             <EntityTypeMapping TypeName="CCModel.ArrayAntigen">
               <MappingFragment StoreEntitySet="ArrayAntigen">
+                <ScalarProperty Name="Group" ColumnName="Group" />
                 <ScalarProperty Name="ArrayId" ColumnName="ArrayId" />
                 <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />

@@ -8,6 +8,7 @@
         PosCalibrator,
         Control,
         NegCalibrator,
-        ArrayAntigen
+        ArrayAntigen,
+        CalibControl
     }
 }

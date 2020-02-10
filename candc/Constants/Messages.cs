@@ -11,5 +11,6 @@
         public static string UsernameTaken = "This username is already taken by another user";
 
         public static string ArrayAlreadyExists = "This array already exists";
+        public static string UnassignedAntigensNotFound = "There is no unassigned antinges left";
     }
 }

@@ -137,8 +137,10 @@
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AntigenResponse.cs" />
+    <Compile Include="Models\AntigensGroup.cs" />
     <Compile Include="Models\AntigensResponse.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\CCAntigens.cs" />
     <Compile Include="Models\CrudMode.cs" />
     <Compile Include="Models\LogObject.cs" />
     <Compile Include="Models\UsersResponse.cs" />
