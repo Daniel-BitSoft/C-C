@@ -130,15 +130,20 @@
     </Compile>
     <Compile Include="Constants\AuditEvents.cs" />
     <Compile Include="Constants\AuditTypes.cs" />
+    <Compile Include="Constants\CCType.cs" />
     <Compile Include="Constants\LogConsts.cs" />
     <Compile Include="Constants\Messages.cs" />
     <Compile Include="Constants\UsersConsts.cs" />
     <Compile Include="GetAntigensNotAssingedToBatch_Result.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetArrayAntigenRelations_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\AntigenResponse.cs" />
     <Compile Include="Models\AntigensGroup.cs" />
     <Compile Include="Models\AntigensResponse.cs" />
+    <Compile Include="Models\ArrayAntigenRelation.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CCAntigens.cs" />
     <Compile Include="Models\CrudMode.cs" />

@@ -103,6 +103,7 @@
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
         </EntityType>
         <Function Name="GetAntigensNotAssingedToBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetArrayAntigenRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="CCModelStoreContainer">
           <EntitySet Name="AntigenAudit" EntityType="Self.AntigenAudit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Antigens" EntityType="Self.Antigens" Schema="dbo" store:Type="Tables" />
@@ -211,6 +212,7 @@
           <EntitySet Name="Users" EntityType="Self.User" />
           <FunctionImport Name="GetAntigensNotAssingedToBatch" ReturnType="Collection(CCModel.GetAntigensNotAssingedToBatch_Result)" />
           <EntitySet Name="Audits" EntityType="CCModel.Audit" />
+          <FunctionImport Name="GetArrayAntigenRelations" ReturnType="Collection(CCModel.GetArrayAntigenRelations_Result)" />
         </EntityContainer>
         <ComplexType Name="GetAntigensNotAssingedToBatch_Result">
           <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="32" />
@@ -237,6 +239,11 @@
           <Property Name="RecordId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <ComplexType Name="GetArrayAntigenRelations_Result">
+          <Property Type="String" Name="ArrayName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MasterArrayId" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="AntigenName" Nullable="false" MaxLength="20" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -364,6 +371,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetArrayAntigenRelations" FunctionName="CCModel.Store.GetArrayAntigenRelations">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CCModel.GetArrayAntigenRelations_Result">
+                <ScalarProperty Name="ArrayName" ColumnName="ArrayName" />
+                <ScalarProperty Name="MasterArrayId" ColumnName="MasterArrayId" />
+                <ScalarProperty Name="AntigenName" ColumnName="AntigenName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

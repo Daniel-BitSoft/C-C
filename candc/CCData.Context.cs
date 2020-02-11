@@ -39,5 +39,10 @@ namespace CC
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAntigensNotAssingedToBatch_Result>("GetAntigensNotAssingedToBatch");
         }
+    
+        public virtual ObjectResult<GetArrayAntigenRelations_Result> GetArrayAntigenRelations()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetArrayAntigenRelations_Result>("GetArrayAntigenRelations");
+        }
     }
 }

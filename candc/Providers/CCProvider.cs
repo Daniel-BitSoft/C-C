@@ -8,7 +8,8 @@ namespace CC.Providers
 {
     public class CCProvider
     {
-        public string CreateCalibControl(CalibControl calibControl, List<CCAntigens> antigens, string CCType)
+        List<ArrayAntigenRelation> arrayAntigens;
+        public string CreateCalibControl(CalibControl calibControl, List<CCAntigens> antigens, CCType type, string arrayname)
         {
             try
             {
@@ -17,16 +18,34 @@ namespace CC.Providers
                     calibControl.CreatedBy = App.LoggedInUser.UserId;
                     calibControl.CreatedDt = DateTime.Now;
                     calibControl.CCId = Guid.NewGuid().ToString();
-                    calibControl.Type = CCType;
+                    calibControl.Type = type.ToString();
                     calibControl.AntigenId = antigen.AntigenId;
                     calibControl.Min = antigen.Min;
                     calibControl.Max = antigen.Max;
 
-                    calibControl.LotNumber = "TODO: NEEDS TO BE CALCULATED";
+                    string LotNumberArrayname = string.Empty;
+                    var arraySelected = arrayAntigens.Find(a => a.ArrayName == arrayname);
+                    if (!string.IsNullOrEmpty(arraySelected.ArrayName))
+                    {
+                        var masterArrayHasAntigen = arrayAntigens
+                            .Where(a => a.MasterArrayName == arraySelected.MasterArrayName)?
+                            .Select(a => a.AntigenName)?.ToList()?.Contains(antigen.AntigenName);
+
+                        if (masterArrayHasAntigen.HasValue && masterArrayHasAntigen.Value)
+                        {
+                            LotNumberArrayname = arraySelected.MasterArrayName;
+                        }
+                        else
+                        {
+                            LotNumberArrayname = arrayname;
+                        }
+                    }
+
+                    calibControl.LotNumber = $"A{LotNumberArrayname}{type}{antigen.AntigenName}-{calibControl.DilutionDate.Value.ToString("MMddyyyy")}";
 
                     App.dbcontext.CalibControls.Add(calibControl);
                 }
-                App.dbcontext.SaveChanges(); 
+                App.dbcontext.SaveChanges();
             }
             catch (Exception ex)
             {
