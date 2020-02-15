@@ -102,7 +102,8 @@
           <Property Name="UpdatedDt" Type="datetime" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
         </EntityType>
-        <Function Name="GetAntigensNotAssingedToBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAntigensAssingedToArray" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAntigensNotAssingedToArray" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetArrayAntigenRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="CCModelStoreContainer">
           <EntitySet Name="AntigenAudit" EntityType="Self.AntigenAudit" Schema="dbo" store:Type="Tables" />
@@ -213,6 +214,8 @@
           <FunctionImport Name="GetAntigensNotAssingedToBatch" ReturnType="Collection(CCModel.GetAntigensNotAssingedToBatch_Result)" />
           <EntitySet Name="Audits" EntityType="CCModel.Audit" />
           <FunctionImport Name="GetArrayAntigenRelations" ReturnType="Collection(CCModel.GetArrayAntigenRelations_Result)" />
+          <FunctionImport Name="GetAntigensAssingedToArray" ReturnType="Collection(CCModel.GetAntigensAssingedToArray)" />
+          <FunctionImport Name="GetAntigensNotAssingedToArray" ReturnType="Collection(CCModel.GetAntigensNotAssingedToArray_Result)" />
         </EntityContainer>
         <ComplexType Name="GetAntigensNotAssingedToBatch_Result">
           <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="32" />
@@ -243,6 +246,31 @@
           <Property Type="String" Name="ArrayName" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="MasterArrayId" Nullable="true" MaxLength="36" />
           <Property Type="String" Name="AntigenName" Nullable="false" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="GetAntigensAssingedToArray">
+          <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="36" />
+          <Property Type="String" Name="AntigenName" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="ArrayId" Nullable="false" MaxLength="36" />
+          <Property Type="String" Name="ArrayName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MasterArrayId" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="MasterArrayName" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="IsSubArray" Nullable="true" />
+          <Property Type="String" Name="Group" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="GetAntigensNotAssingedToArray_Result">
+          <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="36" />
+          <Property Type="String" Name="AntigenName" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="CreatedBy" Nullable="false" MaxLength="36" />
+          <Property Type="DateTime" Name="CreatedDt" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UpdatedBy" Nullable="true" MaxLength="36" />
+          <Property Type="DateTime" Name="UpdatedDt" Nullable="true" Precision="23" />
+          <Property Type="String" Name="ArrayId" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="AntigenId1" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="Group" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="CreatedBy1" Nullable="true" MaxLength="36" />
+          <Property Type="DateTime" Name="CreatedDt1" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UpdatedBy1" Nullable="true" MaxLength="36" />
+          <Property Type="DateTime" Name="UpdatedDt1" Nullable="true" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -341,24 +369,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetAntigensNotAssingedToBatch" FunctionName="CCModel.Store.GetAntigensNotAssingedToBatch">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="CCModel.GetAntigensNotAssingedToBatch_Result">
-                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
-                <ScalarProperty Name="AntigenName" ColumnName="AntigenName" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
-                <ScalarProperty Name="ArrayId" ColumnName="ArrayId" />
-                <ScalarProperty Name="AntigenId1" ColumnName="AntigenId1" />
-                <ScalarProperty Name="CreatedBy1" ColumnName="CreatedBy1" />
-                <ScalarProperty Name="CreatedDt1" ColumnName="CreatedDt1" />
-                <ScalarProperty Name="UpdatedBy1" ColumnName="UpdatedBy1" />
-                <ScalarProperty Name="UpdatedDt1" ColumnName="UpdatedDt1" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="Audits">
             <EntityTypeMapping TypeName="CCModel.Audit">
               <MappingFragment StoreEntitySet="Audit">
@@ -377,6 +387,39 @@
                 <ScalarProperty Name="ArrayName" ColumnName="ArrayName" />
                 <ScalarProperty Name="MasterArrayId" ColumnName="MasterArrayId" />
                 <ScalarProperty Name="AntigenName" ColumnName="AntigenName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAntigensAssingedToArray" FunctionName="CCModel.Store.GetAntigensAssingedToArray">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CCModel.GetAntigensAssingedToArray">
+                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
+                <ScalarProperty Name="AntigenName" ColumnName="AntigenName" />
+                <ScalarProperty Name="ArrayId" ColumnName="ArrayId" />
+                <ScalarProperty Name="ArrayName" ColumnName="ArrayName" />
+                <ScalarProperty Name="MasterArrayId" ColumnName="MasterArrayId" />
+                <ScalarProperty Name="MasterArrayName" ColumnName="MasterArrayName" />
+                <ScalarProperty Name="IsSubArray" ColumnName="IsSubArray" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAntigensNotAssingedToArray" FunctionName="CCModel.Store.GetAntigensNotAssingedToArray">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CCModel.GetAntigensNotAssingedToArray_Result">
+                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
+                <ScalarProperty Name="AntigenName" ColumnName="AntigenName" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
+                <ScalarProperty Name="ArrayId" ColumnName="ArrayId" />
+                <ScalarProperty Name="AntigenId1" ColumnName="AntigenId1" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="CreatedBy1" ColumnName="CreatedBy1" />
+                <ScalarProperty Name="CreatedDt1" ColumnName="CreatedDt1" />
+                <ScalarProperty Name="UpdatedBy1" ColumnName="UpdatedBy1" />
+                <ScalarProperty Name="UpdatedDt1" ColumnName="UpdatedDt1" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

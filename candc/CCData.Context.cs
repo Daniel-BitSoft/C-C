@@ -44,5 +44,15 @@ namespace CC
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetArrayAntigenRelations_Result>("GetArrayAntigenRelations");
         }
+    
+        public virtual ObjectResult<AntigensAssingedToArray> GetAntigensAssingedToArray()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AntigensAssingedToArray>("GetAntigensAssingedToArray");
+        }
+    
+        public virtual ObjectResult<GetAntigensNotAssingedToArray_Result> GetAntigensNotAssingedToArray()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAntigensNotAssingedToArray_Result>("GetAntigensNotAssingedToArray");
+        }
     }
 }

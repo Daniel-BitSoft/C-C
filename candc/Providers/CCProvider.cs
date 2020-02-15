@@ -8,7 +8,13 @@ namespace CC.Providers
 {
     public class CCProvider
     {
-        List<ArrayAntigenRelation> arrayAntigens;
+        public List<AntigensAssingedToArray> ArrayAntigens { get; set; }
+
+        public void SetArrayAntigens()
+        {
+            ArrayAntigens = App.dbcontext.GetAntigensAssingedToArray()?.ToList(); // Database.SqlQuery<ArrayAntigenRelation>("GetAntigensAssingedToArray")?.ToList();
+        }
+
         public string CreateCalibControl(CalibControl calibControl, List<CCAntigens> antigens, CCType type, string arrayname)
         {
             try
@@ -22,26 +28,9 @@ namespace CC.Providers
                     calibControl.AntigenId = antigen.AntigenId;
                     calibControl.Min = antigen.Min;
                     calibControl.Max = antigen.Max;
+                    calibControl.ExpirationDate = calibControl.ExpirationDate == null ? calibControl.DilutionDate.Value.AddDays(90) : calibControl.ExpirationDate;
 
-                    string LotNumberArrayname = string.Empty;
-                    var arraySelected = arrayAntigens.Find(a => a.ArrayName == arrayname);
-                    if (!string.IsNullOrEmpty(arraySelected.ArrayName))
-                    {
-                        var masterArrayHasAntigen = arrayAntigens
-                            .Where(a => a.MasterArrayName == arraySelected.MasterArrayName)?
-                            .Select(a => a.AntigenName)?.ToList()?.Contains(antigen.AntigenName);
-
-                        if (masterArrayHasAntigen.HasValue && masterArrayHasAntigen.Value)
-                        {
-                            LotNumberArrayname = arraySelected.MasterArrayName;
-                        }
-                        else
-                        {
-                            LotNumberArrayname = arrayname;
-                        }
-                    }
-
-                    calibControl.LotNumber = $"A{LotNumberArrayname}{type}{antigen.AntigenName}-{calibControl.DilutionDate.Value.ToString("MMddyyyy")}";
+                    calibControl.LotNumber = CalculateLotNumber(antigen, calibControl.DilutionDate.Value, arrayname, type.ToString());
 
                     App.dbcontext.CalibControls.Add(calibControl);
                 }
@@ -59,6 +48,29 @@ namespace CC.Providers
             }
 
             return string.Empty;
+        }
+
+        private string CalculateLotNumber(Antigen antigen, DateTime DilutionDate, string arrayName, string type)
+        {
+            string LotNumberArrayname = string.Empty;
+            var arraySelected = ArrayAntigens.Find(a => a.ArrayName == arrayName);
+            if (!string.IsNullOrEmpty(arraySelected.ArrayName))
+            {
+                var masterArrayHasAntigen = ArrayAntigens
+                    .Where(a => a.MasterArrayId == arraySelected.MasterArrayId)?
+                    .Select(a => a.AntigenName)?.ToList()?.Contains(antigen.AntigenName);
+
+                if (masterArrayHasAntigen.HasValue && masterArrayHasAntigen.Value)
+                {
+                    LotNumberArrayname = arraySelected.MasterArrayName;
+                }
+                else
+                {
+                    LotNumberArrayname = arrayName;
+                }
+            }
+
+            return $"A{LotNumberArrayname}{type}{antigen.AntigenName}-{DilutionDate.ToString("MMddyyyy")}";
         }
 
         //public string UpdateCalibControl(CalibControl CalibControl, List<Antigen> AddedAntigens, List<Antigen> removedAntigens)
@@ -177,6 +189,9 @@ namespace CC.Providers
             }
         }
 
+        public void AssignCC(AssignedCC assignedCC)
+        {
 
+        }
     }
 }

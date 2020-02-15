@@ -20,7 +20,7 @@ namespace CC
         // providers
         public static AntigensProvider AntigensProvider = new AntigensProvider();
         public static ArrayProvider ArrayProvider = new ArrayProvider();
-        public static CCProvider CalControlProvider = new CCProvider();
+        public static CCProvider CCProvider = new CCProvider();
         public static UserProvider UserProvider = new UserProvider();
 
         // pages

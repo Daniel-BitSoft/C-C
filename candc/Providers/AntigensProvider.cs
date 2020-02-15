@@ -76,13 +76,31 @@ namespace CC.Providers
         {
             try
             {
-                var antigens = App.dbcontext.Database.SqlQuery<Antigen>("GetAntigensNotAssingedToBatch")?.ToList();
+                var antigens = App.dbcontext.Database.SqlQuery<Antigen>("GetAntigensNotAssingedToArray")?.ToList();
                 return new AntigensResponse { Antigens = antigens };
             }
             catch (Exception ex)
             {
                 var logNumber = Logger.Log(nameof(CreateAntigen), new Dictionary<string, object>
                 { 
+                    { LogConsts.Exception, ex }
+                });
+
+                return new AntigensResponse { ErrorMessage = $"{ Messages.Exception} - log: {logNumber}" };
+            }
+        }
+
+        public AntigensResponse GetAntigensAssignedToArray()
+        {
+            try
+            {
+                var antigens = App.dbcontext.Database.SqlQuery<Antigen>("GetAntigensAssingedToArray")?.ToList();
+                return new AntigensResponse { Antigens = antigens };
+            }
+            catch (Exception ex)
+            {
+                var logNumber = Logger.Log(nameof(CreateAntigen), new Dictionary<string, object>
+                {
                     { LogConsts.Exception, ex }
                 });
 

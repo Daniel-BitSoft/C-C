@@ -134,6 +134,12 @@
     <Compile Include="Constants\LogConsts.cs" />
     <Compile Include="Constants\Messages.cs" />
     <Compile Include="Constants\UsersConsts.cs" />
+    <Compile Include="GetAntigensAssingedToArray.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetAntigensNotAssingedToArray_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetAntigensNotAssingedToBatch_Result.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
@@ -144,6 +150,7 @@
     <Compile Include="Models\AntigensGroup.cs" />
     <Compile Include="Models\AntigensResponse.cs" />
     <Compile Include="Models\ArrayAntigenRelation.cs" />
+    <Compile Include="Models\AssignedCC.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CCAntigens.cs" />
     <Compile Include="Models\CrudMode.cs" />
