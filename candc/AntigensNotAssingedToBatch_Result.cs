@@ -10,25 +10,20 @@
 namespace CC
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class CalibControl
+    public partial class AntigensNotAssingedToBatch_Result
     {
-        public string CCId { get; set; }
-        public string LotNumber { get; set; }
-        public string ArrayId { get; set; }
         public string AntigenId { get; set; }
-        public string AntigenGroup { get; set; }
-        public string Type { get; set; }
-        public Nullable<decimal> Min { get; set; }
-        public Nullable<decimal> Max { get; set; }
-        public Nullable<System.DateTime> DilutionDate { get; set; }
-        public string DilutionFactor { get; set; }
-        public System.DateTime ExpirationDate { get; set; }
-        public string Serum { get; set; }
+        public string AntigenName { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDt { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
+        public string ArrayId { get; set; }
+        public string AntigenId1 { get; set; }
+        public string CreatedBy1 { get; set; }
+        public Nullable<System.DateTime> CreatedDt1 { get; set; }
+        public string UpdatedBy1 { get; set; }
+        public Nullable<System.DateTime> UpdatedDt1 { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CC.Constants;
+using CC.Models;
 using CC.Providers;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,8 @@ namespace CC
     /// </summary>
     public partial class CCPage : Page
     {
-        public CCType CCType { get; set; }
+        public List<SerumReference> SerumReferences { get; set; }
+        public List<CalibControl> CCList { get; set; }
 
         public CCPage()
         {
@@ -31,46 +33,148 @@ namespace CC
 
         private void ArrayListbx_Selected(object sender, RoutedEventArgs e)
         {
-            var selectedArray = ArrayListbx.SelectedItem as Array;
-            var groups = App.CCProvider.ArrayAntigens.Select(a => a.Group).Distinct().ToList();
-
-            GroupListbx.ItemsSource = groups;
-            GroupListbx.Items.Refresh();
-
-            if (groups.Count == 1)
+            if (ArrayListbx.SelectedIndex > -1)
             {
-                AntigenListbx.ItemsSource = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).ToList();
-                AntigenListbx.Items.Refresh();
-            }
-            // clear rest
+                var selectedArray = ArrayListbx.SelectedItem as Array;
+                var groups = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).Select(a => a.Group).Distinct().ToList();
 
+                GroupListbx.ItemsSource = groups;
+                GroupListbx.Items.Refresh();
+                GroupListbx.SelectedIndex = -1;
+
+                if (groups.Count == 1)
+                {
+                    AntigenListbx.ItemsSource = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).ToList();
+                    AntigenListbx.Items.Refresh();
+                }
+                // clear rest
+            }
         }
 
         private void GroupListbx_Selected(object sender, RoutedEventArgs e)
         {
-            var selectedArray = ArrayListbx.SelectedItem as Array;
-            var selectedGroup = GroupListbx.SelectedItem as string;
+            if (GroupListbx.SelectedIndex > -1)
+            {
+                var selectedArray = ArrayListbx.SelectedItem as Array;
+                var selectedGroup = GroupListbx.SelectedItem as string;
 
-            AntigenListbx.ItemsSource = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId && a.Group == selectedGroup).ToList();
-            AntigenListbx.Items.Refresh();
+                if (App.ccPageType == CCType.N)
+                {
+                    var arrayAntigens = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId && a.Group == selectedGroup).ToList();
 
+                    AntigensGrid.ItemsSource = App.mapper.Map<List<AntigenRange>>(arrayAntigens);
+                    AntigensGrid.Items.Refresh();
+                }
+                else
+                {
+                    AntigenListbx.ItemsSource = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId && a.Group == selectedGroup).ToList();
+                    AntigenListbx.Items.Refresh();
+                }
+            }
         }
 
         private void AntigenListbx_Selected(object sender, RoutedEventArgs e)
         {
-            // clear rest
+            if (AntigenListbx.SelectedIndex > -1)
+            {
+                AntigensGrid.ItemsSource = new List<AntigenRange> { App.mapper.Map<AntigenRange>(AntigenListbx.SelectedItem as AntigensAssingedToArray) };
+                AntigensGrid.Items.Refresh();
+
+                AntigensGrid.Focus();
+            }
         }
 
-        private void DilutionFactorTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private void DilutionDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            SetLotNumber();
+            if (DilutionDatePicker.SelectedDate != null)
+            {
+                RemoveErrorBorders();
+                ExpirationDateTextBox.Text = DilutionDatePicker.SelectedDate.Value.AddDays(90).ToShortDateString();
+
+                if (ValidatePage(true))
+                {
+                    SetLotNumber();
+                    RemoveErrorBorders();
+                }
+                else
+                {
+                    DilutionDatePicker.SelectedDate = null;
+                    ExpirationDateTextBox.Text = string.Empty;
+                }
+            }
+        }
+
+        private void ClearPage()
+        {
+            SerumReferences = new List<SerumReference>();
+            CCList = new List<CalibControl>();
+
+            AntigensGrid.ItemsSource = null;
+            AntigensGrid.Items.Refresh();
+
+            SerumRefGrid.ItemsSource = null;
+            SerumRefGrid.Items.Refresh();
+
+            ArrayListbx.SelectedIndex = -1;
+
+            AntigenListbx.SelectedIndex = -1;
+            AntigenListbx.ItemsSource = null;
+            AntigenListbx.Items.Refresh();
+
+            GroupListbx.SelectedIndex = -1;
+            GroupListbx.ItemsSource = null;
+            GroupListbx.Items.Refresh();
+
+            SerumTextBox.Text =
+                DilutionFactorTextBox.Text =
+                ExpirationDateTextBox.Text =
+                QuantityLabelTextBox.Text =
+                LotNumberBlock.Text = string.Empty;
+
+            DilutionDatePicker.SelectedDate = null;
+        }
+
+        private void ClearNext()
+        {
+            SerumReferences = new List<SerumReference>();
+            CCList = new List<CalibControl>();
+
+            SerumRefGrid.ItemsSource = null;
+            SerumRefGrid.Items.Refresh();
+
+            SerumTextBox.Text =
+                DilutionFactorTextBox.Text =
+                ExpirationDateTextBox.Text =
+                QuantityLabelTextBox.Text =
+                LotNumberBlock.Text = string.Empty;
+
+            DilutionDatePicker.SelectedDate = null;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
+                ClearPage();
+
+                if (App.ccPageType == CCType.N)
+                {
+                    AntigenListbx.Visibility = AntigenLabel.Visibility = Visibility.Hidden;
+                    PageNameLabel.Content = "Create Negative Control";
+                }
+                else
+                {
+                    AntigenListbx.Visibility = AntigenLabel.Visibility = Visibility.Visible;
+
+                    if (App.ccPageType == CCType.C)
+                        PageNameLabel.Content = "Create Calibrator";
+                    else
+                        PageNameLabel.Content = "Create Positive Control";
+                }
+
                 App.CCProvider.SetArrayAntigens();
+                ArrayListbx.ItemsSource = App.ArrayProvider.GetAllArrays(false);
+                ArrayListbx.Items.Refresh();
             }
             catch (Exception ex)
             {
@@ -83,37 +187,287 @@ namespace CC
             }
         }
 
-        private void SetLotNumber()
+        private string SetLotNumber()
         {
-            if (ArrayListbx.SelectedItem != null && AntigenListbx.SelectedItem != null && !string.IsNullOrEmpty(DilutionFactorTextBox.Text))
+            string lotNumber = string.Empty;
+
+            if (ArrayListbx.SelectedItem != null
+                && (AntigenListbx.SelectedItem != null || App.ccPageType == CCType.N)
+                && !string.IsNullOrEmpty(DilutionFactorTextBox.Text)
+                && DilutionDatePicker.SelectedDate.HasValue)
             {
                 var selectedArray = ArrayListbx.SelectedItem as Array;
-                var selectedAntigen = AntigenListbx.SelectedItem as Antigen;
 
-                string lotNumber = string.Empty;
-                string LotNumberArrayname = string.Empty;
+                // Un comment below if sub arrays are allowed in this page
+                //string LotNumberArrayname = string.Empty;
+                //if (App.ccPageType != CCType.N)
+                //{
+                //    var selectedAntigen = AntigenListbx.SelectedItem as AntigensAssingedToArray;
+                //    var arraySelected = App.CCProvider.ArrayAntigens.Find(a => a.ArrayId == selectedArray.ArrayId);
 
-                var arraySelected = App.CCProvider.ArrayAntigens.Find(a => a.ArrayName == selectedArray.ArrayId);
+                //    if (!string.IsNullOrEmpty(arraySelected.ArrayName))
+                //    {
+                //        var masterArrayHasAntigen = App.CCProvider.ArrayAntigens
+                //            .Where(a => a.MasterArrayId == arraySelected.ArrayId)?
+                //            .Select(a => a.AntigenName)?.ToList()?.Contains(selectedAntigen.AntigenName);
 
-                if (!string.IsNullOrEmpty(arraySelected.ArrayName))
+                //        if (masterArrayHasAntigen.HasValue && masterArrayHasAntigen.Value)
+                //        {
+                //            LotNumberArrayname = arraySelected.MasterArrayShortName;
+                //        }
+                //        else
+                //        {
+                //            LotNumberArrayname = arraySelected.ShortArrayName;
+                //        }
+                //    }
+                //}
+                string antigenName = null;
+
+                if (AntigensGrid.Items != null && AntigensGrid.Items.Count > 0)
                 {
-                    var masterArrayHasAntigen = App.CCProvider.ArrayAntigens
-                        .Where(a => a.MasterArrayId == arraySelected.ArrayId)?
-                        .Select(a => a.AntigenName)?.ToList()?.Contains(selectedAntigen.AntigenName);
+                    var AntgnRng = AntigensGrid.ItemsSource as List<AntigenRange>;
+                    var AntigenRangesSet = AntgnRng.Where(a => !string.IsNullOrWhiteSpace(a.Max) && !string.IsNullOrWhiteSpace(a.Min)).ToList();
 
-                    if (masterArrayHasAntigen.HasValue && masterArrayHasAntigen.Value)
+                    if (AntigenRangesSet.Count == 1)
                     {
-                        LotNumberArrayname = arraySelected.MasterArrayName;
+                        antigenName = AntigenRangesSet.First().AntigenName;
+                    }
+
+                    if (App.ccPageType == CCType.N && AntigenRangesSet.Count > 1)
+                        lotNumber = $"{selectedArray.ShortArrayName}{App.ccPageType}-{DilutionDatePicker.SelectedDate.Value.ToString("MMddyyyy")}";
+                    else if (AntigenRangesSet.Count > 0)
+                        lotNumber = $"{selectedArray.ShortArrayName}{App.ccPageType}{antigenName}-{DilutionDatePicker.SelectedDate.Value.ToString("MMddyyyy")}";
+
+                    LotNumberBlock.Text = lotNumber;
+                }
+            }
+
+            return lotNumber;
+        }
+
+        private void AddSerumBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!SerumReferences.Any(a => a.ReferenceNumber == SerumTextBox.Text.Trim()))
+            {
+                SerumReferences.Add(new SerumReference { ReferenceNumber = SerumTextBox.Text.Trim() });
+                SerumRefGrid.ItemsSource = SerumReferences;
+                SerumRefGrid.Items.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("This reference number is already added");
+            }
+            SerumTextBox.Text = string.Empty;
+        }
+
+        private void RemoveSerum_Click(object sender, RoutedEventArgs e)
+        {
+            SerumReferences.Remove(SerumRefGrid.SelectedItem as SerumReference);
+            SerumRefGrid.ItemsSource = SerumReferences;
+            SerumRefGrid.Items.Refresh();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveCCs();
+            RemoveErrorBorders();
+            ClearPage();
+        }
+
+        private void SaveAndNextButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveCCs();
+            RemoveErrorBorders();
+            if (App.ccPageType != CCType.N)
+            {
+                if (AntigenListbx.SelectedIndex == AntigenListbx.Items.Count - 1) // last antigen selected
+                {
+                    if (GroupListbx.SelectedIndex < GroupListbx.Items.Count - 1) // there are still more groups to select from
+                    {
+                        GroupListbx.SelectedIndex++;
+
+                        ClearNext();
+                        AntigensGrid.Focus();
+
                     }
                     else
                     {
-                        LotNumberArrayname = arraySelected.ArrayName;
+                        MessageBox.Show("That was the last antigen in the Array list");
+                        ClearPage();
                     }
                 }
+                else
+                {
+                    AntigenListbx.SelectedIndex++;
+                    //AntigenListbx.SelectedItem = AntigenListbx.Items[AntigenListbx.SelectedIndex + 1];
 
-                lotNumber = $"A{LotNumberArrayname}{CCType}{selectedAntigen.AntigenName}-{DilutionDatePicker.SelectedDate.Value.ToString("MMddyyyy")}";
-                LotNumberBlock.Text = lotNumber;
+                    ClearNext();
+                    AntigensGrid.Focus();
+                }
+            }
+            else
+            {
+                if (GroupListbx.SelectedIndex < GroupListbx.Items.Count - 1) // there are still more groups to select from
+                {
+                    GroupListbx.SelectedIndex++;
+
+                    ClearNext();
+                    AntigensGrid.Focus();
+
+                }
+                else
+                {
+                    MessageBox.Show("That was the last antigen in the Array list");
+                    ClearPage();
+                }
             }
         }
+
+        private void SaveCCs()
+        {
+            if (!ValidatePage())
+            {
+                MessageBox.Show("There are some incomplete items in this form. Please fill in all required data before saving");
+            }
+
+            var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
+
+            var activeCCs = App.CCProvider.GetExistingCC(
+                ArrayListbx.SelectedValue.ToString(),
+                 null,
+                 App.ccPageType.ToString());
+
+            if (activeCCs != null && activeCCs.Any())
+            {
+                var antigensIds = activeCCs.Select(a => a.AntigenId).ToList();
+                var duplicatedAntigens = antigenRanges.Where(a => antigensIds.Contains(a.AntigenId)).ToList();
+
+                if (duplicatedAntigens != null && duplicatedAntigens.Count > 1)
+                {
+                    MessageBox.Show($"Following antigens already have records that are not expired: {string.Join(",", duplicatedAntigens.Select(a => a.AntigenName))}", "Error");
+                    return;
+                }
+                else if (duplicatedAntigens != null && duplicatedAntigens.Count == 1)
+                {
+                    MessageBox.Show($"Selected antigen already has record that is not expired: {duplicatedAntigens.First().AntigenName}", "Error");
+                    return;
+                }
+            }
+
+            var lotNumber = SetLotNumber();
+            var CalibControls = new List<CalibControl>();
+
+            foreach (var antigenRange in antigenRanges)
+            {
+                CalibControls.Add(new CalibControl
+                {
+                    AntigenGroup = GroupListbx.Text,
+                    ArrayId = ArrayListbx.SelectedValue.ToString(),
+                    AntigenId = antigenRange.AntigenId,
+                    DilutionDate = DilutionDatePicker.SelectedDate.Value,
+                    DilutionFactor = DilutionFactorTextBox.Text,
+                    ExpirationDate = Convert.ToDateTime(ExpirationDateTextBox.Text),
+                    LotNumber = lotNumber,
+                    Min = Convert.ToDecimal(antigenRange.Min),
+                    Max = Convert.ToDecimal(antigenRange.Max),
+                    Serum = string.Join(",", SerumReferences.Select(a => a.ReferenceNumber)),
+                    Type = App.ccPageType.ToString()
+                });
+            }
+
+            try
+            {
+                App.CCProvider.CreateCalibControl(CalibControls);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ Messages.Exception} - log: {ex.Data["logNumber"]}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private bool ValidatePage(bool skipPrintCountLbl = false)
+        {
+            bool isValid = true;
+            if (ArrayListbx.SelectedIndex == -1)
+            {
+                ArrayLabel.BorderBrush = Brushes.Red;
+                ArrayLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (GroupListbx.SelectedIndex == -1)
+            {
+                GroupLabel.BorderBrush = Brushes.Red;
+                GroupLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (App.ccPageType != CCType.N && AntigenListbx.SelectedIndex == -1)
+            {
+                AntigenLabel.BorderBrush = Brushes.Red;
+                AntigenLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (!SerumReferences.Any())
+            {
+                SerumRefLabel.BorderBrush = Brushes.Red;
+                SerumRefLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(DilutionFactorTextBox.Text))
+            {
+                DilutionLabel.BorderBrush = Brushes.Red;
+                DilutionLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (!DilutionDatePicker.SelectedDate.HasValue)
+            {
+                DateLabel.BorderBrush = Brushes.Red;
+                DateLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(ExpirationDateTextBox.Text))
+            {
+                ExpirationLabel.BorderBrush = Brushes.Red;
+                ExpirationLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (!skipPrintCountLbl && string.IsNullOrWhiteSpace(QuantityLabelTextBox.Text))
+            {
+                QtyLabel.BorderBrush = Brushes.Red;
+                QtyLabel.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            if (AntigensGrid.ItemsSource != null)
+            {
+                var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
+                if (antigenRanges.Any(a => string.IsNullOrEmpty(a.Max) || string.IsNullOrEmpty(a.Min)))
+                {
+                    AntigensGrid.BorderBrush = Brushes.Red;
+                    AntigensGrid.BorderThickness = new Thickness(2);
+                    isValid = false;
+                }
+            }
+            else
+            {
+                AntigensGrid.BorderBrush = Brushes.Red;
+                AntigensGrid.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        private void RemoveErrorBorders()
+        {
+            ArrayLabel.BorderThickness =
+            GroupLabel.BorderThickness =
+            AntigenLabel.BorderThickness =
+            SerumRefLabel.BorderThickness =
+            DilutionLabel.BorderThickness =
+            DateLabel.BorderThickness =
+            AntigensGrid.BorderThickness =
+            ExpirationLabel.BorderThickness =
+            QtyLabel.BorderThickness = new Thickness(0);
+        }
+
     }
 }

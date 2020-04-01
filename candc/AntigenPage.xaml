@@ -6,10 +6,10 @@
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AntigenPage">
+      Title="AntigenPage" Loaded="Page_Loaded">
 
     <Grid>
-        <TextBox Name="NameText" MaxLength="20" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="38,10,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="100"/>
+        <TextBox Name="NameText" MaxLength="20" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="26,10,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="112"/>
         <Button Name="CreateButton" Content="Create" HorizontalAlignment="Left" Margin="159,10,0,0" VerticalAlignment="Top" Width="50" Height="23" Click="CreateButton_Click"/>
         <Button Name="EditButton" Content="Edit" HorizontalAlignment="Left" Margin="214,10,0,0" VerticalAlignment="Top" Width="50" Height="23" Click="EditButton_Click"/>
         <DataGrid Name="AntigensGrid" HorizontalAlignment="Left" IsReadOnly="True" AutoGenerateColumns="False" Height="430" Margin="372,10,0,0" VerticalAlignment="Top"

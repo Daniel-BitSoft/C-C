@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CC.Constants;
+using CC.Models;
 using CC.Providers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +13,9 @@ namespace CC
     /// </summary>
     public partial class App : Application
     {
+        // Global Properties
         public static User LoggedInUser { get; set; }
+        public static CCType ccPageType { get; set; }
 
         public static Entities dbcontext = new Entities();
         public static IMapper mapper;
@@ -48,7 +52,7 @@ namespace CC
         {
             return new MapperConfiguration(config =>
             {
-
+                config.CreateMap<AntigensAssingedToArray, AntigenRange>();
             });
         }
 
@@ -57,15 +61,8 @@ namespace CC
             loadDataTasks = new List<Task>();
 
             if (App.LoggedInUser.IsAdmin)
-                loadDataTasks.Add(App.UserProvider.UpdateUsersList());
-
-            loadDataTasks.Add(testtask());
-
+                loadDataTasks.Add(App.UserProvider.UpdateUsersList());  
         } 
-
-        public static async Task testtask()
-        {
-            System.Threading.Thread.Sleep(5000);
-        }
+ 
     }
 }

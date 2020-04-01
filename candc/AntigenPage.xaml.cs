@@ -23,6 +23,7 @@ namespace CC
     public partial class AntigenPage : Page
     {
         CrudMode crudMode;
+        List<Antigen> antigenList;
 
         public AntigenPage()
         {
@@ -40,11 +41,12 @@ namespace CC
         {
             SetEditMode();
             crudMode = CrudMode.Update;
+
+            NameText.Text = (AntigensGrid.SelectedItem as Antigen).AntigenName;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            SetViewMode();
             if (crudMode == CrudMode.Create)
             {
                 var responseMessage = App.AntigensProvider.CreateAntigen(
@@ -55,23 +57,34 @@ namespace CC
 
                 if (string.IsNullOrEmpty(responseMessage.ErrorMessage))
                 {
-                    AntigensGrid.Items.Add(responseMessage.Antigen);
-                    AntigensGrid.Items.Refresh();
-                    MessageBox.Show(Messages.SuccessFullyCreated);
+                    antigenList.Add(responseMessage.Antigen);
+                    
+                    MessageBox.Show(Messages.SuccessFullyCreated);  
+                    SetViewMode();
+                    LoadAntigens();
                 }
                 else
                     MessageBox.Show(responseMessage.ErrorMessage);
             }
             else if (crudMode == CrudMode.Update)
             {
-                var responseMessage = App.AntigensProvider.UpdateAntigen(AntigensGrid.SelectedItem as Antigen);
+                var antigen = AntigensGrid.SelectedItem as Antigen;
+                antigen.AntigenName = NameText.Text.Trim();
+
+                var responseMessage = App.AntigensProvider.UpdateAntigen(antigen);
 
                 if (string.IsNullOrEmpty(responseMessage))
                 {
-                    MessageBox.Show(Messages.SuccessFullyUpdated);
+                    antigenList.First(a => a.AntigenId == antigen.AntigenId).AntigenName = antigen.AntigenName;
+
+                    MessageBox.Show(Messages.SuccessFullyUpdated); 
+                    SetViewMode();
+                    LoadAntigens();
                 }
                 else
+                {
                     MessageBox.Show(responseMessage);
+                }
             }
         }
 
@@ -85,16 +98,25 @@ namespace CC
             LoadAntigens();
         }
 
-        private void LoadAntigens()
+        private void LoadAntigens(List<Antigen> antigens = null)
         {
-            var response = App.AntigensProvider.GetAntigensNotAssigned();
-            if (string.IsNullOrEmpty(response.ErrorMessage))
+            if (antigens == null || !antigens.Any())
             {
-                AntigensGrid.ItemsSource = response.Antigens;
-                AntigensGrid.Items.Refresh();
+                var response = App.AntigensProvider.GetAntigensNotAssigned();
+                if (string.IsNullOrEmpty(response.ErrorMessage))
+                {
+                    antigenList = response.Antigens;
+                    AntigensGrid.ItemsSource = response.Antigens;
+                    AntigensGrid.Items.Refresh();
+                }
+                else
+                    MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
-                MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            {
+                AntigensGrid.ItemsSource = antigens;
+                AntigensGrid.Items.Refresh();
+            }
         }
 
         private void SetEditMode()
@@ -116,8 +138,7 @@ namespace CC
             CreateButton.Visibility = Visibility.Visible;
             EditButton.Visibility = Visibility.Visible;
             NameText.IsEnabled = false;
-
-            crudMode = CrudMode.Unknown;
+            NameText.Text = string.Empty;
         }
 
         private void AntigensGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -4,6 +4,7 @@ using CC.Providers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Windows.Media;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,14 +18,15 @@ namespace CC
     public partial class ArrayPage : Page
     {
         Dictionary<string, List<Antigen>> antigensGroups;
+        List<Antigen> antigenList;
         const int antigenGroupCount = 6;
 
         public ArrayPage()
         {
             InitializeComponent();
 
-            for (int i = 0; i <= antigenGroupCount; i++)
-                AntigenGroupDropdown.Items.Add($"Group{i}");
+            for (int i = 0; i < antigenGroupCount; i++)
+                AntigenGroupDropdown.Items.Add($"Group{i + 1}");
         }
 
         private void GroupDropdown_Selected(object sender, RoutedEventArgs e)
@@ -44,31 +46,65 @@ namespace CC
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            var selectedGroup = AntigenGroupDropdown.SelectedItem.ToString();
-            if (antigensGroups.ContainsKey(selectedGroup))
+            if (AntigenGroupDropdown.SelectedIndex != -1)
             {
-                // for existing groups with antigens in them
-                antigensGroups[selectedGroup].Add(AntigensGrid.SelectedItem as Antigen);
+                var selectedGroup = AntigenGroupDropdown.SelectedItem.ToString();
+                if (antigensGroups.ContainsKey(selectedGroup))
+                {
+                    // for existing groups with antigens in them
+                    antigensGroups[selectedGroup].Add(AntigensGrid.SelectedItem as Antigen);
+                }
+                else
+                {
+                    // first time a group is being assigned antigens
+                    antigensGroups.Add(selectedGroup, new List<Antigen> { AntigensGrid.SelectedItem as Antigen });
+                }
+
+                LoadGroupGrids(selectedGroup, antigensGroups[selectedGroup]);
             }
             else
             {
-                // first time a group is being assigned antigens
-                antigensGroups.Add(selectedGroup, new List<Antigen> { AntigensGrid.SelectedItem as Antigen });
+                MessageBox.Show("Please select group first");
             }
-
-            LoadGroupGrids(selectedGroup, antigensGroups[selectedGroup]);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            antigensGroups = new Dictionary<string, List<Antigen>>();
-            Group1.Visibility = Group1Label.Visibility =
-            Group2.Visibility = Group2Label.Visibility =
-            Group3.Visibility = Group3Label.Visibility =
-            Group4.Visibility = Group4Label.Visibility =
-            Group5.Visibility = Group5Label.Visibility =
-            Group6.Visibility = Group6Label.Visibility = Visibility.Hidden;
+            ResetPage();
+            LoadPageData();
+        }
 
+        private void ResetPage()
+        {
+            antigensGroups = new Dictionary<string, List<Antigen>>(); 
+
+            ArrayNameText.Text = "i.e. Array 3X";
+            ArrayCodeTextbx.Text = "i.e. A3X";
+            ArrayNameText.Foreground = ArrayCodeTextbx.Foreground = Brushes.LightGray;
+            ArrayNameText.FontStyle = ArrayCodeTextbx.FontStyle = FontStyles.Italic;
+
+            SubArrayCheckbox.IsChecked = false;
+            MasterArrayDropdown.IsEnabled = false;
+
+            MasterArrayDropdown.SelectedIndex = -1;
+            AntigenGroupDropdown.SelectedIndex = -1;
+
+            Group1.ItemsSource = null;
+            Group1.Items.Refresh();
+            Group2.ItemsSource = null;
+            Group2.Items.Refresh();
+            Group3.ItemsSource = null;
+            Group3.Items.Refresh();
+            Group4.ItemsSource = null;
+            Group4.Items.Refresh();
+            Group5.ItemsSource = null;
+            Group5.Items.Refresh();
+            Group6.ItemsSource = null;
+            Group6.Items.Refresh();
+        }
+
+        private void LoadPageData()
+        {
             var arrays = App.ArrayProvider.GetAllArrays(true);
             MasterArrayDropdown.ItemsSource = arrays;
             MasterArrayDropdown.Items.Refresh();
@@ -76,12 +112,13 @@ namespace CC
             var antigens = App.AntigensProvider.GetAntigensNotAssigned();
             if (string.IsNullOrEmpty(antigens.ErrorMessage))
             {
+                antigenList = antigens.Antigens;
                 AntigensGrid.ItemsSource = antigens.Antigens;
                 AntigensGrid.Items.Refresh();
             }
             else if (antigens.Antigens == null || !antigens.Antigens.Any())
             {
-                MessageBox.Show(Messages.UnassignedAntigensNotFound, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Messages.UnassignedAntigensNotFound, "Note", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (NavigationService.CanGoBack)
                     NavigationService.GoBack();
             }
@@ -91,40 +128,45 @@ namespace CC
                 if (NavigationService.CanGoBack)
                     NavigationService.GoBack();
             }
-
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Group1.IsFocused)
+            if (Group1.IsMouseOver)
             {
                 antigensGroups[nameof(Group1)].Remove(Group1.SelectedItem as Antigen);
-                Group1.Items.Remove(Group1.SelectedItem);
+                Group1.ItemsSource = antigensGroups[nameof(Group1)];
+                Group1.Items.Refresh();
             }
-            if (Group2.IsFocused)
+            if (Group2.IsMouseOver)
             {
                 antigensGroups[nameof(Group2)].Remove(Group2.SelectedItem as Antigen);
-                Group2.Items.Remove(Group2.SelectedItem);
+                Group2.ItemsSource = antigensGroups[nameof(Group2)];
+                Group2.Items.Refresh();
             }
-            if (Group3.IsFocused)
+            if (Group3.IsMouseOver)
             {
                 antigensGroups[nameof(Group3)].Remove(Group3.SelectedItem as Antigen);
-                Group3.Items.Remove(Group3.SelectedItem);
+                Group3.ItemsSource = antigensGroups[nameof(Group3)];
+                Group3.Items.Refresh();
             }
-            if (Group4.IsFocused)
+            if (Group4.IsMouseOver)
             {
                 antigensGroups[nameof(Group4)].Remove(Group4.SelectedItem as Antigen);
-                Group4.Items.Remove(Group4.SelectedItem);
+                Group4.ItemsSource = antigensGroups[nameof(Group4)];
+                Group4.Items.Refresh();
             }
-            if (Group5.IsFocused)
+            if (Group5.IsMouseOver)
             {
                 antigensGroups[nameof(Group5)].Remove(Group5.SelectedItem as Antigen);
-                Group5.Items.Remove(Group5.SelectedItem);
+                Group5.ItemsSource = antigensGroups[nameof(Group5)];
+                Group5.Items.Refresh();
             }
-            if (Group6.IsFocused)
+            if (Group6.IsMouseOver)
             {
                 antigensGroups[nameof(Group6)].Remove(Group6.SelectedItem as Antigen);
-                Group6.Items.Remove(Group6.SelectedItem);
+                Group6.ItemsSource = antigensGroups[nameof(Group6)];
+                Group6.Items.Refresh();
             }
         }
 
@@ -134,39 +176,27 @@ namespace CC
             {
                 case "Group1":
                     Group1.ItemsSource = antigens;
-                    Group1.Items.Refresh();
-                    Group1.Visibility = Visibility.Visible;
-                    Group1Label.Visibility = Visibility.Visible;
+                    Group1.Items.Refresh(); 
                     break;
                 case "Group2":
                     Group2.ItemsSource = antigens;
-                    Group2.Items.Refresh();
-                    Group2.Visibility = Visibility.Visible;
-                    Group2Label.Visibility = Visibility.Visible;
+                    Group2.Items.Refresh(); 
                     break;
                 case "Group3":
                     Group3.ItemsSource = antigens;
-                    Group3.Items.Refresh();
-                    Group3.Visibility = Visibility.Visible;
-                    Group3Label.Visibility = Visibility.Visible;
+                    Group3.Items.Refresh(); 
                     break;
                 case "Group4":
                     Group4.ItemsSource = antigens;
-                    Group4.Items.Refresh();
-                    Group4.Visibility = Visibility.Visible;
-                    Group4Label.Visibility = Visibility.Visible;
+                    Group4.Items.Refresh(); 
                     break;
                 case "Group5":
                     Group5.ItemsSource = antigens;
-                    Group5.Items.Refresh();
-                    Group5.Visibility = Visibility.Visible;
-                    Group5Label.Visibility = Visibility.Visible;
+                    Group5.Items.Refresh(); 
                     break;
                 case "Group6":
                     Group6.ItemsSource = antigens;
-                    Group6.Items.Refresh();
-                    Group6.Visibility = Visibility.Visible;
-                    Group6Label.Visibility = Visibility.Visible;
+                    Group6.Items.Refresh(); 
                     break;
             }
         }
@@ -175,11 +205,18 @@ namespace CC
         {
             try
             {
+                string masterArrayId = null;
+                var isSubArray = SubArrayCheckbox.IsChecked.HasValue && SubArrayCheckbox.IsChecked.Value;
+
+                if (isSubArray && MasterArrayDropdown.SelectedItem != null)
+                    masterArrayId = ((Array)MasterArrayDropdown.SelectedItem).ArrayId;
+
                 var response = App.ArrayProvider.CreateArray(new Array
                 {
                     ArrayName = ArrayNameText.Text.Trim(),
-                    IsSubArray = SubArrayCheckbox.IsChecked.HasValue && SubArrayCheckbox.IsChecked.Value,
-                    MasterArrayId = ((Array)MasterArrayDropdown.SelectedItem).ArrayId
+                    ShortArrayName = ArrayCodeTextbx.Text.Trim(),
+                    IsSubArray = isSubArray,
+                    MasterArrayId = masterArrayId
                 },
                 antigensGroups);
 
@@ -187,6 +224,13 @@ namespace CC
                 {
                     MessageBox.Show(response);
                 }
+                else
+                {
+                    MessageBox.Show("Successfully saved");
+                }
+
+                ResetPage();
+                LoadPageData();
             }
             catch (Exception ex)
             {
@@ -206,5 +250,56 @@ namespace CC
             else
                 NavigationService.Content = null;
         }
+
+        private void ArrayNameText_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (ArrayNameText.Foreground != Brushes.Black)
+            {
+                ArrayNameText.Text = string.Empty;
+                ArrayNameText.Foreground = Brushes.Black;
+                ArrayNameText.FontStyle = FontStyles.Normal;
+            }
+        }
+
+        private void ArrayCodeTextbx_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (ArrayCodeTextbx.Foreground != Brushes.Black)
+            {
+                ArrayCodeTextbx.Text = string.Empty;
+                ArrayCodeTextbx.Foreground = Brushes.Black;
+                ArrayCodeTextbx.FontStyle = FontStyles.Normal;
+            }
+        }
+
+        private void RemoveAntigenGroup1_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+        private void RemoveAntigenGroup2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void RemoveAntigenGroup3_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void RemoveAntigenGroup4_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void RemoveAntigenGroup5_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void RemoveAntigenGroup6_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AntigenSearchText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            AntigensGrid.ItemsSource = antigenList.Where(a => a.AntigenName.ToLower().Contains(AntigenSearchText.Text.ToLower()));
+            AntigensGrid.Items.Refresh();
+        } 
     }
 }

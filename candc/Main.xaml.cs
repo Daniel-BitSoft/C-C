@@ -57,17 +57,21 @@ namespace CC
 
         private void CalibMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(App.cCPage);
+            App.ccPageType = Constants.CCType.C;
+             
+            frame.Navigate(new CCPage());
         }
 
         private void NegMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(App.cCPage);
+            App.ccPageType = Constants.CCType.N; 
+            frame.Navigate(new CCPage());
         }
 
         private void PosMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(App.cCPage);
+            App.ccPageType = Constants.CCType.P; 
+            frame.Navigate(new CCPage());
         }
 
         private void AntigenMenuButton_Click(object sender, RoutedEventArgs e)

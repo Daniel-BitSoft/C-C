@@ -34,15 +34,17 @@ namespace CC
         public virtual DbSet<CalibControl> CalibControls { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Audit> Audits { get; set; }
+        public virtual DbSet<AssignedCC> AssignedCCs { get; set; }
+        public virtual DbSet<Batch> Batches { get; set; }
     
-        public virtual ObjectResult<GetAntigensNotAssingedToBatch_Result> GetAntigensNotAssingedToBatch()
+        public virtual ObjectResult<AntigensNotAssingedToBatch_Result> GetAntigensNotAssingedToBatch()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAntigensNotAssingedToBatch_Result>("GetAntigensNotAssingedToBatch");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AntigensNotAssingedToBatch_Result>("GetAntigensNotAssingedToBatch");
         }
     
-        public virtual ObjectResult<GetArrayAntigenRelations_Result> GetArrayAntigenRelations()
+        public virtual ObjectResult<ArrayAntigenRelations_Result> GetArrayAntigenRelations()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetArrayAntigenRelations_Result>("GetArrayAntigenRelations");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ArrayAntigenRelations_Result>("GetArrayAntigenRelations");
         }
     
         public virtual ObjectResult<AntigensAssingedToArray> GetAntigensAssingedToArray()
@@ -50,9 +52,26 @@ namespace CC
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AntigensAssingedToArray>("GetAntigensAssingedToArray");
         }
     
-        public virtual ObjectResult<GetAntigensNotAssingedToArray_Result> GetAntigensNotAssingedToArray()
+        public virtual ObjectResult<AntigensNotAssingedToArray_Result> GetAntigensNotAssingedToArray()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAntigensNotAssingedToArray_Result>("GetAntigensNotAssingedToArray");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AntigensNotAssingedToArray_Result>("GetAntigensNotAssingedToArray");
+        }
+    
+        public virtual ObjectResult<ActiveCCs> GetExistingCCs(string arrayId, string antigenId, string type)
+        {
+            var arrayIdParameter = arrayId != null ?
+                new ObjectParameter("arrayId", arrayId) :
+                new ObjectParameter("arrayId", typeof(string));
+    
+            var antigenIdParameter = antigenId != null ?
+                new ObjectParameter("antigenId", antigenId) :
+                new ObjectParameter("antigenId", typeof(string));
+    
+            var typeParameter = type != null ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ActiveCCs>("GetExistingCCs", arrayIdParameter, antigenIdParameter, typeParameter);
         }
     }
 }

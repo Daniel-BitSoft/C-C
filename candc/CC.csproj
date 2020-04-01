@@ -57,11 +57,13 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
@@ -83,6 +85,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ActiveCCs.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Antigen.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
@@ -92,16 +97,34 @@
     <Compile Include="AntigenPage.xaml.cs">
       <DependentUpon>AntigenPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AntigensAssingedToArray.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AntigensNotAssingedToArray_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AntigensNotAssingedToBatch_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Array.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="ArrayAntigen.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
+    <Compile Include="ArrayAntigenRelations_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="ArrayPage.xaml.cs">
       <DependentUpon>ArrayPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AssignedCC.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Audit.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Batch.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="BatchPage.xaml.cs">
@@ -125,6 +148,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CCData.edmx</DependentUpon>
     </Compile>
+    <Compile Include="CCLabel.xaml.cs">
+      <DependentUpon>CCLabel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CCPage.xaml.cs">
       <DependentUpon>CCPage.xaml</DependentUpon>
     </Compile>
@@ -134,27 +160,18 @@
     <Compile Include="Constants\LogConsts.cs" />
     <Compile Include="Constants\Messages.cs" />
     <Compile Include="Constants\UsersConsts.cs" />
-    <Compile Include="GetAntigensAssingedToArray.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetAntigensNotAssingedToArray_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetAntigensNotAssingedToBatch_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetArrayAntigenRelations_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\AntigenRange.cs" />
     <Compile Include="Models\AntigenResponse.cs" />
     <Compile Include="Models\AntigensGroup.cs" />
     <Compile Include="Models\AntigensResponse.cs" />
     <Compile Include="Models\ArrayAntigenRelation.cs" />
     <Compile Include="Models\AssignedCC.cs" />
+    <Compile Include="Models\Barcode.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CCAntigens.cs" />
     <Compile Include="Models\CrudMode.cs" />
     <Compile Include="Models\LogObject.cs" />
+    <Compile Include="Models\SerumReference.cs" />
     <Compile Include="Models\UsersResponse.cs" />
     <Compile Include="Providers\CryptoProvider.cs" />
     <Compile Include="Providers\Logger.cs" />
@@ -188,6 +205,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="BatchPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CCLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,33 +5,46 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="800" d:DesignWidth="1200"
       Title="CCPage"
       Loaded="Page_Loaded">
 
-    <Grid>
+    <Grid Background="White">
         <Label Name="PageNameLabel" FontSize="16" FontWeight="Bold" Content="Page Name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="Array" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top"/>
-        <Label Content="Antigen Group" HorizontalAlignment="Left" Margin="10,89,0,0" VerticalAlignment="Top"/>
-        <Label Content="Antigen" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top"/>
-        <Label Content="Serum Ref." HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" Width="80"/>
-        <Label Content="Dilution Factor" HorizontalAlignment="Left" Margin="10,182,0,0" VerticalAlignment="Top"/>
-        <Label Content="Dilution Date" HorizontalAlignment="Left" Margin="10,213,0,0" VerticalAlignment="Top"/>
-        <Label Content="Expiration" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top"/>
-        <Label Content="Min" HorizontalAlignment="Left" Margin="10,275,0,0" VerticalAlignment="Top"/>
-        <Label Content="Lot Number" HorizontalAlignment="Left" Margin="10,337,0,0" VerticalAlignment="Top"/>
-        <Label Content="Qty Labels to Print" HorizontalAlignment="Left" Margin="10,368,0,0" VerticalAlignment="Top"/>
-        <ListBox Name="ArrayListbx" Selected="ArrayListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="123,60,0,0" VerticalAlignment="Top" Width="100"/>
-        <ListBox Name="GroupListbx" Selected="GroupListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="123,91,0,0" VerticalAlignment="Top" Width="100"/>
-        <ListBox Name="AntigenListbx" Selected="AntigenListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="123,122,0,0" VerticalAlignment="Top" Width="100"/>
-        <TextBox Name="SerumTextBox" HorizontalAlignment="Left" Height="23" Margin="123,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="100"/>
-        <TextBox Name="DilutionFactorTextBox" LostFocus="DilutionFactorTextBox_LostFocus" HorizontalAlignment="Left" Height="23" Margin="123,185,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="100"/>
-        <DatePicker Name="DilutionDatePicker" HorizontalAlignment="Left" Margin="123,214,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="ExpirationDateTextBox" HorizontalAlignment="Left" Height="23" Margin="125,244,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="100"/>
-        <TextBox Name="MinTextBox" HorizontalAlignment="Left" Height="23" Margin="123,277,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="100"/>
-        <Label Content="Max" HorizontalAlignment="Left" Margin="10,306,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="MaxTextBox" HorizontalAlignment="Left" Height="23" Margin="123,309,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="100"/>
-        <TextBlock Name="LotNumberBlock" HorizontalAlignment="Left" Margin="123,341,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="100"/>
-        <TextBox Name="QuantityLabelTextBox" HorizontalAlignment="Left" Height="23" Margin="123,371,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="33"/>
-    </Grid>
+        <Label Name="ArrayLabel" Content="Array" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top"/>
+        <Label Name="GroupLabel" Content="Antigen Group" HorizontalAlignment="Left" Margin="10,89,0,0" VerticalAlignment="Top"/>
+        <Label Name="AntigenLabel" Content="Antigen" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top"/>
+        <Label Name="SerumRefLabel"  Content="Serum Ref." HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" Width="80"/>
+        <Label Name="DilutionLabel"  Content="Dilution Factor" HorizontalAlignment="Left" Margin="10,297,0,0" VerticalAlignment="Top"/>
+        <Label Name="DateLabel" Content="Dilution Date" HorizontalAlignment="Left" Margin="10,328,0,0" VerticalAlignment="Top"/>
+        <Label Name="ExpirationLabel" Content="Expiration" HorizontalAlignment="Left" Margin="10,359,0,0" VerticalAlignment="Top"/>
+        <Label Content="Lot Number" HorizontalAlignment="Left" Margin="10,428,0,0" VerticalAlignment="Top"/>
+        <Label Name="QtyLabel" Content="Qty Labels to Print" HorizontalAlignment="Left" Margin="10,393,0,0" VerticalAlignment="Top" />
+        <ComboBox Name="ArrayListbx" TabIndex="1" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" SelectedValue="{Binding Path=Array}" SelectionChanged="ArrayListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="123,60,0,0" VerticalAlignment="Top" Width="100"/>
+        <ComboBox Name="GroupListbx" TabIndex="2" SelectionChanged="GroupListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="123,91,0,0" VerticalAlignment="Top" Width="100"/>
+        <ComboBox Name="AntigenListbx" TabIndex="3" DisplayMemberPath="AntigenName" SelectedValuePath="AntigenId" SelectedValue="{Binding Path=AntigensAssingedToArray}" SelectionChanged="AntigenListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="123,122,0,0" VerticalAlignment="Top" Width="100"/>
+        <TextBox Name="DilutionFactorTextBox" TabIndex="7" HorizontalAlignment="Left" Height="23" Margin="123,300,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="100"/>
+        <DatePicker Name="DilutionDatePicker" TabIndex="8" SelectedDateChanged="DilutionDatePicker_SelectedDateChanged" HorizontalAlignment="Left" Margin="123,329,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="ExpirationDateTextBox" TabIndex="9" HorizontalAlignment="Left" Height="23" Margin="123,362,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="100"/>
+        <TextBlock Name="LotNumberBlock" FontWeight="Bold" HorizontalAlignment="Left" Margin="19,459,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="206"/>
+        <TextBox Name="QuantityLabelTextBox" TabIndex="10" HorizontalAlignment="Left" Height="23" Margin="123,396,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="38"/>
+        <DataGrid Name="AntigensGrid" TabIndex="4" RowBackground="LightGray" CanUserAddRows="False" IsReadOnly="False" Background="White" AutoGenerateColumns="False" BorderThickness="0" HorizontalAlignment="Left" Height="732" Margin="312,58,0,0" VerticalAlignment="Top" Width="878">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="AntigenNameCol" Header="Antigen" Binding="{Binding Path=AntigenName}" Width="2*" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="MinCol" Header="Min" Binding="{Binding Path=Min}" Width="1*" IsReadOnly="False"/>
+                <DataGridTextColumn x:Name="MaxCol" Header="Max" Binding="{Binding Path=Max}" Width="1*" IsReadOnly="False"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBox Name="SerumTextBox" TabIndex="5" HorizontalAlignment="Left" Height="23" Margin="123,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="73"/>
+        <Button Content="+" TabIndex="6" Name="AddSerumBtn" Click="AddSerumBtn_Click" FontWeight="ExtraBold" HorizontalAlignment="Left" Margin="201,154,0,623" VerticalAlignment="Top" Width="24" Height="23"/>
+        <DataGrid Name="SerumRefGrid" CanUserAddRows="False" VerticalScrollBarVisibility="Auto" Background="White" AutoGenerateColumns="False" BorderThickness="0" HorizontalAlignment="Left" Height="87" Margin="10,189,0,0" VerticalAlignment="Top" Width="186">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="reference" Header="Ref No." Binding="{Binding Path=ReferenceNumber}" Width="1*" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="Save" HorizontalAlignment="Left" TabIndex="11" Margin="19,497,0,0" VerticalAlignment="Top" Width="100" Click="SaveButton_Click"/>
+        <Button Content="Save and Next" TabIndex="12" HorizontalAlignment="Left" Margin="134,497,0,0" VerticalAlignment="Top" Width="100" Click="SaveAndNextButton_Click"/>
+        <Button Content="Exit Without Saving" HorizontalAlignment="Left" Margin="19,530,0,0" VerticalAlignment="Top" Width="215"/>
+        <Button Content="-" Name="RemoveSerum" Click="RemoveSerum_Click" FontWeight="ExtraBold" HorizontalAlignment="Left" Margin="201,189,0,0" VerticalAlignment="Top" Width="24" Height="23"/>
+     </Grid>
 </Page>

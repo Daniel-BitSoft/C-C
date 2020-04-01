@@ -11,7 +11,7 @@ namespace CC
 {
     using System;
     
-    public partial class GetArrayAntigenRelations_Result
+    public partial class ArrayAntigenRelations_Result
     {
         public string ArrayName { get; set; }
         public string MasterArrayId { get; set; }

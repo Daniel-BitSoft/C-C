@@ -15,24 +15,17 @@ namespace CC.Providers
             ArrayAntigens = App.dbcontext.GetAntigensAssingedToArray()?.ToList(); // Database.SqlQuery<ArrayAntigenRelation>("GetAntigensAssingedToArray")?.ToList();
         }
 
-        public string CreateCalibControl(CalibControl calibControl, List<CCAntigens> antigens, CCType type, string arrayname)
+        public void CreateCalibControl(List<CalibControl> calibControls)
         {
             try
             {
-                foreach (var antigen in antigens)
+                foreach (var cc in calibControls)
                 {
-                    calibControl.CreatedBy = App.LoggedInUser.UserId;
-                    calibControl.CreatedDt = DateTime.Now;
-                    calibControl.CCId = Guid.NewGuid().ToString();
-                    calibControl.Type = type.ToString();
-                    calibControl.AntigenId = antigen.AntigenId;
-                    calibControl.Min = antigen.Min;
-                    calibControl.Max = antigen.Max;
-                    calibControl.ExpirationDate = calibControl.ExpirationDate == null ? calibControl.DilutionDate.Value.AddDays(90) : calibControl.ExpirationDate;
+                    cc.CreatedBy = App.LoggedInUser.UserId;
+                    cc.CreatedDt = DateTime.Now;
+                    cc.CCId = Guid.NewGuid().ToString();
 
-                    calibControl.LotNumber = CalculateLotNumber(antigen, calibControl.DilutionDate.Value, arrayname, type.ToString());
-
-                    App.dbcontext.CalibControls.Add(calibControl);
+                    App.dbcontext.CalibControls.Add(cc);
                 }
                 App.dbcontext.SaveChanges();
             }
@@ -46,31 +39,6 @@ namespace CC.Providers
                 ex.Data.Add(nameof(logNumber), logNumber);
                 throw ex;
             }
-
-            return string.Empty;
-        }
-
-        private string CalculateLotNumber(Antigen antigen, DateTime DilutionDate, string arrayName, string type)
-        {
-            string LotNumberArrayname = string.Empty;
-            var arraySelected = ArrayAntigens.Find(a => a.ArrayName == arrayName);
-            if (!string.IsNullOrEmpty(arraySelected.ArrayName))
-            {
-                var masterArrayHasAntigen = ArrayAntigens
-                    .Where(a => a.MasterArrayId == arraySelected.MasterArrayId)?
-                    .Select(a => a.AntigenName)?.ToList()?.Contains(antigen.AntigenName);
-
-                if (masterArrayHasAntigen.HasValue && masterArrayHasAntigen.Value)
-                {
-                    LotNumberArrayname = arraySelected.MasterArrayName;
-                }
-                else
-                {
-                    LotNumberArrayname = arrayName;
-                }
-            }
-
-            return $"A{LotNumberArrayname}{type}{antigen.AntigenName}-{DilutionDate.ToString("MMddyyyy")}";
         }
 
         //public string UpdateCalibControl(CalibControl CalibControl, List<Antigen> AddedAntigens, List<Antigen> removedAntigens)
@@ -182,6 +150,27 @@ namespace CC.Providers
                 var logNumber = Logger.Log(nameof(GetAllCalibControls), new Dictionary<string, object>
                 {
                     { LogConsts.Exception, ex }
+                });
+
+                ex.Data.Add(nameof(logNumber), logNumber);
+                throw ex;
+            }
+        }
+
+        public List<CC.ActiveCCs> GetExistingCC(string arrayId, string antigenId, string type)
+        {
+            try
+            {
+                return App.dbcontext.GetExistingCCs(arrayId, antigenId, type).ToList();
+            }
+            catch (Exception ex)
+            {
+                var logNumber = Logger.Log(nameof(GetAllCalibControls), new Dictionary<string, object>
+                {
+                    { LogConsts.Exception, ex },
+                    { nameof(arrayId), arrayId },
+                    { nameof(antigenId), antigenId},
+                    { nameof(type), type }
                 });
 
                 ex.Data.Add(nameof(logNumber), logNumber);

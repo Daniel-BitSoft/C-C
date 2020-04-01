@@ -10,18 +10,18 @@
 namespace CC
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Array
+    public partial class AntigensAssingedToArray
     {
+        public string AntigenId { get; set; }
+        public string AntigenName { get; set; }
         public string ArrayId { get; set; }
         public string ArrayName { get; set; }
-        public Nullable<bool> IsSubArray { get; set; }
         public string MasterArrayId { get; set; }
-        public string CreatedBy { get; set; }
-        public System.DateTime CreatedDt { get; set; }
-        public string UpdatedBy { get; set; }
-        public Nullable<System.DateTime> UpdatedDt { get; set; }
+        public string MasterArrayName { get; set; }
+        public Nullable<bool> IsSubArray { get; set; }
+        public string Group { get; set; }
         public string ShortArrayName { get; set; }
+        public string MasterArrayShortName { get; set; }
     }
 }
