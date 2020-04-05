@@ -269,6 +269,12 @@ namespace CC
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!ValidatePage())
+            {
+                MessageBox.Show("There are some incomplete items in this form. Please fill in all required data before saving");
+                return;
+            }
+
             SaveCCs();
             RemoveErrorBorders();
             ClearPage();
@@ -276,6 +282,12 @@ namespace CC
 
         private void SaveAndNextButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!ValidatePage())
+            {
+                MessageBox.Show("There are some incomplete items in this form. Please fill in all required data before saving");
+                return;
+            }
+
             SaveCCs();
             RemoveErrorBorders();
             if (App.ccPageType != CCType.N)
@@ -325,58 +337,54 @@ namespace CC
 
         private void SaveCCs()
         {
-            if (!ValidatePage())
-            {
-                MessageBox.Show("There are some incomplete items in this form. Please fill in all required data before saving");
-            }
-
-            var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
-
-            var activeCCs = App.CCProvider.GetExistingCC(
-                ArrayListbx.SelectedValue.ToString(),
-                 null,
-                 App.ccPageType.ToString());
-
-            if (activeCCs != null && activeCCs.Any())
-            {
-                var antigensIds = activeCCs.Select(a => a.AntigenId).ToList();
-                var duplicatedAntigens = antigenRanges.Where(a => antigensIds.Contains(a.AntigenId)).ToList();
-
-                if (duplicatedAntigens != null && duplicatedAntigens.Count > 1)
-                {
-                    MessageBox.Show($"Following antigens already have records that are not expired: {string.Join(",", duplicatedAntigens.Select(a => a.AntigenName))}", "Error");
-                    return;
-                }
-                else if (duplicatedAntigens != null && duplicatedAntigens.Count == 1)
-                {
-                    MessageBox.Show($"Selected antigen already has record that is not expired: {duplicatedAntigens.First().AntigenName}", "Error");
-                    return;
-                }
-            }
-
-            var lotNumber = SetLotNumber();
-            var CalibControls = new List<CalibControl>();
-
-            foreach (var antigenRange in antigenRanges)
-            {
-                CalibControls.Add(new CalibControl
-                {
-                    AntigenGroup = GroupListbx.Text,
-                    ArrayId = ArrayListbx.SelectedValue.ToString(),
-                    AntigenId = antigenRange.AntigenId,
-                    DilutionDate = DilutionDatePicker.SelectedDate.Value,
-                    DilutionFactor = DilutionFactorTextBox.Text,
-                    ExpirationDate = Convert.ToDateTime(ExpirationDateTextBox.Text),
-                    LotNumber = lotNumber,
-                    Min = Convert.ToDecimal(antigenRange.Min),
-                    Max = Convert.ToDecimal(antigenRange.Max),
-                    Serum = string.Join(",", SerumReferences.Select(a => a.ReferenceNumber)),
-                    Type = App.ccPageType.ToString()
-                });
-            }
-
             try
             {
+                var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
+
+                var activeCCs = App.CCProvider.GetExistingCC(
+                    ArrayListbx.SelectedValue.ToString(),
+                     null,
+                     App.ccPageType.ToString());
+
+                if (activeCCs != null && activeCCs.Any())
+                {
+                    var antigensIds = activeCCs.Select(a => a.AntigenId).ToList();
+                    var duplicatedAntigens = antigenRanges.Where(a => antigensIds.Contains(a.AntigenId)).ToList();
+
+                    if (duplicatedAntigens != null && duplicatedAntigens.Count > 1)
+                    {
+                        MessageBox.Show($"Following antigens already have records that are not expired: {string.Join(",", duplicatedAntigens.Select(a => a.AntigenName))}", "Error");
+                        return;
+                    }
+                    else if (duplicatedAntigens != null && duplicatedAntigens.Count == 1)
+                    {
+                        MessageBox.Show($"Selected antigen already has record that is not expired: {duplicatedAntigens.First().AntigenName}", "Error");
+                        return;
+                    }
+                }
+
+                var lotNumber = SetLotNumber();
+                var CalibControls = new List<CalibControl>();
+
+                foreach (var antigenRange in antigenRanges)
+                {
+                    CalibControls.Add(new CalibControl
+                    {
+                        AntigenGroup = GroupListbx.Text,
+                        ArrayId = ArrayListbx.SelectedValue.ToString(),
+                        AntigenId = antigenRange.AntigenId,
+                        DilutionDate = DilutionDatePicker.SelectedDate.Value,
+                        DilutionFactor = DilutionFactorTextBox.Text,
+                        ExpirationDate = Convert.ToDateTime(ExpirationDateTextBox.Text),
+                        LotNumber = lotNumber,
+                        Min = Convert.ToDecimal(antigenRange.Min),
+                        Max = Convert.ToDecimal(antigenRange.Max),
+                        Serum = string.Join(",", SerumReferences.Select(a => a.ReferenceNumber)),
+                        Type = App.ccPageType.ToString()
+                    });
+                }
+
+
                 App.CCProvider.CreateCalibControl(CalibControls);
             }
             catch (Exception ex)

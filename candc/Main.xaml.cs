@@ -89,11 +89,6 @@ namespace CC
             frame.Navigate(App.batchPage);
         }
 
-        private void AddUserButton_Click(object sender, RoutedEventArgs e)
-        {
-            frame.Navigate(App.userPage);
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             

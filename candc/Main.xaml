@@ -33,8 +33,7 @@
                 <MenuItem Name="Report2" Header="Report 2" IsTabStop="False"/>
             </MenuItem>
             <MenuItem Name="AdminMenu" Header="Admin" IsTabStop="False">
-                <MenuItem Name="UsersMenuButton" Header="Users" IsTabStop="False" Click="UsersMenuButton_Click"/>
-                <MenuItem Name="AddUserButton" Header="Add New User" IsTabStop="False" Click="AddUserButton_Click"/>
+                <MenuItem Name="UsersMenuButton" Header="User Management" IsTabStop="False" Click="UsersMenuButton_Click"/>
             </MenuItem>
         </Menu>
         <TextBlock Name="userLabel" HorizontalAlignment="right" Margin="0,5,5,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>

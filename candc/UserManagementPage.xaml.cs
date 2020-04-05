@@ -19,6 +19,7 @@ namespace CC
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ActiveUsersRadBtn.IsChecked = true;
+            RefreshGridData(App.UserProvider.ActiveUsers);
         }
 
         private void ActiveUsersRadBtn_Checked(object sender, RoutedEventArgs e)
@@ -51,6 +52,7 @@ namespace CC
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             App.userPage.User = UsersGrid.SelectedItem as User;
+            App.userPage.IsNew = false;
             NavigationService.Navigate(App.userPage);
         }
 

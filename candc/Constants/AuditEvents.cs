@@ -6,7 +6,8 @@
         UserAccessChanged,
         AdminPrivilegeChanged,
         PasswordReset,
-        CustomerUpdated,
+        UserCreated,
+        UserUpdated,
         UserDeleted,
         ArrayDeleted,
         ArrayUpdated

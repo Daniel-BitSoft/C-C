@@ -10,7 +10,7 @@
       Loaded="Page_Loaded">
 
     <Grid >
-        <Grid Name="RadioBtnGrid"  VerticalAlignment="Top" HorizontalAlignment="Center" Margin="136,25,155,0" Width="509" Height="30" >
+        <Grid Name="RadioBtnGrid"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="136,25,155,0" Width="509" Height="30" >
             <RadioButton Name="ActiveUsersRadBtn" Checked="ActiveUsersRadBtn_Checked" Content="Active Users" HorizontalAlignment="Left" Margin="37,6,0,0" VerticalAlignment="Top"/>
             <RadioButton Name="DisabledUserRadBtn" Checked="DisabledUserRadBtn_Checked" Content="Disabled Users" HorizontalAlignment="Left" Margin="129,6,0,0" VerticalAlignment="Top"/>
             <Label Content="View:" HorizontalAlignment="Left" VerticalAlignment="Top"/>

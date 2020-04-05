@@ -51,7 +51,7 @@ namespace CC.Providers
             }
         }
 
-        public string CreateUser(User user)
+        public string CreateUser(User user, string auditEvent = null)
         {
             try
             {
@@ -64,7 +64,18 @@ namespace CC.Providers
                     user.RequirePasswordChange = true;
                     user.Password = string.IsNullOrEmpty(user.Password) ? CryptoProvider.HashPassword(UsersConsts.DefaultTempPassword) : CryptoProvider.HashPassword(user.Password);
 
-                    App.dbcontext.Users.Add(user);
+                    App.dbcontext.Users.Add(user); 
+
+                    Audit audit = new Audit
+                    {
+                        RecordId = user.UserId,
+                        Type = AuditTypes.User.ToString(),
+                        Description = auditEvent,
+                        UpdatedBy = App.LoggedInUser.UserId,
+                        UpdatedDt = DateTime.Now
+                    };
+
+                    App.dbcontext.Audits.Add(audit);
                     App.dbcontext.SaveChanges();
 
                     ActiveUsers.Add(user);
