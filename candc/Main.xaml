@@ -13,24 +13,14 @@
             <MenuItem Header="Create" IsTabStop="False">
                 <MenuItem Name="CalibMenuButton" Header="Calibrator" IsTabStop="False" Click="CalibMenuButton_Click"/>
                 <MenuItem Name="NegMenuButton" Header="Negative" IsTabStop="False" Click="NegMenuButton_Click"/>
-                <MenuItem Name="PosMenuButton" Header="Positive" IsTabStop="False" Click="PosMenuButton_Click"/> 
+                <MenuItem Name="PosMenuButton" Header="Positive" IsTabStop="False" Click="PosMenuButton_Click"/>
                 <MenuItem Name="AntigenMenuButton" Header="Antigen" IsTabStop="False" Click="AntigenMenuButton_Click"/>
                 <MenuItem Name="ArrayMenuButton" Header="Array" IsTabStop="False" Click="ArrayMenuButton_Click"/>
-            </MenuItem>
-            <MenuItem Header="Search/Edit" IsTabStop="False">
-                <MenuItem Name="SearchBatchButton" Header="Batch" IsTabStop="False" />
-                <MenuItem Name="SearchCalibButton" Header="Negative" IsTabStop="False" />
-                <MenuItem Name="SearchNegButton" Header="Positive" IsTabStop="False" />
-                <MenuItem Name="SearchPosButton" Header="Antigen" IsTabStop="False" />
-                <MenuItem Name="SearchPlateButton" Header="Plate" IsTabStop="False" />
-                <MenuItem Name="SearchArrayButton" Header="Array" IsTabStop="False" />
             </MenuItem>
             <MenuItem Header="Assign" IsTabStop="False">
                 <MenuItem Name="AssignBatchButton" Header="Batch" IsTabStop="False" Click="AssignBatchButton_Click"/>
             </MenuItem>
             <MenuItem Header="Reports" IsTabStop="False">
-                <MenuItem Name="Report1" Header="Report 1" IsTabStop="False"/>
-                <MenuItem Name="Report2" Header="Report 2" IsTabStop="False"/>
             </MenuItem>
             <MenuItem Name="AdminMenu" Header="Admin" IsTabStop="False">
                 <MenuItem Name="UsersMenuButton" Header="User Management" IsTabStop="False" Click="UsersMenuButton_Click"/>

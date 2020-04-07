@@ -73,5 +73,23 @@ namespace CC
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ActiveCCs>("GetExistingCCs", arrayIdParameter, antigenIdParameter, typeParameter);
         }
+    
+        public virtual ObjectResult<Array> GetArrayByLIMNumber(string lIMArrayNumber)
+        {
+            var lIMArrayNumberParameter = lIMArrayNumber != null ?
+                new ObjectParameter("LIMArrayNumber", lIMArrayNumber) :
+                new ObjectParameter("LIMArrayNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Array>("GetArrayByLIMNumber", lIMArrayNumberParameter);
+        }
+    
+        public virtual ObjectResult<Array> GetArrayByLIMNumber(string lIMArrayNumber, MergeOption mergeOption)
+        {
+            var lIMArrayNumberParameter = lIMArrayNumber != null ?
+                new ObjectParameter("LIMArrayNumber", lIMArrayNumber) :
+                new ObjectParameter("LIMArrayNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Array>("GetArrayByLIMNumber", mergeOption, lIMArrayNumberParameter);
+        }
     }
 }

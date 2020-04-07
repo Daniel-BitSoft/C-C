@@ -23,5 +23,6 @@ namespace CC
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
         public string ShortArrayName { get; set; }
+        public string LIMArrayNumber { get; set; }
     }
 }

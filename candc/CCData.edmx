@@ -48,6 +48,7 @@
           <Property Name="ShortArrayName" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="IsSubArray" Type="bit" />
           <Property Name="MasterArrayId" Type="varchar" MaxLength="36" />
+          <Property Name="LIMArrayNumber" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="CreatedDt" Type="datetime" Nullable="false" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
@@ -134,6 +135,9 @@
         <Function Name="GetAntigensAssingedToArray" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAntigensNotAssingedToArray" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetArrayAntigenRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetArrayByLIMNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LIMArrayNumber" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="GetExistingCCs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="arrayId" Type="varchar" Mode="In" />
           <Parameter Name="antigenId" Type="varchar" Mode="In" />
@@ -201,6 +205,7 @@
           <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
           <Property Name="ShortArrayName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="LIMArrayNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CalibControl">
           <Key>
@@ -259,6 +264,9 @@
             <Parameter Name="arrayId" Mode="In" Type="String" />
             <Parameter Name="antigenId" Mode="In" Type="String" />
             <Parameter Name="type" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetArrayByLIMNumber" EntitySet="Arrays" ReturnType="Collection(CCModel.Array)">
+          <Parameter Name="LIMArrayNumber" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="AntigensNotAssingedToBatch_Result">
@@ -409,6 +417,7 @@
           <EntitySetMapping Name="Arrays">
             <EntityTypeMapping TypeName="CCModel.Array">
               <MappingFragment StoreEntitySet="Arrays">
+                <ScalarProperty Name="LIMArrayNumber" ColumnName="LIMArrayNumber" />
                 <ScalarProperty Name="ShortArrayName" ColumnName="ShortArrayName" />
                 <ScalarProperty Name="ArrayId" ColumnName="ArrayId" />
                 <ScalarProperty Name="ArrayName" ColumnName="ArrayName" />
@@ -568,6 +577,8 @@
                 <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
               </ComplexTypeMapping>
             </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetArrayByLIMNumber" FunctionName="CCModel.Store.GetArrayByLIMNumber">
           </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>

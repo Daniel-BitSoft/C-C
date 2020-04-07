@@ -247,17 +247,20 @@ namespace CC
 
         private void AddSerumBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!SerumReferences.Any(a => a.ReferenceNumber == SerumTextBox.Text.Trim()))
+            if (!string.IsNullOrWhiteSpace(SerumTextBox.Text))
             {
-                SerumReferences.Add(new SerumReference { ReferenceNumber = SerumTextBox.Text.Trim() });
-                SerumRefGrid.ItemsSource = SerumReferences;
-                SerumRefGrid.Items.Refresh();
+                if (!SerumReferences.Any(a => a.ReferenceNumber == SerumTextBox.Text.Trim()))
+                {
+                    SerumReferences.Add(new SerumReference { ReferenceNumber = SerumTextBox.Text.Trim() });
+                    SerumRefGrid.ItemsSource = SerumReferences;
+                    SerumRefGrid.Items.Refresh();
+                }
+                else
+                {
+                    MessageBox.Show("This reference number is already added");
+                }
+                SerumTextBox.Text = string.Empty;
             }
-            else
-            {
-                MessageBox.Show("This reference number is already added");
-            }
-            SerumTextBox.Text = string.Empty;
         }
 
         private void RemoveSerum_Click(object sender, RoutedEventArgs e)

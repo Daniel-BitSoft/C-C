@@ -22,7 +22,7 @@ namespace CC.Providers
                     App.dbcontext.SaveChanges();
 
                     foreach (var group in antigensGroups)
-                    { 
+                    {
                         foreach (var antigen in group.Value)
                         {
                             App.dbcontext.ArrayAntigens.Add(new ArrayAntigen
@@ -180,6 +180,25 @@ namespace CC.Providers
             try
             {
                 return App.dbcontext.ArrayAntigens.Where(a => a.ArrayId == ArrayId).ToList();
+            }
+            catch (Exception ex)
+            {
+                var logNumber = Logger.Log(nameof(GetArrayAntigens), new Dictionary<string, object>
+                {
+                    { LogConsts.Exception, ex }
+                });
+
+                ex.Data.Add(nameof(logNumber), logNumber);
+                throw ex;
+            }
+        }
+
+        public Array GetArrayByLIMArrayNumber(string LimArrayNumber)
+        {
+            try
+            {
+                var array = App.dbcontext.GetArrayByLIMNumber(LimArrayNumber).FirstOrDefault();
+                return array;
             }
             catch (Exception ex)
             {
