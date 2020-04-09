@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="1300"
-      Title="BatchPage">
+      Title="BatchPage"
+      Loaded="Page_Loaded">
 
     <Grid Background="White">
         <Label Content="Assign Calibrators and Controls" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="270"/>
@@ -17,24 +18,27 @@
         <Label Name="BlockNumberLabel" Content="Block Number" HorizontalAlignment="Left" Margin="10,213,0,0" VerticalAlignment="Top"/>
         <TextBox Name="BlockNumberTextBox" HorizontalAlignment="Left" Height="23" Margin="20,244,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="182"/>
         <Label Name="AntigenGroupLabel" Content="Antigen Group" HorizontalAlignment="Left" Margin="10,279,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="AntigenGroupCombo" HorizontalAlignment="Left" Margin="20,310,0,0" VerticalAlignment="Top" Width="182"/>
+        <ComboBox Name="AntigenGroupCombo" SelectionChanged="AntigenGroupCombo_SelectionChanged" HorizontalAlignment="Left" Margin="20,310,0,0" VerticalAlignment="Top" Width="182"/>
         <CheckBox Name="AllowPartialCheckbox" Content="Allow Partial Plate Data" HorizontalAlignment="Left" Margin="20,377,0,0" VerticalAlignment="Top" Width="182"/>
-        <Button Name="SaveBtn" Content="Save" HorizontalAlignment="Left" Margin="20,808,0,0" VerticalAlignment="Top" Width="80"/>
-        <Button Name="SaveAndNextBtn" Content="Save and Next" HorizontalAlignment="Left" Margin="115,808,0,0" VerticalAlignment="Top" Width="87"/>
+        <Button Name="SaveBtn" Click="SaveBtn_Click" Content="Save" HorizontalAlignment="Left" Margin="20,808,0,0" VerticalAlignment="Top" Width="80"/>
+        <Button Name="SaveAndNextBtn" Click="SaveAndNextBtn_Click" Content="Save and Next" HorizontalAlignment="Left" Margin="115,808,0,0" VerticalAlignment="Top" Width="87"/>
         <Button Name="ExitBtn" Content="Exit Without Saving" HorizontalAlignment="Left" Margin="20,848,0,0" VerticalAlignment="Top" Width="182"/>
-        <DataGrid Name="CalibGid" BorderThickness="0,1,0,0" HeadersVisibility="None" RowBackground="LightGray" CanUserAddRows="False" IsReadOnly="False" Background="White" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="765" Margin="297,103,0,0" VerticalAlignment="Top" Width="300" >
+        <DataGrid Name="CalibGid" HorizontalScrollBarVisibility="Hidden" BorderThickness="0,1,0,0" HeadersVisibility="None" RowBackground="White" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="False" 
+                  Background="White" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="765" Margin="297,103,0,0" VerticalAlignment="Top" Width="300" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="CalAntigen" Binding="{Binding Path=AntigenName}" Width="1.5*" IsReadOnly="True"/>
-                <DataGridTextColumn x:Name="CalLotNumber" Binding="{Binding Path=LotNumber}" Width="2*" IsReadOnly="False"/>
+                <DataGridTextColumn x:Name="CalLotNumber" Binding="{Binding Path=LotNumber}" Width="2*" IsReadOnly="False" />
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid Name="NegGrid" RowBackground="LightGray" HeadersVisibility="None" BorderThickness="0,1,0,0" CanUserAddRows="False" IsReadOnly="False" Background="White" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="765" Margin="984,103,0,0" VerticalAlignment="Top" Width="300">
+        <DataGrid Name="NegGrid" RowBackground="White" HorizontalScrollBarVisibility="Hidden" HeadersVisibility="None" BorderThickness="0,1,0,0" CanUserAddRows="False" IsReadOnly="False" CanUserDeleteRows="False"
+                  Background="White" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="765" Margin="643,103,0,0" VerticalAlignment="Top" Width="300" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="NegAntigen" Binding="{Binding Path=AntigenName}" Width="1.5*" IsReadOnly="True"/>
                 <DataGridTextColumn x:Name="NegLotNumber" Binding="{Binding Path=LotNumber}" Width="2*" IsReadOnly="False"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid Name="PosGrid" RowBackground="LightGray" HeadersVisibility="None" BorderThickness="0,1,0,0" CanUserAddRows="False" IsReadOnly="False" Background="White" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="765" Margin="643,103,0,0" VerticalAlignment="Top" Width="300">
+        <DataGrid Name="PosGrid" RowBackground="White" HeadersVisibility="None" HorizontalScrollBarVisibility="Hidden" BorderThickness="0,1,0,0" CanUserAddRows="False" IsReadOnly="False" CanUserDeleteRows="False"
+                  Background="White" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="765" Margin="984,103,0,0" VerticalAlignment="Top" Width="300" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="PosAntigen" Binding="{Binding Path=AntigenName}" Width="1.5*" IsReadOnly="True"/>
                 <DataGridTextColumn x:Name="PosLotNumber" Binding="{Binding Path=LotNumber}" Width="2*" IsReadOnly="False"/>
@@ -45,7 +49,7 @@
         <Label Content="Positive Control" FontWeight="DemiBold" HorizontalAlignment="Left" Margin="984,72,0,0" VerticalAlignment="Top"/>
         <GridSplitter HorizontalAlignment="Left" Height="770" Margin="266,103,0,0" VerticalAlignment="Top" Width="14"/>
         <TextBox Name="GenericNegLotTextBox" HorizontalAlignment="Left" Height="18" Margin="760,77,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="125"/>
-        <Button Name="ApplyAllBtn" Content="|" FontSize="10" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="890,77,0,0" VerticalAlignment="Top" Width="23" Height="18"/>
+        <Button Name="ApplyAllBtn" Content="|" Click="ApplyAllBtn_Click" FontSize="10" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="890,77,0,0" VerticalAlignment="Top" Width="23" Height="18"/>
 
     </Grid>
 </Page>

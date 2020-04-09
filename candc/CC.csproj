@@ -164,8 +164,7 @@
     <Compile Include="Models\AntigenResponse.cs" />
     <Compile Include="Models\AntigensGroup.cs" />
     <Compile Include="Models\AntigensResponse.cs" />
-    <Compile Include="Models\ArrayAntigenRelation.cs" />
-    <Compile Include="Models\AssignedCC.cs" />
+    <Compile Include="Models\BatchAntigen.cs" />
     <Compile Include="Models\Barcode.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CCAntigens.cs" />

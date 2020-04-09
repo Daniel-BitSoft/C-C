@@ -53,6 +53,7 @@ namespace CC
             return new MapperConfiguration(config =>
             {
                 config.CreateMap<AntigensAssingedToArray, AntigenRange>();
+                config.CreateMap<AntigensAssingedToArray, BatchAntigen>();
             });
         }
 
