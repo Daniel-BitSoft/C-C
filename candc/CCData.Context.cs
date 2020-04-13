@@ -34,7 +34,6 @@ namespace CC
         public virtual DbSet<CalibControl> CalibControls { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Audit> Audits { get; set; }
-        public virtual DbSet<AssignedCC> AssignedCCs { get; set; }
         public virtual DbSet<Batch> Batches { get; set; }
     
         public virtual ObjectResult<AntigensNotAssingedToBatch_Result> GetAntigensNotAssingedToBatch()
@@ -90,6 +89,48 @@ namespace CC
                 new ObjectParameter("LIMArrayNumber", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Array>("GetArrayByLIMNumber", mergeOption, lIMArrayNumberParameter);
+        }
+    
+        public virtual ObjectResult<Batch> GetBatchRecords(string batchName, Nullable<System.DateTime> runDate, Nullable<int> blockNumber, string antigenGroup)
+        {
+            var batchNameParameter = batchName != null ?
+                new ObjectParameter("batchName", batchName) :
+                new ObjectParameter("batchName", typeof(string));
+    
+            var runDateParameter = runDate.HasValue ?
+                new ObjectParameter("runDate", runDate) :
+                new ObjectParameter("runDate", typeof(System.DateTime));
+    
+            var blockNumberParameter = blockNumber.HasValue ?
+                new ObjectParameter("BlockNumber", blockNumber) :
+                new ObjectParameter("BlockNumber", typeof(int));
+    
+            var antigenGroupParameter = antigenGroup != null ?
+                new ObjectParameter("antigenGroup", antigenGroup) :
+                new ObjectParameter("antigenGroup", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Batch>("GetBatchRecords", batchNameParameter, runDateParameter, blockNumberParameter, antigenGroupParameter);
+        }
+    
+        public virtual ObjectResult<Batch> GetBatchRecords(string batchName, Nullable<System.DateTime> runDate, Nullable<int> blockNumber, string antigenGroup, MergeOption mergeOption)
+        {
+            var batchNameParameter = batchName != null ?
+                new ObjectParameter("batchName", batchName) :
+                new ObjectParameter("batchName", typeof(string));
+    
+            var runDateParameter = runDate.HasValue ?
+                new ObjectParameter("runDate", runDate) :
+                new ObjectParameter("runDate", typeof(System.DateTime));
+    
+            var blockNumberParameter = blockNumber.HasValue ?
+                new ObjectParameter("BlockNumber", blockNumber) :
+                new ObjectParameter("BlockNumber", typeof(int));
+    
+            var antigenGroupParameter = antigenGroup != null ?
+                new ObjectParameter("antigenGroup", antigenGroup) :
+                new ObjectParameter("antigenGroup", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Batch>("GetBatchRecords", mergeOption, batchNameParameter, runDateParameter, blockNumberParameter, antigenGroupParameter);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace CC
                 if (array != null)
                 {
                     BatchIdTextBox.Text = $"{array.ArrayName} (Pts. {batchNumberParts[1]}-{batchNumberParts[2]})";
-                    RunDateTextBox.Text = batchNumberParts[3];
+                    RundatePicker.SelectedDate = Convert.ToDateTime(batchNumberParts[3]);
                     BlockNumberTextBox.Text = batchNumberParts[4];
 
                     var groups = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == array.ArrayId).Select(a => a.Group).Distinct().ToList();
@@ -88,24 +88,64 @@ namespace CC
         {
             if (ValidateForm())
             {
+                var response = SaveBatch();
+                if (string.IsNullOrEmpty(response))
+                {
+                    MessageBox.Show("Successfully saved");
 
+                    // clean page
+                }
+                else
+                {
+                    MessageBox.Show(response, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
                 MessageBox.Show("Please complete the form before saving", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        } 
+        }
 
         private void SaveAndNextBtn_Click(object sender, RoutedEventArgs e)
         {
             if (ValidateForm())
             {
-
+                var response = SaveBatch();
+                if (string.IsNullOrEmpty(response))
+                {
+                    MessageBox.Show("Successfully saved");
+                    // select next group
+                    // or
+                    // clean page
+                }
+                else
+                {
+                    MessageBox.Show(response, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
-                // message
+                MessageBox.Show("Please complete the form before saving", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private string SaveBatch()
+        {
+            var bachAntigens = new List<BatchAntigen>();
+
+            bachAntigens.AddRange(NegGrid.ItemsSource as List<BatchAntigen>);
+            bachAntigens.AddRange(PosGrid.ItemsSource as List<BatchAntigen>);
+            bachAntigens.AddRange(CalibGid.ItemsSource as List<BatchAntigen>);
+
+            var batch = new Batch
+            {
+                BatchName = BatchIdTextBox.Text.Trim(),
+                RunDate = RundatePicker.SelectedDate.Value,
+                BlockNumber = Convert.ToInt32(BlockNumberTextBox.Text.Trim()),
+                AntigenGroup = AntigenGroupCombo.Text
+            };
+
+            return App.BatchProvider.CreateBatch(batch, bachAntigens);
         }
 
         private bool ValidateForm()
@@ -131,7 +171,7 @@ namespace CC
                 BlockNumberLabel.BorderThickness = new Thickness(0);
 
 
-            if (string.IsNullOrWhiteSpace(RunDateTextBox.Text))
+            if (RundatePicker.SelectedDate.HasValue)
             {
                 RunDateLabel.BorderBrush = Brushes.Red;
                 RunDateLabel.BorderThickness = new Thickness(2);
@@ -270,7 +310,7 @@ namespace CC
                         }
                     }
                 }
-            } 
+            }
 
             if (isValid)
             {
@@ -286,8 +326,8 @@ namespace CC
         {
             App.CCProvider.SetArrayAntigens();
 
-            BatchIdTextBox.Text = RunDateTextBox.Text = BlockNumberTextBox.Text = GenericNegLotTextBox.Text = string.Empty;
-
+            BatchIdTextBox.Text = BlockNumberTextBox.Text = GenericNegLotTextBox.Text = string.Empty;
+            RundatePicker.SelectedDate = null;
             AntigenGroupCombo.ItemsSource = null;
             AntigenGroupCombo.Items.Refresh();
 

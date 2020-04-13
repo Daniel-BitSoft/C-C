@@ -12,5 +12,7 @@
 
         public static string ArrayAlreadyExists = "This array already exists";
         public static string UnassignedAntigensNotFound = "There is no unassigned antinges left";
+        public static string BatchAlreadyExist = "Batch records for this antigen group already exists";
+
     }
 }

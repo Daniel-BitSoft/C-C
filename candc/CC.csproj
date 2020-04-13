@@ -118,9 +118,6 @@
     <Compile Include="ArrayPage.xaml.cs">
       <DependentUpon>ArrayPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AssignedCC.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
     <Compile Include="Audit.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
@@ -172,6 +169,7 @@
     <Compile Include="Models\LogObject.cs" />
     <Compile Include="Models\SerumReference.cs" />
     <Compile Include="Models\UsersResponse.cs" />
+    <Compile Include="Providers\BatchProvider.cs" />
     <Compile Include="Providers\CryptoProvider.cs" />
     <Compile Include="Providers\Logger.cs" />
     <Compile Include="User.cs">

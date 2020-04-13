@@ -26,6 +26,7 @@ namespace CC
         public static ArrayProvider ArrayProvider = new ArrayProvider();
         public static CCProvider CCProvider = new CCProvider();
         public static UserProvider UserProvider = new UserProvider();
+        public static BatchProvider BatchProvider = new BatchProvider();
 
         // pages
         public static AntigenPage AntigenPage = new AntigenPage();

@@ -14,10 +14,12 @@ namespace CC
     
     public partial class Batch
     {
-        public string BatchId { get; set; }
         public string BatchName { get; set; }
         public System.DateTime RunDate { get; set; }
         public int BlockNumber { get; set; }
+        public string LotNumber { get; set; }
+        public string AntigenGroup { get; set; }
+        public string AntigenId { get; set; }
         public string CreatedBy { get; set; }
         public System.DateTime CreatedDt { get; set; }
         public string UpdatedBy { get; set; }

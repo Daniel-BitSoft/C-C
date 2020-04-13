@@ -14,7 +14,7 @@
         <Label Name="BatchIdLabel" Content="Batch Id" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
         <TextBox Name="BatchIdTextBox" HorizontalAlignment="Left" Height="23" Margin="20,103,0,0" TextWrapping="Wrap" TextChanged="BatchIdTextBox_TextChanged" Text="" VerticalAlignment="Top" Width="182"/>
         <Label Name="RunDateLabel" Content="Run Date" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="RunDateTextBox" HorizontalAlignment="Left" Height="23" Margin="20,171,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="182"/>
+        <DatePicker Name="RundatePicker" HorizontalAlignment="Left" Margin="20,171,0,0" VerticalAlignment="Top" Width="182"/>
         <Label Name="BlockNumberLabel" Content="Block Number" HorizontalAlignment="Left" Margin="10,213,0,0" VerticalAlignment="Top"/>
         <TextBox Name="BlockNumberTextBox" HorizontalAlignment="Left" Height="23" Margin="20,244,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="182"/>
         <Label Name="AntigenGroupLabel" Content="Antigen Group" HorizontalAlignment="Left" Margin="10,279,0,0" VerticalAlignment="Top"/>

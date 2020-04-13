@@ -54,21 +54,6 @@
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
           <Property Name="UpdatedDt" Type="datetime" />
         </EntityType>
-        <EntityType Name="AssignedCC">
-          <Key>
-            <PropertyRef Name="BatchId" />
-            <PropertyRef Name="AntigenId" />
-          </Key>
-          <Property Name="BatchId" Type="varchar" MaxLength="36" Nullable="false" />
-          <Property Name="AntigenId" Type="varchar" MaxLength="36" Nullable="false" />
-          <Property Name="CCId" Type="varchar" MaxLength="36" />
-          <Property Name="Lot" Type="varchar" MaxLength="36" />
-          <Property Name="AntigenGroup" Type="varchar" MaxLength="10" />
-          <Property Name="CreatedBy" Type="varchar" MaxLength="36" />
-          <Property Name="CreatedDt" Type="datetime" />
-          <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
-          <Property Name="UpdatedDt" Type="datetime" />
-        </EntityType>
         <EntityType Name="Audit">
           <Key>
             <PropertyRef Name="AuditId" />
@@ -82,13 +67,18 @@
         </EntityType>
         <EntityType Name="Batch">
           <Key>
-            <PropertyRef Name="BatchId" />
+            <PropertyRef Name="BatchName" />
+            <PropertyRef Name="RunDate" />
+            <PropertyRef Name="BlockNumber" />
+            <PropertyRef Name="AntigenGroup" />
           </Key>
-          <Property Name="BatchId" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="BatchName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="RunDate" Type="date" Nullable="false" />
           <Property Name="BlockNumber" Type="int" Nullable="false" />
-          <Property Name="CreatedBy" Type="varchar" MaxLength="36" />
+          <Property Name="LotNumber" Type="varchar" MaxLength="50" />
+          <Property Name="AntigenGroup" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="AntigenId" Type="varchar" MaxLength="36" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="CreatedDt" Type="datetime" Nullable="false" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
           <Property Name="UpdatedDt" Type="datetime" />
@@ -138,6 +128,12 @@
         <Function Name="GetArrayByLIMNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LIMArrayNumber" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="GetBatchRecords" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="batchName" Type="varchar" Mode="In" />
+          <Parameter Name="runDate" Type="date" Mode="In" />
+          <Parameter Name="BlockNumber" Type="int" Mode="In" />
+          <Parameter Name="antigenGroup" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="GetExistingCCs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="arrayId" Type="varchar" Mode="In" />
           <Parameter Name="antigenId" Type="varchar" Mode="In" />
@@ -148,7 +144,6 @@
           <EntitySet Name="Antigens" EntityType="Self.Antigens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ArrayAntigen" EntityType="Self.ArrayAntigen" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Arrays" EntityType="Self.Arrays" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AssignedCC" EntityType="Self.AssignedCC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CalibControl" EntityType="Self.CalibControl" Schema="dbo" store:Type="Tables" />
@@ -258,8 +253,6 @@
           <FunctionImport Name="GetArrayAntigenRelations" ReturnType="Collection(CCModel.ArrayAntigenRelations_Result)" />
           <FunctionImport Name="GetAntigensAssingedToArray" ReturnType="Collection(CCModel.AntigensAssingedToArray)" />
           <FunctionImport Name="GetAntigensNotAssingedToArray" ReturnType="Collection(CCModel.AntigensNotAssingedToArray_Result)" />
-          <EntitySet Name="AssignedCCs" EntityType="CCModel.AssignedCC" />
-          <EntitySet Name="Batches" EntityType="CCModel.Batch" />
           <FunctionImport Name="GetExistingCCs" ReturnType="Collection(CCModel.ActiveCCs)">
             <Parameter Name="arrayId" Mode="In" Type="String" />
             <Parameter Name="antigenId" Mode="In" Type="String" />
@@ -268,6 +261,13 @@
           <FunctionImport Name="GetArrayByLIMNumber" EntitySet="Arrays" ReturnType="Collection(CCModel.Array)">
           <Parameter Name="LIMArrayNumber" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="GetBatchRecords" EntitySet="Batches" ReturnType="Collection(CCModel.Batch)">
+            <Parameter Name="batchName" Mode="In" Type="String" />
+            <Parameter Name="runDate" Mode="In" Type="DateTime" />
+            <Parameter Name="BlockNumber" Mode="In" Type="Int32" />
+            <Parameter Name="antigenGroup" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Batches" EntityType="CCModel.Batch" />
         </EntityContainer>
         <ComplexType Name="AntigensNotAssingedToBatch_Result">
           <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="32" />
@@ -326,34 +326,6 @@
           <Property Type="String" Name="UpdatedBy1" Nullable="true" MaxLength="36" />
           <Property Type="DateTime" Name="UpdatedDt1" Nullable="true" Precision="23" />
         </ComplexType>
-        <EntityType Name="AssignedCC">
-          <Key>
-            <PropertyRef Name="BatchId" />
-            <PropertyRef Name="AntigenId" />
-          </Key>
-          <Property Name="BatchId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="AntigenId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="CCId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="Lot" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="AntigenGroup" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDt" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
-        </EntityType>
-        <EntityType Name="Batch">
-          <Key>
-            <PropertyRef Name="BatchId" />
-          </Key>
-          <Property Name="BatchId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="BatchName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RunDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="BlockNumber" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
-        </EntityType>
         <ComplexType Name="ActiveCCs">
           <Property Type="String" Name="CCId" Nullable="false" MaxLength="36" />
           <Property Type="String" Name="LotNumber" Nullable="false" MaxLength="50" />
@@ -372,6 +344,24 @@
           <Property Type="String" Name="UpdatedBy" Nullable="true" MaxLength="36" />
           <Property Type="DateTime" Name="UpdatedDt" Nullable="true" Precision="23" />
         </ComplexType>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="BatchName" />
+            <PropertyRef Name="RunDate" />
+            <PropertyRef Name="BlockNumber" />
+            <PropertyRef Name="AntigenGroup" />
+          </Key>
+          <Property Name="BatchName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RunDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="BlockNumber" Type="Int32" Nullable="false" />
+          <Property Name="LotNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AntigenGroup" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="AntigenId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -527,35 +517,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="AssignedCCs">
-            <EntityTypeMapping TypeName="CCModel.AssignedCC">
-              <MappingFragment StoreEntitySet="AssignedCC">
-                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="AntigenGroup" ColumnName="AntigenGroup" />
-                <ScalarProperty Name="Lot" ColumnName="Lot" />
-                <ScalarProperty Name="CCId" ColumnName="CCId" />
-                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
-                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Batches">
-            <EntityTypeMapping TypeName="CCModel.Batch">
-              <MappingFragment StoreEntitySet="Batch">
-                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="BlockNumber" ColumnName="BlockNumber" />
-                <ScalarProperty Name="RunDate" ColumnName="RunDate" />
-                <ScalarProperty Name="BatchName" ColumnName="BatchName" />
-                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetExistingCCs" FunctionName="CCModel.Store.GetExistingCCs">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CCModel.ActiveCCs">
@@ -580,6 +541,24 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetArrayByLIMNumber" FunctionName="CCModel.Store.GetArrayByLIMNumber">
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetBatchRecords" FunctionName="CCModel.Store.GetBatchRecords">
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Batches">
+            <EntityTypeMapping TypeName="CCModel.Batch">
+              <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
+                <ScalarProperty Name="AntigenGroup" ColumnName="AntigenGroup" />
+                <ScalarProperty Name="LotNumber" ColumnName="LotNumber" />
+                <ScalarProperty Name="BlockNumber" ColumnName="BlockNumber" />
+                <ScalarProperty Name="RunDate" ColumnName="RunDate" />
+                <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
