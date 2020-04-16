@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CC"
         mc:Ignorable="d"
-        Title="LoginPage" Height="450" Width="800">
+        Title="LoginPage" Height="450" Width="800" FontSize="16">
     <Grid>
         <Grid Name="MainGrid" Visibility="Visible">
             <Button Content="Login" HorizontalAlignment="Left" Margin="354,246,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <TextBox Name="UserNameTxt" HorizontalAlignment="Left" Height="23" Margin="304,162,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
-            <TextBox Name="PasswordTxt" HorizontalAlignment="Left" Height="23" Margin="304,200,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
+            <TextBox Name="UserNameTxt" HorizontalAlignment="Left" Height="23" Margin="304,163,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
+            <TextBox Name="PasswordTxt" HorizontalAlignment="Left" Height="23" Margin="304,201,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="221"/>
             <TextBlock HorizontalAlignment="Left" Margin="225,163,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Left" Margin="229,201,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top"/>
         </Grid> 

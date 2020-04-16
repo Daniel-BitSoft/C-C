@@ -10,7 +10,7 @@ namespace CC.Providers
 {
     public class Logger
     {
-        private static string LogFileName = ConfigurationManager.AppSettings["LogPath"].ToString();
+        private static string LogPath = ConfigurationManager.AppSettings["LogPath"].ToString();
         private static string LogTimeFormat = ConfigurationManager.AppSettings["LogTimeFormat"].ToString();
 
         public static string Log(string eventName, Dictionary<string, object> LogDetails)
@@ -23,11 +23,16 @@ namespace CC.Providers
             var logObject = new LogObject
             {
                 EventName = eventName,
-                UserId = App.LoggedInUser.UserId,
+                UserId = App.LoggedInUser?.UserId,
                 EventDetails = LogDetails
             };
 
-            File.WriteAllText($"{LogFileName}{DateTime.Now.ToString(LogTimeFormat)}", JsonConvert.SerializeObject(logObject));
+            if (!Directory.Exists(LogPath))
+            {
+                Directory.CreateDirectory(LogPath);
+            }
+
+            File.WriteAllText($"{LogPath}LOG-{DateTime.Now.ToString(LogTimeFormat)}", JsonConvert.SerializeObject(logObject));
             return logCode;
         }
 

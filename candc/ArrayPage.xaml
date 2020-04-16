@@ -7,53 +7,33 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1400"
       Title="ArrayPage"
-      Loaded="Page_Loaded">
+      Loaded="Page_Loaded" FontSize="16">
 
     <Grid Background="White">
         <Label Content="Create Array" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
         <Label Content="Array Name" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
-        <CheckBox Name="SubArrayCheckbox" Content="" Checked="SubArrayCheckbox_Checked" Unchecked="SubArrayCheckbox_Unchecked" HorizontalAlignment="Left" Margin="129,106,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="SubArrayCheckbox" Content="" Checked="SubArrayCheckbox_Checked" Unchecked="SubArrayCheckbox_Unchecked" HorizontalAlignment="Left" Margin="160,105,0,0" VerticalAlignment="Top" Width="18" Height="16"/>
         <Label Content="Is this a sub array" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="ArrayNameText" HorizontalAlignment="Left" Height="23" Margin="129,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" GotFocus="ArrayNameText_GotFocus"/>
+        <TextBox Name="ArrayNameText" HorizontalAlignment="Left" Height="23" Margin="159,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" GotFocus="ArrayNameText_GotFocus"/>
         <Label Content="Array Code" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="ArrayCodeTextbx" HorizontalAlignment="Left" Height="23" Margin="129,71,0,0" TextWrapping="Wrap" Text="" 
+        <TextBox x:Name="ArrayCodeTextbx" HorizontalAlignment="Left" Height="23" Margin="159,71,0,0" TextWrapping="Wrap" Text="" 
                  ToolTip="This will be used in forming lot number. For example if array code is A3X, lot number will look something like A3XC1-12132019"
                  VerticalAlignment="Top" Width="120" GotFocus="ArrayCodeTextbx_GotFocus"/>
         <Label Content="Select master array" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="MasterArrayDropdown" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" HorizontalAlignment="Left" Height="26" Margin="129,126,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox Name="MasterArrayDropdown" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" HorizontalAlignment="Left" Height="26" Margin="159,132,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Select Group" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="AntigenGroupDropdown" HorizontalAlignment="Left" Height="26" Margin="129,157,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox Name="AntigenGroupDropdown" HorizontalAlignment="Left" Height="26" Margin="159,163,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Add Antigen from below:" HorizontalAlignment="Left" Margin="10,200,0,0" VerticalAlignment="Top"/>
-        <DataGrid Name="AntigensGrid" CanUserAddRows="False" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="465" Margin="106,262,0,0" VerticalAlignment="Top" Width="143">
+        <DataGrid Name="AntigensGrid" CanUserAddRows="False" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="465" Margin="135,262,0,0" VerticalAlignment="Top" Width="144">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="AntigenName" Header="Antigen" Binding="{Binding Path=AntigenName}" Width="1*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBox Name="AntigenSearchText" TextChanged="AntigenSearchText_TextChanged" HorizontalAlignment="Left" Height="23" Margin="106,231,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
-        <Label Content="Search Antigen" HorizontalAlignment="Left" Margin="10,231,0,0" VerticalAlignment="Top" Width="91"/>
-        <Button Name="AddButton" Click="AddButton_Click" Content="Add" HorizontalAlignment="Left" Margin="203,234,0,0" VerticalAlignment="Top" Width="46"/>
+        <TextBox Name="AntigenSearchText" TextChanged="AntigenSearchText_TextChanged" HorizontalAlignment="Left" Height="25" Margin="135,232,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
+        <Label Content="Search Antigen" HorizontalAlignment="Left" Margin="10,231,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button Name="AddButton" Click="AddButton_Click" Content="Add" HorizontalAlignment="Left" Margin="233,232,0,0" VerticalAlignment="Top" Width="46"/>
 
-        <DataGrid Name="Group1" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="304,71,0,0" VerticalAlignment="Top" Width="154">
-            <DataGrid.Columns>
-                 <DataGridTemplateColumn Width="1*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate> 
-                                <Label Content="{Binding Path=AntigenName}" VerticalAlignment="Center" VerticalContentAlignment="Center"/> 
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="33">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate> 
-                                 <Button Click="RemoveButton_Click" Content="-" Width="30" FontSize="20" FontWeight="Bold" Foreground="Red" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Label Name="Group1Label" Content="Group 1" HorizontalAlignment="Left" Margin="304,40,0,0" VerticalAlignment="Top"/>
-
-        <DataGrid Name="Group2" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="478,71,0,0" VerticalAlignment="Top" Width="154">
+        <DataGrid Name="Group1" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="331,71,0,0" VerticalAlignment="Top" Width="154">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="1*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -71,9 +51,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Name="Group2Label" Content="Group 2" HorizontalAlignment="Left" Margin="478,40,0,0" VerticalAlignment="Top"/>
+        <Label Name="Group1Label" Content="Group 1" HorizontalAlignment="Left" Margin="331,40,0,0" VerticalAlignment="Top"/>
 
-        <DataGrid Name="Group3" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="653,71,0,0" VerticalAlignment="Top" Width="154">
+        <DataGrid Name="Group2" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="505,71,0,0" VerticalAlignment="Top" Width="154">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="1*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -91,9 +71,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Name="Group3Label" Content="Group 3" HorizontalAlignment="Left" Margin="653,40,0,0" VerticalAlignment="Top"/>
+        <Label Name="Group2Label" Content="Group 2" HorizontalAlignment="Left" Margin="505,40,0,0" VerticalAlignment="Top"/>
 
-        <DataGrid Name="Group4" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="824,71,0,0" VerticalAlignment="Top" Width="154">
+        <DataGrid Name="Group3" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="680,71,0,0" VerticalAlignment="Top" Width="154">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="1*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -111,9 +91,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Name="Group4Label" Content="Group 4" HorizontalAlignment="Left" Margin="824,40,0,0" VerticalAlignment="Top"/>
+        <Label Name="Group3Label" Content="Group 3" HorizontalAlignment="Left" Margin="680,40,0,0" VerticalAlignment="Top"/>
 
-        <DataGrid Name="Group5" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="993,71,0,0" VerticalAlignment="Top" Width="154">
+        <DataGrid Name="Group4" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="851,71,0,0" VerticalAlignment="Top" Width="154">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="1*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -131,9 +111,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Name="Group5Label" Content="Group 5" HorizontalAlignment="Left" Margin="993,40,0,0" VerticalAlignment="Top"/>
+        <Label Name="Group4Label" Content="Group 4" HorizontalAlignment="Left" Margin="851,40,0,0" VerticalAlignment="Top"/>
 
-        <DataGrid Name="Group6" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="1161,71,0,0" VerticalAlignment="Top" Width="154">
+        <DataGrid Name="Group5" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="1020,71,0,0" VerticalAlignment="Top" Width="154">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="1*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -151,9 +131,30 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Name="Group6Label" Content="Group 6" HorizontalAlignment="Left" Margin="1161,40,0,0" VerticalAlignment="Top"/>
-        <Button Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="156,757,0,0" VerticalAlignment="Top" Width="93" Click="SaveButton_Click"/>
-        <Button Name="CancelButton" Content="Exit" HorizontalAlignment="Left" Margin="10,757,0,0" VerticalAlignment="Top" Width="91" Click="CancelButton_Click"/>
+        <Label Name="Group5Label" Content="Group 5" HorizontalAlignment="Left" Margin="1020,40,0,0" VerticalAlignment="Top"/>
+
+        <DataGrid Name="Group6" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="1188,71,0,0" VerticalAlignment="Top" Width="154">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="1*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Path=AntigenName}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="33">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="RemoveButton_Click" Content="-" Width="30" FontSize="20" FontWeight="Bold" Foreground="Red" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Name="Group6Label" Content="Group 6" HorizontalAlignment="Left" Margin="1188,40,0,0" VerticalAlignment="Top"/>
+        <Button Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="156,757,0,0" VerticalAlignment="Top" Width="123" Click="SaveButton_Click"/>
+        <Button Name="CancelButton" Content="Exit" HorizontalAlignment="Left" Margin="10,757,0,0" VerticalAlignment="Top" Width="120" Click="CancelButton_Click"/>
+        <GridSplitter HorizontalAlignment="Left" Height="1000" Margin="300,43,0,-243" VerticalAlignment="Top" Width="14" Background="LightGray"/>
 
 
     </Grid>

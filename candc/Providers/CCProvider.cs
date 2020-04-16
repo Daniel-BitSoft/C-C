@@ -157,11 +157,11 @@ namespace CC.Providers
             }
         }
 
-        public List<CC.ActiveCCs> GetExistingCC(string arrayId, string antigenId, string type)
+        public List<CC.ActiveCCs> GetExistingCC(string arrayId, string antigenId = null, string type = null)
         {
             try
             {
-                return App.dbcontext.GetExistingCCs(arrayId, antigenId, type).ToList();
+                return App.dbcontext.GetExistingCCs(arrayId, antigenId, type)?.ToList();
             }
             catch (Exception ex)
             {
@@ -176,11 +176,6 @@ namespace CC.Providers
                 ex.Data.Add(nameof(logNumber), logNumber);
                 throw ex;
             }
-        }
-
-        public void AssignCC(AssignedCC assignedCC)
-        {
-
-        }
+        } 
     }
 }

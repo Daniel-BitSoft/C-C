@@ -12,7 +12,7 @@
         <EntityTypeShape EntityType="CCModel.CalibControl" Width="1.5" PointX="6.75" PointY="2.25" IsExpanded="true" />
         <EntityTypeShape EntityType="CCModel.User" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="CCModel.Audit" Width="1.5" PointX="0.75" PointY="2.875" />
-        <EntityTypeShape EntityType="CCModel.Batch" Width="1.5" PointX="9.5" PointY="2.75" />
+        <EntityTypeShape EntityType="CCModel.Batch" Width="1.5" PointX="9.875" PointY="3.375" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -6,19 +6,19 @@
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AntigenPage" Loaded="Page_Loaded">
+      Title="AntigenPage" Loaded="Page_Loaded" FontSize="16">
 
     <Grid>
-        <TextBox Name="NameText" MaxLength="20" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="26,10,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="112"/>
-        <Button Name="CreateButton" Content="Create" HorizontalAlignment="Left" Margin="159,10,0,0" VerticalAlignment="Top" Width="50" Height="23" Click="CreateButton_Click"/>
-        <Button Name="EditButton" Content="Edit" HorizontalAlignment="Left" Margin="214,10,0,0" VerticalAlignment="Top" Width="50" Height="23" Click="EditButton_Click"/>
+        <TextBox Name="NameText" MaxLength="20" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="26,10,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="154"/>
+        <Button Name="CreateButton" Content="Create" HorizontalAlignment="Left" Margin="194,10,0,0" VerticalAlignment="Top" Width="66" Height="23" Click="CreateButton_Click"/>
+        <Button Name="EditButton" Content="Edit" HorizontalAlignment="Left" Margin="265,10,0,0" VerticalAlignment="Top" Width="67" Height="23" Click="EditButton_Click"/>
         <DataGrid Name="AntigensGrid" HorizontalAlignment="Left" IsReadOnly="True" AutoGenerateColumns="False" Height="430" Margin="372,10,0,0" VerticalAlignment="Top"
-                  Width="273" SelectionChanged="AntigensGrid_SelectionChanged">
+                  Width="316" SelectionChanged="AntigensGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="AntigenName" Binding="{Binding Path=AntigenName}" Width="1*"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Name="SaveButton" Click="SaveButton_Click" Visibility="Hidden" Content="Save" HorizontalAlignment="Left" Margin="26,65,0,0" VerticalAlignment="Top" Width="50" Height="23"/>
-        <Button Name="CancelButton" Click="CancelButton_Click" Visibility="Hidden" Content="Cancel" HorizontalAlignment="Left" Margin="88,65,0,0" VerticalAlignment="Top" Width="50" Height="23"/>
+        <Button Name="SaveButton" Click="SaveButton_Click" Visibility="Visible" Content="Save" HorizontalAlignment="Left" Margin="26,65,0,0" VerticalAlignment="Top" Width="72" Height="23"/>
+        <Button Name="CancelButton" Click="CancelButton_Click" Visibility="Visible" Content="Cancel" HorizontalAlignment="Left" Margin="103,65,0,0" VerticalAlignment="Top" Width="77" Height="23"/>
     </Grid>
 </Page>

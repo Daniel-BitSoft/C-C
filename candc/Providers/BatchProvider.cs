@@ -10,44 +10,47 @@ namespace CC.Providers
 {
     public class BatchProvider
     {
-        public string CreateBatch(Batch batchInfo, List<BatchAntigen> batchAntigens)
+        public string CreateBatch(Batch newBatchInfo, List<BatchAntigen> batchAntigens, List<Batch> existingBatch)
         {
             try
             {
-                var existingBatch = App.dbcontext.GetBatchRecords(batchInfo.BatchName, batchInfo.RunDate, batchInfo.BlockNumber, batchInfo.AntigenGroup);
 
-                if (existingBatch == null || !existingBatch.Any())
+                foreach (var bA in batchAntigens)
                 {
-                    foreach (var bA in batchAntigens)
+                    var existingRecord = existingBatch?.FirstOrDefault(a => a.AntigenId == bA.AntigenId && !string.Equals(a.LotNumber, bA.LotNumber, StringComparison.OrdinalIgnoreCase));
+                    if (existingRecord != null) // existing batch record with different lot number. so needs to be updated
+                    {
+                        existingRecord.LotNumber = bA.LotNumber;
+                    }
+                    // new record needs to be create
+                    else if (!string.IsNullOrEmpty(bA.LotNumber))
                     {
                         App.dbcontext.Batches.Add(new Batch
                         {
-                            BatchName = batchInfo.BatchName,
-                            RunDate = batchInfo.RunDate,
-                            BlockNumber = batchInfo.BlockNumber,
-                            AntigenGroup = batchInfo.AntigenGroup,
+                            BatchName = newBatchInfo.BatchName,
+                            RunDate = newBatchInfo.RunDate,
+                            BlockNumber = newBatchInfo.BlockNumber,
+                            AntigenGroup = newBatchInfo.AntigenGroup,
                             LotNumber = bA.LotNumber,
                             AntigenId = bA.AntigenId,
+                            CCType = bA.Type.ToString(),
                             CreatedBy = App.LoggedInUser.UserId,
                             CreatedDt = DateTime.Now
                         });
                     }
+                }
 
-                    App.dbcontext.SaveChanges();
-                }
-                else
-                {
-                    return Messages.BatchAlreadyExist;
-                }
+                App.dbcontext.SaveChanges();
             }
             catch (Exception ex)
             {
                 var logNumber = Logger.Log(nameof(CreateBatch), new Dictionary<string, object>
                 {
                     { LogConsts.Exception, ex },
-                    { nameof(batchInfo.BatchName), batchInfo.BatchName },
-                    { nameof(batchInfo.RunDate), batchInfo.RunDate },
-                    { nameof(batchInfo.BlockNumber), batchInfo.BlockNumber }
+                    { nameof(newBatchInfo.BatchName), newBatchInfo.BatchName },
+                    { nameof(newBatchInfo.RunDate), newBatchInfo.RunDate },
+                    { nameof(newBatchInfo.BlockNumber), newBatchInfo.BlockNumber },
+                    { nameof(newBatchInfo.AntigenGroup), newBatchInfo.AntigenGroup }
                 });
 
                 ex.Data.Add(nameof(logNumber), logNumber);
@@ -55,6 +58,29 @@ namespace CC.Providers
             }
 
             return string.Empty;
+        }
+
+        public List<Batch> GetBatchRecords(string batchName, DateTime runDate, int blockNumber, string antigenGroup)
+        {
+            try
+            {
+                return App.dbcontext.GetBatchRecords(batchName, runDate, blockNumber, antigenGroup)?.ToList();
+            }
+            catch (Exception ex)
+            {
+
+                var logNumber = Logger.Log(nameof(CreateBatch), new Dictionary<string, object>
+                {
+                    { LogConsts.Exception, ex },
+                    { nameof(batchName), batchName },
+                    { nameof(runDate), runDate },
+                    { nameof(blockNumber), blockNumber },
+                    {nameof(antigenGroup), antigenGroup }
+                });
+
+                ex.Data.Add(nameof(logNumber), logNumber);
+                return null;
+            }
         }
     }
 }

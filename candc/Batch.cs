@@ -19,6 +19,7 @@ namespace CC
         public int BlockNumber { get; set; }
         public string LotNumber { get; set; }
         public string AntigenGroup { get; set; }
+        public string CCType { get; set; }
         public string AntigenId { get; set; }
         public string CreatedBy { get; set; }
         public System.DateTime CreatedDt { get; set; }

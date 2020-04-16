@@ -70,13 +70,15 @@
             <PropertyRef Name="BatchName" />
             <PropertyRef Name="RunDate" />
             <PropertyRef Name="BlockNumber" />
-            <PropertyRef Name="AntigenGroup" />
+            <PropertyRef Name="CCType" />
+            <PropertyRef Name="AntigenId" />
           </Key>
           <Property Name="BatchName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="RunDate" Type="date" Nullable="false" />
           <Property Name="BlockNumber" Type="int" Nullable="false" />
-          <Property Name="LotNumber" Type="varchar" MaxLength="50" />
+          <Property Name="LotNumber" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="AntigenGroup" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CCType" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="AntigenId" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="CreatedDt" Type="datetime" Nullable="false" />
@@ -92,7 +94,7 @@
           <Property Name="ArrayId" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="AntigenId" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="AntigenGroup" Type="varchar" MaxLength="50" />
-          <Property Name="Type" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="Min" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Max" Type="decimal" Precision="18" Scale="0" />
           <Property Name="DilutionDate" Type="datetime" />
@@ -211,7 +213,7 @@
           <Property Name="ArrayId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="AntigenId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="AntigenGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Min" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Max" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="DilutionDate" Type="DateTime" Precision="3" />
@@ -349,13 +351,15 @@
             <PropertyRef Name="BatchName" />
             <PropertyRef Name="RunDate" />
             <PropertyRef Name="BlockNumber" />
-            <PropertyRef Name="AntigenGroup" />
+            <PropertyRef Name="CCType" />
+            <PropertyRef Name="AntigenId" />
           </Key>
           <Property Name="BatchName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="RunDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="BlockNumber" Type="Int32" Nullable="false" />
-          <Property Name="LotNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LotNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AntigenGroup" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CCType" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="AntigenId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDt" Type="DateTime" Nullable="false" Precision="3" />
@@ -551,6 +555,7 @@
                 <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
+                <ScalarProperty Name="CCType" ColumnName="CCType" />
                 <ScalarProperty Name="AntigenGroup" ColumnName="AntigenGroup" />
                 <ScalarProperty Name="LotNumber" ColumnName="LotNumber" />
                 <ScalarProperty Name="BlockNumber" ColumnName="BlockNumber" />

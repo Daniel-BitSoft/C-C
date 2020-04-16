@@ -1,4 +1,6 @@
-﻿using CC.Models;
+﻿using CC.Constants;
+using CC.Models;
+using CC.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,7 @@ namespace CC
     public partial class BatchPage : Page
     {
         public Array array { get; set; }
+        public List<Batch> ExistingBatch { get; set; }
 
         public BatchPage()
         {
@@ -37,6 +40,8 @@ namespace CC
 
                 if (array != null)
                 {
+                    AntigenGroupCombo.SelectedIndex = -1;
+
                     BatchIdTextBox.Text = $"{array.ArrayName} (Pts. {batchNumberParts[1]}-{batchNumberParts[2]})";
                     RundatePicker.SelectedDate = Convert.ToDateTime(batchNumberParts[3]);
                     BlockNumberTextBox.Text = batchNumberParts[4];
@@ -60,16 +65,70 @@ namespace CC
         {
             if (AntigenGroupCombo.SelectedIndex > -1)
             {
-                var selectedGroup = AntigenGroupCombo.SelectedItem as string;
-                var arrayAntigens = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == array.ArrayId && a.Group == selectedGroup).ToList();
+                try
+                {
+                    ExistingBatch = App.BatchProvider.GetBatchRecords(
+                       BatchIdTextBox.Text.Trim(),
+                       RundatePicker.SelectedDate.Value,
+                       Convert.ToInt32(BlockNumberTextBox.Text.Trim()),
+                       Convert.ToString(AntigenGroupCombo.SelectedValue));
 
-                CalibGid.ItemsSource = App.mapper.Map<List<BatchAntigen>>(arrayAntigens);
-                NegGrid.ItemsSource = App.mapper.Map<List<BatchAntigen>>(arrayAntigens);
-                PosGrid.ItemsSource = App.mapper.Map<List<BatchAntigen>>(arrayAntigens);
+                    var selectedGroup = AntigenGroupCombo.SelectedItem as string;
+                    var arrayAntigens = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == array.ArrayId && a.Group == selectedGroup).ToList();
 
-                CalibGid.Items.Refresh();
-                NegGrid.Items.Refresh();
-                PosGrid.Items.Refresh();
+                    var calibBatch = App.mapper.Map<List<BatchAntigen>>(arrayAntigens);
+                    var negBatch = App.mapper.Map<List<BatchAntigen>>(arrayAntigens);
+                    var posBatch = App.mapper.Map<List<BatchAntigen>>(arrayAntigens);
+
+                    if (ExistingBatch != null && ExistingBatch.Any())
+                    {
+                        foreach (var batch in calibBatch)
+                        {
+                            batch.LotNumber = ExistingBatch.FirstOrDefault(b => b.AntigenId == batch.AntigenId && b.CCType == CCType.C.ToString())?.LotNumber;
+                            batch.Type = CCType.C;
+                        }
+                        foreach (var batch in negBatch)
+                        {
+                            batch.LotNumber = ExistingBatch.FirstOrDefault(b => b.AntigenId == batch.AntigenId && b.CCType == CCType.N.ToString())?.LotNumber;
+                            batch.Type = CCType.N;
+                        }
+                        foreach (var batch in posBatch)
+                        {
+                            batch.LotNumber = ExistingBatch.FirstOrDefault(b => b.AntigenId == batch.AntigenId && b.CCType == CCType.P.ToString())?.LotNumber;
+                            batch.Type = CCType.P;
+                        }
+                    }
+                    else
+                    {
+                        calibBatch.ForEach(a => a.Type = CCType.C);
+                        negBatch.ForEach(a => a.Type = CCType.N);
+                        posBatch.ForEach(a => a.Type = CCType.P);
+                    }
+
+                    CalibGid.ItemsSource = calibBatch;
+                    NegGrid.ItemsSource = negBatch;
+                    PosGrid.ItemsSource = posBatch;
+
+                    CalibGid.Items.Refresh();
+                    NegGrid.Items.Refresh();
+                    PosGrid.Items.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Data.Contains("logNumber"))
+                    {
+                        MessageBox.Show($"{ Messages.Exception} - log: {ex.Data["logNumber"]}");
+                    }
+                    else
+                    {
+                        var logNumber = Logger.Log(nameof(AntigenGroupCombo_SelectionChanged), new Dictionary<string, object>
+                        {
+                            { LogConsts.Exception, ex }
+                        });
+
+                        MessageBox.Show($"{ Messages.Exception} - log: {logNumber}");
+                    }
+                }
             }
         }
 
@@ -92,8 +151,7 @@ namespace CC
                 if (string.IsNullOrEmpty(response))
                 {
                     MessageBox.Show("Successfully saved");
-
-                    // clean page
+                    CleanPage();
                 }
                 else
                 {
@@ -102,7 +160,7 @@ namespace CC
             }
             else
             {
-                MessageBox.Show("Please complete the form before saving", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("There are some invalid or missing fields on the page", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -113,10 +171,16 @@ namespace CC
                 var response = SaveBatch();
                 if (string.IsNullOrEmpty(response))
                 {
-                    MessageBox.Show("Successfully saved");
-                    // select next group
-                    // or
-                    // clean page
+                    if (AntigenGroupCombo.SelectedIndex < AntigenGroupCombo.Items.Count - 1) // there are still more groups to select from
+                    {
+                        MessageBox.Show("Successfully saved. Please click OK to load next antigen group");
+                        AntigenGroupCombo.SelectedIndex++;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Successfully saved. That was the last antigen group");
+                        CleanPage();
+                    }
                 }
                 else
                 {
@@ -125,7 +189,7 @@ namespace CC
             }
             else
             {
-                MessageBox.Show("Please complete the form before saving", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("There are some invalid or missing fields on the page", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -145,7 +209,7 @@ namespace CC
                 AntigenGroup = AntigenGroupCombo.Text
             };
 
-            return App.BatchProvider.CreateBatch(batch, bachAntigens);
+            return App.BatchProvider.CreateBatch(batch, bachAntigens, ExistingBatch);
         }
 
         private bool ValidateForm()
@@ -171,7 +235,7 @@ namespace CC
                 BlockNumberLabel.BorderThickness = new Thickness(0);
 
 
-            if (RundatePicker.SelectedDate.HasValue)
+            if (!RundatePicker.SelectedDate.HasValue)
             {
                 RunDateLabel.BorderBrush = Brushes.Red;
                 RunDateLabel.BorderThickness = new Thickness(2);
@@ -197,62 +261,41 @@ namespace CC
                         {
                             if (string.IsNullOrWhiteSpace(negBatch[i].LotNumber))
                             {
-                                var row = NegGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                row.BorderBrush = Brushes.Red;
-                                row.BorderThickness = new Thickness(2);
+                                (NegGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
                             }
                             else
                             {
-                                var row = NegGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                row.BorderBrush = Brushes.LightGray;
-                                row.BorderThickness = new Thickness(1);
+                                (NegGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
+
                             }
 
                             if (string.IsNullOrWhiteSpace(posBatch[i].LotNumber))
                             {
-                                var row = PosGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                row.BorderBrush = Brushes.Red;
-                                row.BorderThickness = new Thickness(2);
+                                (PosGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
+
                             }
                             else
                             {
-                                var row = PosGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                row.BorderBrush = Brushes.LightGray;
-                                row.BorderThickness = new Thickness(1);
+                                (PosGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
                             }
 
                             if (string.IsNullOrWhiteSpace(CalibBatch[i].LotNumber))
                             {
-                                var row = CalibGid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                row.BorderBrush = Brushes.Red;
-                                row.BorderThickness = new Thickness(2);
+                                (CalibGid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
                             }
                             else
                             {
-                                var row = CalibGid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                row.BorderBrush = Brushes.LightGray;
-                                row.BorderThickness = new Thickness(1);
+                                (CalibGid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
                             }
                         }
-
-                        MessageBox.Show("Some antigens do not have lot number. Please complete form before saving", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return isValid;
                     }
                     else
                     {
                         for (int i = 0; i < NegGrid.Items.Count; i++)
                         {
-                            var negRow = NegGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                            negRow.BorderBrush = Brushes.LightGray;
-                            negRow.BorderThickness = new Thickness(1);
-
-                            var posRow = PosGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                            posRow.BorderBrush = Brushes.LightGray;
-                            posRow.BorderThickness = new Thickness(1);
-
-                            var calRow = CalibGid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                            calRow.BorderBrush = Brushes.LightGray;
-                            calRow.BorderThickness = new Thickness(1);
+                            (NegGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
+                            (PosGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
+                            (CalibGid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
                         }
                     }
                 }
@@ -270,39 +313,29 @@ namespace CC
                             {
                                 if (string.IsNullOrWhiteSpace(negBatch[i].LotNumber))
                                 {
-                                    var row = NegGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                    row.BorderBrush = Brushes.Red;
-                                    row.BorderThickness = new Thickness(2);
+                                    (NegGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
                                 }
                                 else
                                 {
-                                    var negRow = NegGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                    negRow.BorderBrush = Brushes.LightGray;
-                                    negRow.BorderThickness = new Thickness(1);
+                                    (NegGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
                                 }
+
                                 if (string.IsNullOrWhiteSpace(posBatch[i].LotNumber))
                                 {
-                                    var row = PosGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                    row.BorderBrush = Brushes.Red;
-                                    row.BorderThickness = new Thickness(2);
+                                    (PosGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
                                 }
                                 else
                                 {
-                                    var posRow = PosGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                    posRow.BorderBrush = Brushes.LightGray;
-                                    posRow.BorderThickness = new Thickness(1);
+                                    (PosGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
                                 }
+
                                 if (string.IsNullOrWhiteSpace(CalibBatch[i].LotNumber))
                                 {
-                                    var row = CalibGid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                    row.BorderBrush = Brushes.Red;
-                                    row.BorderThickness = new Thickness(2);
+                                    (CalibGid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
                                 }
                                 else
                                 {
-                                    var calRow = CalibGid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                                    calRow.BorderBrush = Brushes.LightGray;
-                                    calRow.BorderThickness = new Thickness(1);
+                                    (CalibGid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
                                 }
 
                                 isValid = false;
@@ -310,19 +343,71 @@ namespace CC
                         }
                     }
                 }
+
+                // validate expiration of lot numbers 
+                // Get existing calibrators, postitive controls, and negative controls that are not expired for selected array
+                var existingLotNumbers = App.CCProvider.GetExistingCC(array.ArrayId);
+
+                for (int i = 0; i < NegGrid.Items.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(negBatch[i].LotNumber))
+                    {
+                        var negC = existingLotNumbers.FirstOrDefault(a => a.LotNumber == negBatch[i].LotNumber && a.AntigenId == negBatch[i].AntigenId && a.Type == CCType.N.ToString());
+                        if (negC == null)
+                        {
+                            (NegGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
+                            isValid = false;
+                        }
+                        else
+                        {
+                            (NegGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(posBatch[i].LotNumber))
+                    {
+                        var posC = existingLotNumbers.FirstOrDefault(a => a.LotNumber == posBatch[i].LotNumber && a.AntigenId == posBatch[i].AntigenId && a.Type == CCType.P.ToString());
+                        if (posC == null)
+                        {
+                            (PosGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
+                            isValid = false;
+                        }
+                        else
+                        {
+                            (PosGrid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(CalibBatch[i].LotNumber))
+                    {
+                        var calib = existingLotNumbers.FirstOrDefault(a => a.LotNumber == CalibBatch[i].LotNumber && a.AntigenId == CalibBatch[i].AntigenId && a.Type == CCType.C.ToString());
+                        if (calib == null)
+                        {
+                            (CalibGid.Items[i] as BatchAntigen).ShowExpired = Visibility.Visible;
+                            isValid = false;
+                        }
+                        else
+                        {
+                            (CalibGid.Items[i] as BatchAntigen).ShowExpired = Visibility.Hidden;
+                        }
+                    }
+                }
             }
 
-            if (isValid)
-            {
-                NegGrid.Items.Refresh();
-                PosGrid.Items.Refresh();
-                CalibGid.Items.Refresh();
-            }
+            NegGrid.Items.Refresh();
+            PosGrid.Items.Refresh();
+            CalibGid.Items.Refresh();
 
             return isValid;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            CleanPage();
+            ExistingBatch = null;
+        }
+
+        private void CleanPage()
         {
             App.CCProvider.SetArrayAntigens();
 

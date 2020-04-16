@@ -96,6 +96,7 @@ namespace CC
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             LoadAntigens();
+            SaveButton.Visibility = CancelButton.Visibility = Visibility.Hidden;
         }
 
         private void LoadAntigens(List<Antigen> antigens = null)
