@@ -2,6 +2,7 @@
 {
     public class UsersConsts
     {
-        public static string DefaultTempPassword = "12345";
+        public const string DefaultTempPassword = "12345a";
+        public const string PasswordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$";
     }
 }

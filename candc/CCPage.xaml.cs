@@ -64,6 +64,7 @@ namespace CC
 
                     AntigensGrid.ItemsSource = App.mapper.Map<List<AntigenRange>>(arrayAntigens);
                     AntigensGrid.Items.Refresh();
+                    QuantityLabelTextBox.Text = arrayAntigens.Count.ToString();
                 }
                 else
                 {
@@ -79,6 +80,7 @@ namespace CC
             {
                 AntigensGrid.ItemsSource = new List<AntigenRange> { App.mapper.Map<AntigenRange>(AntigenListbx.SelectedItem as AntigensAssingedToArray) };
                 AntigensGrid.Items.Refresh();
+                QuantityLabelTextBox.Text = "1";
 
                 AntigensGrid.Focus();
             }
@@ -351,7 +353,7 @@ namespace CC
 
                 if (activeCCs != null && activeCCs.Any())
                 {
-                    var antigensIds = activeCCs.Select(a => a.AntigenId).ToList();
+                    var antigensIds = activeCCs.Where(a=>a.DilutionDate == DilutionDatePicker.SelectedDate.Value.Date).Select(a => a.AntigenId).ToList();
                     var duplicatedAntigens = antigenRanges.Where(a => antigensIds.Contains(a.AntigenId)).ToList();
 
                     if (duplicatedAntigens != null && duplicatedAntigens.Count > 1)
@@ -376,7 +378,7 @@ namespace CC
                         AntigenGroup = GroupListbx.Text,
                         ArrayId = ArrayListbx.SelectedValue.ToString(),
                         AntigenId = antigenRange.AntigenId,
-                        DilutionDate = DilutionDatePicker.SelectedDate.Value,
+                        DilutionDate = DilutionDatePicker.SelectedDate.Value.Date,
                         DilutionFactor = DilutionFactorTextBox.Text,
                         ExpirationDate = Convert.ToDateTime(ExpirationDateTextBox.Text),
                         LotNumber = lotNumber,
@@ -389,6 +391,10 @@ namespace CC
 
 
                 App.CCProvider.CreateCalibControl(CalibControls);
+                MessageBox.Show("Successfully Saved. Click OK to start printing labels");
+
+                var demoPrintPage = new CCLabel(new List<Barcode> { }, 1);
+                demoPrintPage.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -480,5 +486,16 @@ namespace CC
             QtyLabel.BorderThickness = new Thickness(0);
         }
 
+        private void QuantityLabelTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var value = QuantityLabelTextBox.Text.Trim();
+            if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int qty))
+            {
+                if (qty < 0)
+                    QuantityLabelTextBox.Text = string.Empty;
+            }
+            else
+                QuantityLabelTextBox.Text = string.Empty;
+        }
     }
 }

@@ -9,6 +9,6 @@
         Control,
         NegCalibrator,
         ArrayAntigen,
-        CalibControl
+        Batch
     }
 }

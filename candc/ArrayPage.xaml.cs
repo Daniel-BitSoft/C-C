@@ -76,12 +76,14 @@ namespace CC
 
         private void ResetPage()
         {
-            antigensGroups = new Dictionary<string, List<Antigen>>(); 
+            antigensGroups = new Dictionary<string, List<Antigen>>();
 
             ArrayNameText.Text = "i.e. Array 3X";
             ArrayCodeTextbx.Text = "i.e. A3X";
-            ArrayNameText.Foreground = ArrayCodeTextbx.Foreground = Brushes.LightGray;
-            ArrayNameText.FontStyle = ArrayCodeTextbx.FontStyle = FontStyles.Italic;
+            QRArrayCodeTextBx.Text = "i.e. 3";
+
+            ArrayNameText.Foreground = ArrayCodeTextbx.Foreground = QRArrayCodeTextBx.Foreground = Brushes.LightGray;
+            ArrayNameText.FontStyle = ArrayCodeTextbx.FontStyle = QRArrayCodeTextBx.FontStyle = FontStyles.Italic;
 
             SubArrayCheckbox.IsChecked = false;
             MasterArrayDropdown.IsEnabled = false;
@@ -176,27 +178,27 @@ namespace CC
             {
                 case "Group1":
                     Group1.ItemsSource = antigens;
-                    Group1.Items.Refresh(); 
+                    Group1.Items.Refresh();
                     break;
                 case "Group2":
                     Group2.ItemsSource = antigens;
-                    Group2.Items.Refresh(); 
+                    Group2.Items.Refresh();
                     break;
                 case "Group3":
                     Group3.ItemsSource = antigens;
-                    Group3.Items.Refresh(); 
+                    Group3.Items.Refresh();
                     break;
                 case "Group4":
                     Group4.ItemsSource = antigens;
-                    Group4.Items.Refresh(); 
+                    Group4.Items.Refresh();
                     break;
                 case "Group5":
                     Group5.ItemsSource = antigens;
-                    Group5.Items.Refresh(); 
+                    Group5.Items.Refresh();
                     break;
                 case "Group6":
                     Group6.ItemsSource = antigens;
-                    Group6.Items.Refresh(); 
+                    Group6.Items.Refresh();
                     break;
             }
         }
@@ -205,32 +207,41 @@ namespace CC
         {
             try
             {
-                string masterArrayId = null;
-                var isSubArray = SubArrayCheckbox.IsChecked.HasValue && SubArrayCheckbox.IsChecked.Value;
-
-                if (isSubArray && MasterArrayDropdown.SelectedItem != null)
-                    masterArrayId = ((Array)MasterArrayDropdown.SelectedItem).ArrayId;
-
-                var response = App.ArrayProvider.CreateArray(new Array
+                var errorMessage = ValidatePage();
+                if (string.IsNullOrEmpty(errorMessage))
                 {
-                    ArrayName = ArrayNameText.Text.Trim(),
-                    ShortArrayName = ArrayCodeTextbx.Text.Trim(),
-                    IsSubArray = isSubArray,
-                    MasterArrayId = masterArrayId
-                },
-                antigensGroups);
+                    string masterArrayId = null;
+                    var isSubArray = SubArrayCheckbox.IsChecked.HasValue && SubArrayCheckbox.IsChecked.Value;
 
-                if (!string.IsNullOrEmpty(response))
-                {
-                    MessageBox.Show(response);
+                    if (isSubArray && MasterArrayDropdown.SelectedItem != null)
+                        masterArrayId = ((Array)MasterArrayDropdown.SelectedItem).ArrayId;
+
+                    var response = App.ArrayProvider.CreateArray(new Array
+                    {
+                        ArrayName = ArrayNameText.Text.Trim(),
+                        ShortArrayName = ArrayCodeTextbx.Text.Trim(),
+                        LIMArrayNumber = QRArrayCodeTextBx.Text.Trim(),
+                        IsSubArray = isSubArray,
+                        MasterArrayId = masterArrayId
+                    },
+                    antigensGroups);
+
+                    if (!string.IsNullOrEmpty(response))
+                    {
+                        MessageBox.Show(response);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Successfully saved");
+                    }
+
+                    ResetPage();
+                    LoadPageData();
                 }
                 else
                 {
-                    MessageBox.Show("Successfully saved");
+                    MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
-                ResetPage();
-                LoadPageData();
             }
             catch (Exception ex)
             {
@@ -241,6 +252,66 @@ namespace CC
 
                 MessageBox.Show($"{ Messages.Exception} - log: {logNumber}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private string ValidatePage()
+        {
+            var isValid = true;
+
+            if (string.IsNullOrWhiteSpace(ArrayNameText.Text))
+            {
+                ArrayNameLbl.BorderBrush = Brushes.Red;
+                ArrayNameLbl.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            else
+            {
+                ArrayNameLbl.BorderThickness = new Thickness(0);
+            }
+
+            if (string.IsNullOrWhiteSpace(ArrayCodeTextbx.Text))
+            {
+                ArrayCodeLbl.BorderBrush = Brushes.Red;
+                ArrayCodeLbl.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            else
+            {
+                ArrayCodeLbl.BorderThickness = new Thickness(0);
+            }
+
+            if (string.IsNullOrWhiteSpace(QRArrayCodeTextBx.Text))
+            {
+                QRArrCodeLbl.BorderBrush = Brushes.Red;
+                QRArrCodeLbl.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            else
+            {
+                QRArrCodeLbl.BorderThickness = new Thickness(0);
+            }
+
+            if (Convert.ToBoolean(SubArrayCheckbox.IsChecked) && MasterArrayDropdown.SelectedIndex < 0)
+            {
+                MasterArrayLbl.BorderBrush = Brushes.Red;
+                MasterArrayLbl.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            else
+            {
+                MasterArrayLbl.BorderThickness = new Thickness(0);
+            }
+
+            if (!antigensGroups.Any())
+            {
+                return "Please add at least one antigen in one antigen group before saving";
+            }
+            else if (!isValid)
+            {
+                return "Please complete required fields marked with red before saving";
+            }
+
+            return string.Empty;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -273,7 +344,7 @@ namespace CC
 
         private void RemoveAntigenGroup1_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
         private void RemoveAntigenGroup2_Click(object sender, RoutedEventArgs e)
         {
@@ -300,6 +371,16 @@ namespace CC
         {
             AntigensGrid.ItemsSource = antigenList.Where(a => a.AntigenName.ToLower().Contains(AntigenSearchText.Text.ToLower()));
             AntigensGrid.Items.Refresh();
-        } 
+        }
+
+        private void QRArrayCodeTextBx_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (QRArrayCodeTextBx.Foreground != Brushes.Black)
+            {
+                QRArrayCodeTextBx.Text = string.Empty;
+                QRArrayCodeTextBx.Foreground = Brushes.Black;
+                QRArrayCodeTextBx.FontStyle = FontStyles.Normal;
+            }
+        }
     }
 }

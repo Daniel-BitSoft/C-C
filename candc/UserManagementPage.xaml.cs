@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CC.Constants;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -51,9 +52,12 @@ namespace CC
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            App.userPage.User = UsersGrid.SelectedItem as User;
-            App.userPage.IsNew = false;
-            NavigationService.Navigate(App.userPage);
+            if (UsersGrid.SelectedItem != null)
+            {
+                App.userPage.User = UsersGrid.SelectedItem as User;
+                App.userPage.IsNew = false;
+                NavigationService.Navigate(App.userPage);
+            }
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)

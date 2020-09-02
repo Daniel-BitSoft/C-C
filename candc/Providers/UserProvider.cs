@@ -10,6 +10,7 @@ namespace CC.Providers
     {
         public List<User> ActiveUsers { get; set; }
         public List<User> DisabledUsers { get; set; }
+        public List<User> AllUsers { get; set; }
 
         public UserProvider()
         {
@@ -17,9 +18,9 @@ namespace CC.Providers
 
         public async Task UpdateUsersList()
         {
-            var users = GetAllUsers();
-            DisabledUsers = users.Where(a => a.IsDisabled).ToList();
-            ActiveUsers = users.Except(DisabledUsers).ToList();
+            AllUsers = GetAllUsers();
+            DisabledUsers = AllUsers.Where(a => a.IsDisabled).ToList();
+            ActiveUsers = AllUsers.Except(DisabledUsers).ToList();
         }
 
         public User ValidateCredentials(string username, string password)

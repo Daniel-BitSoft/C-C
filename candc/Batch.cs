@@ -25,5 +25,6 @@ namespace CC
         public System.DateTime CreatedDt { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
+        public string BatchId { get; set; }
     }
 }

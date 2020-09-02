@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CC.Providers;
+using System.Text.RegularExpressions;
 
 namespace CC
 {
@@ -74,10 +76,6 @@ namespace CC
                     {
                         MessageBox.Show(response, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                    else
-                    {
-                        App.UserProvider.UpdateUsersList().Wait();
-                    }
                 }
                 else
                 {
@@ -107,18 +105,19 @@ namespace CC
                     {
                         MessageBox.Show(response, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                    else
-                    {
-                        App.UserProvider.UpdateUsersList().Wait();
-                    }
                 }
 
                 App.UserProvider.UpdateUsersList().Wait();
                 NavigationService.GoBack();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(Messages.Exception, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var logNumber = Logger.Log(nameof(UserPage) + nameof(SaveButton_Click), new Dictionary<string, object>
+                {
+                    { LogConsts.Exception, ex }
+                });
+
+                MessageBox.Show($"{ Messages.Exception} - log: {logNumber}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
         }
@@ -126,6 +125,7 @@ namespace CC
         private bool Validate()
         {
             bool isvalid = true;
+            bool incompleteForm = false;
             List<string> errorMessages = new List<string>();
 
             if (string.IsNullOrWhiteSpace(FirstNameTextbox.Text))
@@ -133,6 +133,7 @@ namespace CC
                 FNameLbl.BorderBrush = Brushes.Red;
                 FNameLbl.BorderThickness = new Thickness(2);
                 isvalid = false;
+                incompleteForm = true;
             }
             else
             {
@@ -144,6 +145,7 @@ namespace CC
                 LNameLbl.BorderBrush = Brushes.Red;
                 LNameLbl.BorderThickness = new Thickness(2);
                 isvalid = false;
+                incompleteForm = true;
             }
             else
             {
@@ -155,10 +157,17 @@ namespace CC
                 TempPassLabel.BorderBrush = Brushes.Red;
                 TempPassLabel.BorderThickness = new Thickness(2);
                 isvalid = false;
+                incompleteForm = true;
             }
             else
             {
                 TempPassLabel.BorderThickness = new Thickness(0);
+            }
+
+            if (!Regex.IsMatch(TemporaryPassTextBox.Text.Trim(), UsersConsts.PasswordRegex))
+            {
+                errorMessages.Add("* Password must be between 6 to 25 characters and contain both letters and numbers");
+                isvalid = false;
             }
 
             if (EmailTextbox.Text.Trim() != ConfirmEmailTextbox.Text.Trim() || string.IsNullOrWhiteSpace(EmailTextbox.Text))
@@ -176,7 +185,9 @@ namespace CC
 
             if (!isvalid)
             {
-                errorMessages.Add("* Please complete the form before saving");
+                if (incompleteForm)
+                    errorMessages.Add("* Please complete the form before saving");
+
                 ErrorMessages.Text = string.Join("\r\n", errorMessages);
             }
             else
@@ -206,7 +217,7 @@ namespace CC
         {
             if (IsNew)
                 PrepareNewCustomer();
-            else
+            else if (User != null)
             {
                 FirstNameTextbox.Text = User.FirstName;
                 LastNameTextbox.Text = User.LastName;
@@ -219,6 +230,9 @@ namespace CC
 
                 TemporaryPassTextBox.Visibility = Visibility.Hidden;
                 TempPassLabel.Visibility = Visibility.Hidden;
+
+                if (User.IsDisabled)
+                    DeleteButton.Visibility = Visibility.Visible;
             }
         }
 
@@ -231,7 +245,7 @@ namespace CC
                 TempPassLabel.Visibility = Visibility.Visible;
                 TemporaryPassTextBox.Text = UsersConsts.DefaultTempPassword;
                 DisabledCheckbox.IsChecked = false;
-                IsNew = true;
+                IsNew = false;
 
                 User.Password = UsersConsts.DefaultTempPassword;
                 User.IsLocked = false;

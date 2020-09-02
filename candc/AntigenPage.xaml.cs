@@ -49,41 +49,55 @@ namespace CC
         {
             if (crudMode == CrudMode.Create)
             {
-                var responseMessage = App.AntigensProvider.CreateAntigen(
-                     new Antigen
-                     {
-                         AntigenName = NameText.Text.Trim()
-                     });
-
-                if (string.IsNullOrEmpty(responseMessage.ErrorMessage))
+                if (!string.IsNullOrWhiteSpace(NameText.Text))
                 {
-                    antigenList.Add(responseMessage.Antigen);
-                    
-                    MessageBox.Show(Messages.SuccessFullyCreated);  
-                    SetViewMode();
-                    LoadAntigens();
+                    var existingAntigen = App.dbcontext.Antigens.FirstOrDefault(a => a.AntigenName.ToLower() == NameText.Text.Trim().ToLower());
+                    if (existingAntigen == null)
+                    {
+                        var responseMessage = App.AntigensProvider.CreateAntigen(
+                             new Antigen
+                             {
+                                 AntigenName = NameText.Text.Trim()
+                             });
+
+                        if (string.IsNullOrEmpty(responseMessage.ErrorMessage))
+                        {
+                            antigenList.Add(responseMessage.Antigen);
+
+                            MessageBox.Show(Messages.SuccessFullyCreated);
+                            SetViewMode();
+                            LoadAntigens();
+                        }
+                        else
+                            MessageBox.Show(responseMessage.ErrorMessage);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Antigen already exists");
+                    }
                 }
-                else
-                    MessageBox.Show(responseMessage.ErrorMessage);
             }
             else if (crudMode == CrudMode.Update)
             {
-                var antigen = AntigensGrid.SelectedItem as Antigen;
-                antigen.AntigenName = NameText.Text.Trim();
-
-                var responseMessage = App.AntigensProvider.UpdateAntigen(antigen);
-
-                if (string.IsNullOrEmpty(responseMessage))
+                if (!string.IsNullOrWhiteSpace(NameText.Text))
                 {
-                    antigenList.First(a => a.AntigenId == antigen.AntigenId).AntigenName = antigen.AntigenName;
+                    var antigen = AntigensGrid.SelectedItem as Antigen;
+                    antigen.AntigenName = NameText.Text.Trim();
 
-                    MessageBox.Show(Messages.SuccessFullyUpdated); 
-                    SetViewMode();
-                    LoadAntigens();
-                }
-                else
-                {
-                    MessageBox.Show(responseMessage);
+                    var responseMessage = App.AntigensProvider.UpdateAntigen(antigen);
+
+                    if (string.IsNullOrEmpty(responseMessage))
+                    {
+                        antigenList.First(a => a.AntigenId == antigen.AntigenId).AntigenName = antigen.AntigenName;
+
+                        MessageBox.Show(Messages.SuccessFullyUpdated);
+                        SetViewMode();
+                        LoadAntigens();
+                    }
+                    else
+                    {
+                        MessageBox.Show(responseMessage);
+                    }
                 }
             }
         }
@@ -105,10 +119,13 @@ namespace CC
             {
                 var response = App.AntigensProvider.GetAntigensNotAssigned();
                 if (string.IsNullOrEmpty(response.ErrorMessage))
-                {
+                { 
                     antigenList = response.Antigens;
                     AntigensGrid.ItemsSource = response.Antigens;
                     AntigensGrid.Items.Refresh();
+
+                    AntigensGridAssigned.ItemsSource = App.AntigensProvider.GetAntigensAssignedToArray().Antigens;
+                    AntigensGridAssigned.Items.Refresh();
                 }
                 else
                     MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -2,6 +2,7 @@
 using CC.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,23 +11,42 @@ namespace CC.Providers
 {
     public class BatchProvider
     {
-        public string CreateBatch(Batch newBatchInfo, List<BatchAntigen> batchAntigens, List<Batch> existingBatch)
+        public string UpsertBatch(Batch newBatchInfo, List<BatchAntigen> batchAntigens)
         {
             try
-            {
-
+            { 
                 foreach (var bA in batchAntigens)
                 {
-                    var existingRecord = existingBatch?.FirstOrDefault(a => a.AntigenId == bA.AntigenId && !string.Equals(a.LotNumber, bA.LotNumber, StringComparison.OrdinalIgnoreCase));
+                    var existingRecord = App.dbcontext.Batches.FirstOrDefault(a =>
+                                            a.BatchName == newBatchInfo.BatchName &&
+                                            a.RunDate == newBatchInfo.RunDate &&
+                                            a.BlockNumber == newBatchInfo.BlockNumber &&
+                                            a.CCType == bA.Type.ToString() &&
+                                            a.AntigenId == bA.AntigenId);
+
                     if (existingRecord != null) // existing batch record with different lot number. so needs to be updated
                     {
                         existingRecord.LotNumber = bA.LotNumber;
+                        existingRecord.UpdatedBy = App.LoggedInUser.UserId;
+                        existingRecord.UpdatedDt = DateTime.Now;
+
+                        var audit = new Audit
+                        {
+                            RecordId = existingRecord.BatchId,
+                            Type = AuditTypes.Batch.ToString(),
+                            Description = AuditEvents.BatchRecordUpdated.ToString(),
+                            UpdatedBy = App.LoggedInUser.UserId,
+                            UpdatedDt = DateTime.Now
+                        };
+
+                        App.dbcontext.Audits.Add(audit);
                     }
                     // new record needs to be create
                     else if (!string.IsNullOrEmpty(bA.LotNumber))
                     {
                         App.dbcontext.Batches.Add(new Batch
                         {
+                            BatchId = Guid.NewGuid().ToString(),
                             BatchName = newBatchInfo.BatchName,
                             RunDate = newBatchInfo.RunDate,
                             BlockNumber = newBatchInfo.BlockNumber,
@@ -44,7 +64,7 @@ namespace CC.Providers
             }
             catch (Exception ex)
             {
-                var logNumber = Logger.Log(nameof(CreateBatch), new Dictionary<string, object>
+                var logNumber = Logger.Log(nameof(UpsertBatch), new Dictionary<string, object>
                 {
                     { LogConsts.Exception, ex },
                     { nameof(newBatchInfo.BatchName), newBatchInfo.BatchName },
@@ -60,16 +80,21 @@ namespace CC.Providers
             return string.Empty;
         }
 
-        public List<Batch> GetBatchRecords(string batchName, DateTime runDate, int blockNumber, string antigenGroup)
+        public List<Batch> GetBatchRecordsInGroup(string batchName, DateTime runDate, int blockNumber, string antigenGroup)
         {
             try
             {
-                return App.dbcontext.GetBatchRecords(batchName, runDate, blockNumber, antigenGroup)?.ToList();
+                var bName = new SqlParameter("@batchName", batchName);
+                var bRundate = new SqlParameter("@runDate", runDate.ToShortDateString());
+                var blockNum = new SqlParameter("@BlockNumber", blockNumber);
+                var group = new SqlParameter("@antigenGroup", antigenGroup);
+
+                return App.dbcontext.Database.SqlQuery<Batch>("GetBatchRecords @batchName, @runDate, @BlockNumber, @antigenGroup", bName, bRundate, blockNum, group)?.ToList();
             }
             catch (Exception ex)
             {
 
-                var logNumber = Logger.Log(nameof(CreateBatch), new Dictionary<string, object>
+                var logNumber = Logger.Log(nameof(UpsertBatch), new Dictionary<string, object>
                 {
                     { LogConsts.Exception, ex },
                     { nameof(batchName), batchName },
@@ -79,7 +104,7 @@ namespace CC.Providers
                 });
 
                 ex.Data.Add(nameof(logNumber), logNumber);
-                return null;
+                throw ex;
             }
         }
     }

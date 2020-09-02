@@ -23,8 +23,7 @@ namespace CC
     /// </summary>
     public partial class BatchPage : Page
     {
-        public Array array { get; set; }
-        public List<Batch> ExistingBatch { get; set; }
+        public Array array { get; set; } 
 
         public BatchPage()
         {
@@ -67,7 +66,7 @@ namespace CC
             {
                 try
                 {
-                    ExistingBatch = App.BatchProvider.GetBatchRecords(
+                    var ExistingBatch = App.BatchProvider.GetBatchRecordsInGroup(
                        BatchIdTextBox.Text.Trim(),
                        RundatePicker.SelectedDate.Value,
                        Convert.ToInt32(BlockNumberTextBox.Text.Trim()),
@@ -209,7 +208,7 @@ namespace CC
                 AntigenGroup = AntigenGroupCombo.Text
             };
 
-            return App.BatchProvider.CreateBatch(batch, bachAntigens, ExistingBatch);
+            return App.BatchProvider.UpsertBatch(batch, bachAntigens);
         }
 
         private bool ValidateForm()
@@ -403,8 +402,7 @@ namespace CC
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            CleanPage();
-            ExistingBatch = null;
+            CleanPage(); 
         }
 
         private void CleanPage()

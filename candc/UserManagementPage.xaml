@@ -5,26 +5,24 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="800"
+      d:DesignHeight="700" d:DesignWidth="1000"
       Title="UserManagementPage" Background="White"
       Loaded="Page_Loaded" FontSize="16">
 
     <Grid >
-        <Grid Name="RadioBtnGrid"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="136,25,0,0" Width="588" Height="52" >
+        <Grid Name="RadioBtnGrid"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="136,25,0,0" Width="750" Height="52" >
             <RadioButton Name="ActiveUsersRadBtn" Checked="ActiveUsersRadBtn_Checked" Content="Active Users" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="61,10,0,0" VerticalAlignment="Top"/>
             <RadioButton Name="DisabledUserRadBtn" Checked="DisabledUserRadBtn_Checked" Content="Disabled Users" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="179,10,0,0" VerticalAlignment="Top" />
             <Label Content="View:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,4,0,0"/>
-            <TextBox Name="SearchTextBox" HorizontalAlignment="Left" Height="28" Margin="420,8,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="158" KeyDown="SearchTextBox_KeyDown"/>
-            <Label Content="Search:" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Width="65"/>
+            <TextBox Name="SearchTextBox" HorizontalAlignment="Left" Height="28" Margin="586,8,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="158" KeyDown="SearchTextBox_KeyDown"/>
+            <Label Content="Search:" HorizontalAlignment="Left" Margin="516,4,0,0" VerticalAlignment="Top" Width="65"/>
         </Grid>
         <DataGrid Name="UsersGrid" HorizontalAlignment="Left" IsReadOnly="True" AutoGenerateColumns="False" Height="500" Margin="136,82,0,0" VerticalAlignment="Top" Width="750">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="NameCol" Header="NAME" Binding="{Binding Path=FirstName}" Width="2*"/>
                 <DataGridTextColumn x:Name="LNameCol" Header="LAST NAME" Binding="{Binding Path=LastName}" Width="2*"/>
-                <DataGridTextColumn x:Name="EmailCol" Header="EMAIL" Binding="{Binding Path=Email}" Width="3*"/>
+                <DataGridTextColumn x:Name="EmailCol" Header="EMAIL" Binding="{Binding Path=Username}" Width="3*"/>
                 <DataGridCheckBoxColumn x:Name="AdminCol" Header="ADMIN" Binding="{Binding Path=IsAdmin}" Width="1*"/>
-                <DataGridCheckBoxColumn x:Name="DisableCol" Header="DISABLE" Binding="{Binding Path=IsDisabled}" Width="1*"/>
-                <DataGridCheckBoxColumn x:Name="DeleteCol" Header="DELETE" Binding="{Binding Path=IsDeleted}" Width="1*"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button Name="EditButton" Content="Edit User" Click="EditButton_Click" HorizontalAlignment="Left" Margin="320,626,0,0" VerticalAlignment="Top" Width="161"/>

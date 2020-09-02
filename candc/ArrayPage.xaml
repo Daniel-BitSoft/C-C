@@ -11,27 +11,31 @@
 
     <Grid Background="White">
         <Label Content="Create Array" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
-        <Label Content="Array Name" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
-        <CheckBox Name="SubArrayCheckbox" Content="" Checked="SubArrayCheckbox_Checked" Unchecked="SubArrayCheckbox_Unchecked" HorizontalAlignment="Left" Margin="160,105,0,0" VerticalAlignment="Top" Width="18" Height="16"/>
-        <Label Content="Is this a sub array" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top"/>
+        <Label Name="ArrayNameLbl" Content="Array Name" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
         <TextBox Name="ArrayNameText" HorizontalAlignment="Left" Height="23" Margin="159,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" GotFocus="ArrayNameText_GotFocus"/>
-        <Label Content="Array Code" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top"/>
+        <Label Name="ArrayCodeLbl" Content="Array Code" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="ArrayCodeTextbx" HorizontalAlignment="Left" Height="23" Margin="159,71,0,0" TextWrapping="Wrap" Text="" 
                  ToolTip="This will be used in forming lot number. For example if array code is A3X, lot number will look something like A3XC1-12132019"
                  VerticalAlignment="Top" Width="120" GotFocus="ArrayCodeTextbx_GotFocus"/>
-        <Label Content="Select master array" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="MasterArrayDropdown" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" HorizontalAlignment="Left" Height="26" Margin="159,132,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Select Group" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="AntigenGroupDropdown" HorizontalAlignment="Left" Height="26" Margin="159,163,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Add Antigen from below:" HorizontalAlignment="Left" Margin="10,200,0,0" VerticalAlignment="Top"/>
-        <DataGrid Name="AntigensGrid" CanUserAddRows="False" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="465" Margin="135,262,0,0" VerticalAlignment="Top" Width="144">
+        <Label Name="QRArrCodeLbl" Content="QR Array Code" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="QRArrayCodeTextBx" HorizontalAlignment="Left" Height="23" Margin="159,99,0,0" TextWrapping="Wrap" Text="" 
+            ToolTip="This is the Array Code in the QR 2D scanner"
+            VerticalAlignment="Top" Width="120" GotFocus="QRArrayCodeTextBx_GotFocus"/>
+        <Label Content="Is this a sub array" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="SubArrayCheckbox" Content="" Checked="SubArrayCheckbox_Checked" Unchecked="SubArrayCheckbox_Unchecked" HorizontalAlignment="Left" Margin="160,138,0,0" VerticalAlignment="Top" Width="18" Height="16"/>
+        <Label Name="MasterArrayLbl" Content="Select master array" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="MasterArrayDropdown" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" HorizontalAlignment="Left" Height="26" Margin="159,165,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Name="GroupLbl" Content="Select Group" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="AntigenGroupDropdown" HorizontalAlignment="Left" Height="26" Margin="159,196,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Add Antigen from below:" HorizontalAlignment="Left" Margin="10,233,0,0" VerticalAlignment="Top"/>
+        <DataGrid Name="AntigensGrid" CanUserAddRows="False" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="439" Margin="10,295,0,0" VerticalAlignment="Top" Width="269">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="AntigenName" Header="Antigen" Binding="{Binding Path=AntigenName}" Width="1*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBox Name="AntigenSearchText" TextChanged="AntigenSearchText_TextChanged" HorizontalAlignment="Left" Height="25" Margin="135,232,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
-        <Label Content="Search Antigen" HorizontalAlignment="Left" Margin="10,231,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button Name="AddButton" Click="AddButton_Click" Content="Add" HorizontalAlignment="Left" Margin="233,232,0,0" VerticalAlignment="Top" Width="46"/>
+        <TextBox Name="AntigenSearchText" TextChanged="AntigenSearchText_TextChanged" HorizontalAlignment="Left" Height="25" Margin="135,265,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
+        <Label Content="Search Antigen" HorizontalAlignment="Left" Margin="10,264,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button Name="AddButton" Click="AddButton_Click" Content="Add" HorizontalAlignment="Left" Margin="233,265,0,0" VerticalAlignment="Top" Width="46"/>
 
         <DataGrid Name="Group1" CanUserAddRows="False" AutoGenerateColumns="False" BorderThickness="0" Background="White" HorizontalAlignment="Left" Height="656" Margin="331,71,0,0" VerticalAlignment="Top" Width="154">
             <DataGrid.Columns>
@@ -152,10 +156,10 @@
             </DataGrid.Columns>
         </DataGrid>
         <Label Name="Group6Label" Content="Group 6" HorizontalAlignment="Left" Margin="1188,40,0,0" VerticalAlignment="Top"/>
-        <Button Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="156,757,0,0" VerticalAlignment="Top" Width="123" Click="SaveButton_Click"/>
-        <Button Name="CancelButton" Content="Exit" HorizontalAlignment="Left" Margin="10,757,0,0" VerticalAlignment="Top" Width="120" Click="CancelButton_Click"/>
+        <Button Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="156,0,0,20" VerticalAlignment="Bottom" Width="123" Click="SaveButton_Click"/>
+        <Button Name="CancelButton" Content="Exit" HorizontalAlignment="Left" Margin="10,0,0,20" VerticalAlignment="Bottom" Width="120" Click="CancelButton_Click"/>
         <GridSplitter HorizontalAlignment="Left" Height="1000" Margin="300,43,0,-243" VerticalAlignment="Top" Width="14" Background="LightGray"/>
-
+        
 
     </Grid>
 </Page>

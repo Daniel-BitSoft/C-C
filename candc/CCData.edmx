@@ -5,16 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="CCModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="AntigenAudit">
-          <Key>
-            <PropertyRef Name="AntigenAuditId" />
-          </Key>
-          <Property Name="AntigenAuditId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="AntigenId" Type="varchar" MaxLength="36" Nullable="false" />
-          <Property Name="PreviousAntigenName" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="UpdatedBy" Type="varchar" MaxLength="36" Nullable="false" />
-          <Property Name="UpdatedDt" Type="datetime" Nullable="false" />
-        </EntityType>
         <EntityType Name="Antigens">
           <Key>
             <PropertyRef Name="AntigenId" />
@@ -73,6 +63,7 @@
             <PropertyRef Name="CCType" />
             <PropertyRef Name="AntigenId" />
           </Key>
+          <Property Name="BatchId" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="BatchName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="RunDate" Type="date" Nullable="false" />
           <Property Name="BlockNumber" Type="int" Nullable="false" />
@@ -142,7 +133,6 @@
           <Parameter Name="type" Type="nchar" Mode="In" />
         </Function>
         <EntityContainer Name="CCModelStoreContainer">
-          <EntitySet Name="AntigenAudit" EntityType="Self.AntigenAudit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Antigens" EntityType="Self.Antigens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ArrayAntigen" EntityType="Self.ArrayAntigen" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Arrays" EntityType="Self.Arrays" Schema="dbo" store:Type="Tables" />
@@ -155,16 +145,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="AntigenAudit">
-          <Key>
-            <PropertyRef Name="AntigenAuditId" />
-          </Key>
-          <Property Name="AntigenAuditId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AntigenId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="PreviousAntigenName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UpdatedDt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="Antigen">
           <Key>
             <PropertyRef Name="AntigenId" />
@@ -244,7 +224,6 @@
           <Property Name="RequirePasswordChange" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="AntigenAudits" EntityType="Self.AntigenAudit" />
           <EntitySet Name="Antigens" EntityType="Self.Antigen" />
           <EntitySet Name="ArrayAntigens" EntityType="Self.ArrayAntigen" />
           <EntitySet Name="Arrays" EntityType="Self.Array" />
@@ -365,6 +344,7 @@
           <Property Name="CreatedDt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
+          <Property Name="BatchId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -372,17 +352,6 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="CCModelStoreContainer" CdmEntityContainer="Entities">
-          <EntitySetMapping Name="AntigenAudits">
-            <EntityTypeMapping TypeName="CCModel.AntigenAudit">
-              <MappingFragment StoreEntitySet="AntigenAudit">
-                <ScalarProperty Name="AntigenAuditId" ColumnName="AntigenAuditId" />
-                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
-                <ScalarProperty Name="PreviousAntigenName" ColumnName="PreviousAntigenName" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Antigens">
             <EntityTypeMapping TypeName="CCModel.Antigen">
               <MappingFragment StoreEntitySet="Antigens">
@@ -550,6 +519,7 @@
           <EntitySetMapping Name="Batches">
             <EntityTypeMapping TypeName="CCModel.Batch">
               <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
                 <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
                 <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
                 <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />

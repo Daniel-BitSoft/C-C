@@ -19,11 +19,13 @@ namespace CC
     /// </summary>
     public partial class Main : Window
     {
-        LoginPage loginPage;
+        LoginPage loginPage;  
 
         public Main()
         {
             InitializeComponent();
+
+            this.Title = "C&C";
 
             // initial pages
             loginPage = new LoginPage();

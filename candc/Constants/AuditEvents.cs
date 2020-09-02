@@ -10,6 +10,9 @@
         UserUpdated,
         UserDeleted,
         ArrayDeleted,
-        ArrayUpdated
+        ArrayUpdated,
+        BatchRecordUpdated,
+        AntigenUpdated,
+        CCExpired
     }
 }

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using CC.Providers;
 using CC.Models;
 using CC.Constants;
+using System.Text.RegularExpressions;
 
 namespace CC
 {
@@ -74,7 +75,8 @@ namespace CC
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Mode = "Login";
-            userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Text.Trim());
+            ErrorLabel.Content = string.Empty;
+            userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Password.Trim());
 
             if (App.LoggedInUser != null)
             {
@@ -96,6 +98,12 @@ namespace CC
             if (PassTextbox.Text.Trim() != ConfPassTextbox.Text.Trim())
             {
                 ErrorLabel.Content = "Password does not match in text boxes above";
+                return;
+            }
+
+            if (!Regex.IsMatch(PassTextbox.Text.Trim(), UsersConsts.PasswordRegex))
+            {
+                ErrorLabel.Content = "Password must be between 6 to 25 characters and contain both letters and numbers";
                 return;
             }
 
@@ -131,6 +139,12 @@ namespace CC
 
             // show main page after db read rasks are done
             NavigationService.Content = null;
+
+            if (App.LoggedInUser.IsAdmin)
+                NavigationService.Navigate(App.userMgmtPage);
+            else
+                NavigationService.Navigate(App.batchPage);
+
         }
     }
 }

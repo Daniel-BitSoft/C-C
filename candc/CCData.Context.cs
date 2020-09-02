@@ -27,7 +27,6 @@ namespace CC
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<AntigenAudit> AntigenAudits { get; set; }
         public virtual DbSet<Antigen> Antigens { get; set; }
         public virtual DbSet<ArrayAntigen> ArrayAntigens { get; set; }
         public virtual DbSet<Array> Arrays { get; set; }

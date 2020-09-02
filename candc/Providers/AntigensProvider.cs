@@ -45,14 +45,15 @@ namespace CC.Providers
                 var antigenToUpdate = App.dbcontext.Antigens.FirstOrDefault(a => a.AntigenId == antigen.AntigenId);
                 if (antigenToUpdate.AntigenName != antigen.AntigenName)
                 {
-                    AntigenAudit auditRecord = new AntigenAudit
+                    var auditRecord = new Audit
                     {
-                        AntigenId = antigenToUpdate.AntigenId,
-                        PreviousAntigenName = antigenToUpdate.AntigenName,
+                        RecordId = antigen.AntigenId,
+                        Type = AuditTypes.Antigen.ToString(),
+                        Description = AuditEvents.AntigenUpdated.ToString(), 
                         UpdatedBy = App.LoggedInUser.UserId,
                         UpdatedDt = DateTime.Now
                     };
-                    App.dbcontext.AntigenAudits.Add(auditRecord);
+                    App.dbcontext.Audits.Add(auditRecord);
 
                     antigenToUpdate.AntigenName = antigen.AntigenName;
 
@@ -88,7 +89,7 @@ namespace CC.Providers
 
                 return new AntigensResponse { ErrorMessage = $"{ Messages.Exception} - log: {logNumber}" };
             }
-        }
+        } 
 
         public AntigensResponse GetAntigensAssignedToArray()
         {
