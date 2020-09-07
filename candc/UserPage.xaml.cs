@@ -79,6 +79,24 @@ namespace CC
                 }
                 else
                 {
+                    if (Convert.ToBoolean(DisabledCheckbox.IsChecked))
+                    {
+                        if(MessageBox.Show("You are about to disable this user which will revoke the permision to use this software. Would you like to continue?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        {
+                            return;
+                        }
+                    }
+
+                    if (User.IsAdmin && Convert.ToBoolean(DisabledCheckbox.IsChecked))
+                    {
+                        App.UserProvider.GetAllUsers();
+                        if (!App.UserProvider.ActiveUsers.Any(a => a.IsAdmin && a.Username != User.Username))
+                        {
+                            MessageBox.Show("This user is the only admin and cannot be disabled. At least one admin is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                    }
+
                     AuditEvents auditEvent = AuditEvents.UserUpdated;
                     if (User.IsDisabled != (DisabledCheckbox.IsChecked.HasValue && DisabledCheckbox.IsChecked.Value))
                     {
@@ -164,7 +182,7 @@ namespace CC
                 TempPassLabel.BorderThickness = new Thickness(0);
             }
 
-            if (!Regex.IsMatch(TemporaryPassTextBox.Text.Trim(), UsersConsts.PasswordRegex))
+            if (TemporaryPassTextBox.Visibility == Visibility.Visible && !Regex.IsMatch(TemporaryPassTextBox.Text.Trim(), UsersConsts.PasswordRegex))
             {
                 errorMessages.Add("* Password must be between 6 to 25 characters and contain both letters and numbers");
                 isvalid = false;

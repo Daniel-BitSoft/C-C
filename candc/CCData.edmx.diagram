@@ -8,10 +8,10 @@
         <EntityTypeShape EntityType="CCModel.Antigen" Width="1.5" PointX="4" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="CCModel.ArrayAntigen" Width="1.5" PointX="4" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="CCModel.Array" Width="1.5" PointX="4" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="CCModel.CalibControl" Width="1.5" PointX="6.75" PointY="2" IsExpanded="true" />
         <EntityTypeShape EntityType="CCModel.User" Width="1.5" PointX="0.875" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="CCModel.Audit" Width="1.5" PointX="0.875" PointY="0.625" />
         <EntityTypeShape EntityType="CCModel.Batch" Width="1.5" PointX="9.875" PointY="2.375" />
+        <EntityTypeShape EntityType="CCModel.CalibControl" Width="1.5" PointX="6.875" PointY="2.25" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

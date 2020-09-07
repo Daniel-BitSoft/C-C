@@ -20,8 +20,8 @@ namespace CC
         public string AntigenId { get; set; }
         public string AntigenGroup { get; set; }
         public string Type { get; set; }
-        public Nullable<decimal> Min { get; set; }
-        public Nullable<decimal> Max { get; set; }
+        public Nullable<double> Min { get; set; }
+        public Nullable<double> Max { get; set; }
         public Nullable<System.DateTime> DilutionDate { get; set; }
         public string DilutionFactor { get; set; }
         public System.DateTime ExpirationDate { get; set; }

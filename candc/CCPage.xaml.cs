@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,8 @@ namespace CC
     /// </summary>
     public partial class CCPage : Page
     {
+        private readonly Regex _regex = new Regex("[^0-9.-]+");
+
         public List<SerumReference> SerumReferences { get; set; }
         public List<CalibControl> CCList { get; set; }
 
@@ -36,7 +39,7 @@ namespace CC
             if (ArrayListbx.SelectedIndex > -1)
             {
                 var selectedArray = ArrayListbx.SelectedItem as Array;
-                var groups = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).Select(a => a.Group).Distinct().ToList();
+                var groups = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).Select(a => a.Group).Distinct().OrderBy(a => a).ToList();
 
                 GroupListbx.ItemsSource = groups;
                 GroupListbx.Items.Refresh();
@@ -47,6 +50,16 @@ namespace CC
                     AntigenListbx.ItemsSource = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).ToList();
                     AntigenListbx.Items.Refresh();
                 }
+                else
+                {
+                    AntigenListbx.SelectedIndex = -1;
+                    AntigenListbx.ItemsSource = null;
+                    AntigenListbx.Items.Refresh();
+                }
+
+                AntigensGrid.ItemsSource = null;
+                AntigensGrid.Items.Refresh();
+
                 // clear rest
             }
         }
@@ -64,7 +77,6 @@ namespace CC
 
                     AntigensGrid.ItemsSource = App.mapper.Map<List<AntigenRange>>(arrayAntigens);
                     AntigensGrid.Items.Refresh();
-                    QuantityLabelTextBox.Text = arrayAntigens.Count.ToString();
                 }
                 else
                 {
@@ -80,7 +92,6 @@ namespace CC
             {
                 AntigensGrid.ItemsSource = new List<AntigenRange> { App.mapper.Map<AntigenRange>(AntigenListbx.SelectedItem as AntigensAssingedToArray) };
                 AntigensGrid.Items.Refresh();
-                QuantityLabelTextBox.Text = "1";
 
                 AntigensGrid.Focus();
             }
@@ -104,6 +115,40 @@ namespace CC
                     ExpirationDateTextBox.Text = string.Empty;
                 }
             }
+        }
+
+        private bool GetMinMax(bool isValid)
+        {
+            var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
+            for (int i = 0; i < antigenRanges.Count; i++)
+            {
+                // min
+                ContentPresenter minCell = AntigensGrid.Columns[1].GetCellContent(
+                    (DataGridRow)AntigensGrid.ItemContainerGenerator.ContainerFromIndex(i)) as ContentPresenter;
+
+                var minTextBox = (minCell.ContentTemplate.FindName("MinCol", minCell) as TextBox);
+                antigenRanges[i].Min = minTextBox.Text;
+
+                // max
+                ContentPresenter maxCell = AntigensGrid.Columns[2].GetCellContent(
+                  (DataGridRow)AntigensGrid.ItemContainerGenerator.ContainerFromIndex(i)) as ContentPresenter;
+
+                var maxTextBox = (maxCell.ContentTemplate.FindName("MaxCol", maxCell) as TextBox);
+                antigenRanges[i].Max = maxTextBox.Text;
+
+                if (Convert.ToDouble(antigenRanges[i].Min) > Convert.ToDouble(antigenRanges[i].Max))
+                {
+                    minTextBox.BorderThickness = new Thickness(2);
+                    minTextBox.BorderBrush = Brushes.Red;
+
+                    maxTextBox.BorderThickness = new Thickness(2);
+                    maxTextBox.BorderBrush = Brushes.Red;
+
+                    isValid = false;
+                }
+            }
+
+            return isValid;
         }
 
         private void ClearPage()
@@ -175,7 +220,7 @@ namespace CC
                 }
 
                 App.CCProvider.SetArrayAntigens();
-                ArrayListbx.ItemsSource = App.ArrayProvider.GetAllArrays(false);
+                ArrayListbx.ItemsSource = App.ArrayProvider.GetAllArrays(true);
                 ArrayListbx.Items.Refresh();
             }
             catch (Exception ex)
@@ -276,7 +321,7 @@ namespace CC
         {
             if (!ValidatePage())
             {
-                MessageBox.Show("There are some incomplete items in this form. Please fill in all required data before saving");
+                MessageBox.Show("Please complete all data");
                 return;
             }
 
@@ -289,7 +334,7 @@ namespace CC
         {
             if (!ValidatePage())
             {
-                MessageBox.Show("There are some incomplete items in this form. Please fill in all required data before saving");
+                MessageBox.Show("Please complete all data");
                 return;
             }
 
@@ -353,7 +398,7 @@ namespace CC
 
                 if (activeCCs != null && activeCCs.Any())
                 {
-                    var antigensIds = activeCCs.Where(a=>a.DilutionDate == DilutionDatePicker.SelectedDate.Value.Date).Select(a => a.AntigenId).ToList();
+                    var antigensIds = activeCCs.Where(a => a.DilutionDate == DilutionDatePicker.SelectedDate.Value.Date).Select(a => a.AntigenId).ToList();
                     var duplicatedAntigens = antigenRanges.Where(a => antigensIds.Contains(a.AntigenId)).ToList();
 
                     if (duplicatedAntigens != null && duplicatedAntigens.Count > 1)
@@ -371,6 +416,9 @@ namespace CC
                 var lotNumber = SetLotNumber();
                 var CalibControls = new List<CalibControl>();
 
+                var dilutionFactor = double.Parse(DilutionFactorTextBox.Text);
+                var barcodes = new List<Barcode>();
+
                 foreach (var antigenRange in antigenRanges)
                 {
                     CalibControls.Add(new CalibControl
@@ -379,13 +427,20 @@ namespace CC
                         ArrayId = ArrayListbx.SelectedValue.ToString(),
                         AntigenId = antigenRange.AntigenId,
                         DilutionDate = DilutionDatePicker.SelectedDate.Value.Date,
-                        DilutionFactor = DilutionFactorTextBox.Text,
+                        DilutionFactor = dilutionFactor.ToString(),
                         ExpirationDate = Convert.ToDateTime(ExpirationDateTextBox.Text),
                         LotNumber = lotNumber,
-                        Min = Convert.ToDecimal(antigenRange.Min),
-                        Max = Convert.ToDecimal(antigenRange.Max),
+                        Min = Convert.ToDouble(antigenRange.Min),
+                        Max = Convert.ToDouble(antigenRange.Max),
                         Serum = string.Join(",", SerumReferences.Select(a => a.ReferenceNumber)),
                         Type = App.ccPageType.ToString()
+                    });
+
+                    barcodes.Add(new Barcode
+                    {
+                        AntigenName = antigenRange.AntigenName,
+                        ExpirationDate = ExpirationDateTextBox.Text,
+                        LotNumber = lotNumber
                     });
                 }
 
@@ -393,8 +448,24 @@ namespace CC
                 App.CCProvider.CreateCalibControl(CalibControls);
                 MessageBox.Show("Successfully Saved. Click OK to start printing labels");
 
-                var demoPrintPage = new CCLabel(new List<Barcode> { }, 1);
-                demoPrintPage.ShowDialog();
+                PrintDialog printDialog = null;
+                foreach (var antigenRange in antigenRanges)
+                {
+                    var printPage = new CCLabel();
+                    if (printDialog != null)
+                        printPage.printDlg = printDialog;
+
+                    printPage.Barcode = new Barcode
+                    {
+                        AntigenName = antigenRange.AntigenName,
+                        ExpirationDate = ExpirationDateTextBox.Text,
+                        LotNumber = lotNumber
+                    };
+                    printPage.NumberOfLabels = Convert.ToInt32(QuantityLabelTextBox.Text);
+                    printPage.ShowDialog();
+
+                    printDialog = printPage.printDlg;
+                }
             }
             catch (Exception ex)
             {
@@ -453,6 +524,9 @@ namespace CC
                 QtyLabel.BorderThickness = new Thickness(2);
                 isValid = false;
             }
+
+            isValid = GetMinMax(isValid);
+
             if (AntigensGrid.ItemsSource != null)
             {
                 var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
@@ -497,5 +571,62 @@ namespace CC
             else
                 QuantityLabelTextBox.Text = string.Empty;
         }
+
+
+        private void DilutionFactorTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            ValidateNumbers(5, sender, e);
+        }
+
+        private void MinCol_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            ValidateNumbers(10, sender, e);
+        }
+
+        private void MaxCol_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            ValidateNumbers(10, sender, e);
+        }
+
+        private void ValidateNumbers(int maxLength, object sender, TextCompositionEventArgs e)
+        {
+            var txt = (sender as TextBox).Text;
+
+            if (txt.StartsWith("-"))
+            {
+                if ((txt.Length == maxLength + 1))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+            else if (txt.Length == maxLength)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            if (char.TryParse(e.Text, out char value))
+            {
+                if ((!char.IsControl(value) && !char.IsDigit(value) &&
+                    (value != '.')))
+                {
+                    e.Handled = true;
+                }
+
+                if (value == '-' && txt.Length == 0)
+                {
+                    e.Handled = false;
+                }
+
+                // only allow one decimal point
+                if ((value == '.') && (txt.IndexOf('.') > -1))
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+
+
     }
 }

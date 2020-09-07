@@ -11,32 +11,47 @@
 
     <Grid Background="White">
         <Label Name="PageNameLabel" FontSize="16" FontWeight="Bold" Content="Name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Label Name="ArrayLabel" Content="Array" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" Width="133"/>
+        <Label Name="ArrayLabel" Content="Array" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Width="133"/>
         <Label Name="GroupLabel" Content="Antigen Group" HorizontalAlignment="Left" Margin="10,89,0,0" VerticalAlignment="Top" Width="133"/>
         <Label Name="AntigenLabel" Content="Antigen" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Width="133"/>
-        <Label Name="SerumRefLabel"  Content="Serum Ref." HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" Width="133"/>
+        <Label Name="SerumRefLabel"  Content="Serum Ref." HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top" Width="133"/>
         <Label Name="DilutionLabel"  Content="Dilution Factor" HorizontalAlignment="Left" Margin="10,337,0,0" VerticalAlignment="Top" Width="133"/>
         <Label Name="DateLabel" Content="Dilution Date" HorizontalAlignment="Left" Margin="10,368,0,0" VerticalAlignment="Top" Width="133"/>
         <Label Name="ExpirationLabel" Content="Expiration" HorizontalAlignment="Left" Margin="10,399,0,0" VerticalAlignment="Top" Width="133"/>
         <Label Content="Lot Number" HorizontalAlignment="Left" Margin="10,485,0,0" VerticalAlignment="Top" Width="133"/>
-        <Label Name="QtyLabel" Content="Qty Labels to Print" HorizontalAlignment="Left" Margin="10,433,0,0" VerticalAlignment="Top" Width="142" />
-        <ComboBox Name="ArrayListbx" TabIndex="1" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" SelectedValue="{Binding Path=Array}" SelectionChanged="ArrayListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="156,64,0,0" VerticalAlignment="Top" Width="136"/>
-        <ComboBox Name="GroupListbx" TabIndex="2" SelectionChanged="GroupListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="156,95,0,0" VerticalAlignment="Top" Width="136"/>
-        <ComboBox Name="AntigenListbx" TabIndex="3" DisplayMemberPath="AntigenName" SelectedValuePath="AntigenId" SelectedValue="{Binding Path=AntigensAssingedToArray}" SelectionChanged="AntigenListbx_Selected" HorizontalAlignment="Left" Height="23" Margin="156,126,0,0" VerticalAlignment="Top" Width="136"/>
-        <TextBox Name="DilutionFactorTextBox" TabIndex="7" HorizontalAlignment="Left" Height="23" Margin="156,346,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="136"/>
+        <Label Name="QtyLabel" Content="Qty Labels to Print Per Antigen" HorizontalAlignment="Left" Margin="10,433,0,0" VerticalAlignment="Top" Width="238" />
+        <ComboBox Name="ArrayListbx" TabIndex="1" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" SelectedValue="{Binding Path=Array}" SelectionChanged="ArrayListbx_Selected" HorizontalAlignment="Left" Height="27" Margin="156,64,0,0" VerticalAlignment="Top" Width="136"/>
+        <ComboBox Name="GroupListbx" TabIndex="2" SelectionChanged="GroupListbx_Selected" HorizontalAlignment="Left" Height="26" Margin="156,95,0,0" VerticalAlignment="Top" Width="136"/>
+        <ComboBox Name="AntigenListbx" TabIndex="3" DisplayMemberPath="AntigenName" SelectedValuePath="AntigenId" SelectedValue="{Binding Path=AntigensAssingedToArray}" SelectionChanged="AntigenListbx_Selected" HorizontalAlignment="Left" Height="27" Margin="156,126,0,0" VerticalAlignment="Top" Width="136"/>
+        <TextBox Name="DilutionFactorTextBox" PreviewTextInput="DilutionFactorTextBox_PreviewTextInput" TabIndex="7" HorizontalAlignment="Left" Height="23" Margin="156,346,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="136"/>
         <DatePicker Name="DilutionDatePicker" TabIndex="8" SelectedDateChanged="DilutionDatePicker_SelectedDateChanged" HorizontalAlignment="Left" Margin="156,375,0,0" VerticalAlignment="Top" Width="136"/>
         <TextBox Name="ExpirationDateTextBox" TabIndex="9" HorizontalAlignment="Left" Height="23" Margin="156,408,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="136"/>
         <TextBlock Name="LotNumberBlock" FontWeight="Bold" HorizontalAlignment="Left" Margin="20,516,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="272"/>
-        <TextBox Name="QuantityLabelTextBox" TabIndex="10" TextChanged="QuantityLabelTextBox_TextChanged" HorizontalAlignment="Left" Height="23" Margin="156,436,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="39"/>
+        <TextBox Name="QuantityLabelTextBox" TabIndex="10" TextChanged="QuantityLabelTextBox_TextChanged" HorizontalAlignment="Left" Height="23" Margin="253,436,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="39"/>
         <DataGrid Name="AntigensGrid" TabIndex="4" RowBackground="LightGray" CanUserAddRows="False" IsReadOnly="False" Background="White" AutoGenerateColumns="False" BorderThickness="0" HorizontalAlignment="Left" Height="732" Margin="338,58,0,0" VerticalAlignment="Top" Width="852">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="AntigenNameCol" Header="Antigen" Binding="{Binding Path=AntigenName}" Width="2*" IsReadOnly="True"/>
-                <DataGridTextColumn x:Name="MinCol" Header="Min" Binding="{Binding Path=Min}" Width="1*" IsReadOnly="False"/>
-                <DataGridTextColumn x:Name="MaxCol" Header="Max" Binding="{Binding Path=Max}" Width="1*" IsReadOnly="False"/>
+
+                <DataGridTemplateColumn Header="Min" Width="1*" IsReadOnly="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox x:Name="MinCol" PreviewTextInput="MinCol_PreviewTextInput">
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Max" Width="1*" IsReadOnly="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox x:Name="MaxCol" PreviewTextInput ="MaxCol_PreviewTextInput">
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn> 
             </DataGrid.Columns>
         </DataGrid>
-        <TextBox Name="SerumTextBox" TabIndex="5" HorizontalAlignment="Left" Height="23" Margin="156,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="107"/>
-        <Button Content="+" TabIndex="6" Name="AddSerumBtn" Click="AddSerumBtn_Click" FontWeight="ExtraBold" HorizontalAlignment="Left" Margin="268,155,0,0" VerticalAlignment="Top" Width="24" Height="22"/>
+        <TextBox Name="SerumTextBox" MaxLength="30" TabIndex="5" HorizontalAlignment="Left" Height="23" Margin="156,161,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="107"/>
+        <Button Content="+" Foreground="Green" TabIndex="6" Name="AddSerumBtn" Click="AddSerumBtn_Click" FontWeight="ExtraBold" HorizontalAlignment="Left" Margin="268,161,0,0" VerticalAlignment="Top" Width="24" Height="22"/>
         <DataGrid Name="SerumRefGrid" CanUserAddRows="False" VerticalScrollBarVisibility="Auto" Background="White" AutoGenerateColumns="False" BorderThickness="0" HorizontalAlignment="Left" Height="143" Margin="20,189,0,0" VerticalAlignment="Top" Width="243">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="reference" Header="Ref No." Binding="{Binding Path=ReferenceNumber}" Width="1*" IsReadOnly="True"/>
@@ -45,6 +60,6 @@
         <Button Content="Save" HorizontalAlignment="Left" TabIndex="11" Margin="10,553,0,0" VerticalAlignment="Top" Width="122" Click="SaveButton_Click"/>
         <Button Content="Save and Next" TabIndex="12" HorizontalAlignment="Left" Margin="156,553,0,0" VerticalAlignment="Top" Width="136" Click="SaveAndNextButton_Click"/>
         <Button Content="Exit Without Saving" HorizontalAlignment="Left" Margin="10,586,0,0" VerticalAlignment="Top" Width="282"/>
-        <Button Content="-" Name="RemoveSerum" Click="RemoveSerum_Click" FontWeight="ExtraBold" HorizontalAlignment="Left" Margin="268,189,0,0" VerticalAlignment="Top" Width="24" Height="23"/>
+        <Button Content="-" Foreground="Red" Name="RemoveSerum" Click="RemoveSerum_Click" FontWeight="ExtraBold" HorizontalAlignment="Left" Margin="268,189,0,0" VerticalAlignment="Top" Width="24" Height="23"/>
     </Grid>
 </Page>

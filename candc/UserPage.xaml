@@ -23,11 +23,11 @@
         <TextBox x:Name="TemporaryPassTextBox" MaxLength="25" HorizontalAlignment="Left" Height="23" Margin="284,232,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="283"/>
         <RadioButton Name="UserRadioBtn" GroupName="Role" Content="User" HorizontalAlignment="Left" Margin="106,276,0,0" VerticalAlignment="Top"/>
         <RadioButton Name="AdminRadioBtn" GroupName="Role" Content="Admin" HorizontalAlignment="Left" Margin="195,276,0,0" VerticalAlignment="Top"/>
-        <CheckBox Name="LockCheckbox" Content="Locked" HorizontalAlignment="Left" Margin="106,312,0,0" VerticalAlignment="Top"/>
-        <Button Name="SaveButton" Click="SaveButton_Click" Content="Save Changes" HorizontalAlignment="Left" Margin="214,395,0,0" VerticalAlignment="Top" Width="120" Height="35"/>
-        <Button Name="DeleteButton" Click="DeleteButton_Click" Visibility="Hidden" Content="Delete" Foreground="Red" FontWeight="Bold" HorizontalAlignment="Left" Margin="583,395,0,0" VerticalAlignment="Top" Width="77" Height="35"/>
-        <Button Name="ResetPasswordButton" Click="ResetPasswordButton_Click" Content="Reset Password" HorizontalAlignment="Left" Margin="342,395,0,0" VerticalAlignment="Top" Width="121" Height="35"/>
-        <CheckBox Name="DisabledCheckbox" Content="Disable" HorizontalAlignment="Left" Margin="106,346,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="LockCheckbox" IsEnabled="False" Content="Locked" HorizontalAlignment="Left" Margin="111,356,0,0" VerticalAlignment="Top"/>
+        <Button Name="SaveButton" Click="SaveButton_Click" Content="Save Changes" HorizontalAlignment="Left" Margin="221,395,0,0" VerticalAlignment="Top" Width="120" Height="35"/>
+        <Button Name="DeleteButton" Click="DeleteButton_Click" Visibility="Visible" Content="Delete" Foreground="Red" FontWeight="Bold" HorizontalAlignment="Left" Margin="638,395,0,0" VerticalAlignment="Top" Width="77" Height="35"/>
+        <Button Name="ResetPasswordButton" Click="ResetPasswordButton_Click" Content="Reset Password and Unlock" HorizontalAlignment="Left" Margin="356,395,0,0" VerticalAlignment="Top" Width="267" Height="35"/>
+        <CheckBox Name="DisabledCheckbox" Content="Disable" HorizontalAlignment="Left" Margin="111,327,0,0" VerticalAlignment="Top"/>
         <TextBlock Name="ErrorMessages" Foreground="Red" HorizontalAlignment="Left" Margin="109,451,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="760" Height="116"/>
         <Button x:Name="CancelBtn" Click="CancelBtn_Click" Content="Cancel" HorizontalAlignment="Left" Margin="106,395,0,0" VerticalAlignment="Top" Width="100" Height="35"/>
     </Grid>

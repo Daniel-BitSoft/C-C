@@ -10,6 +10,6 @@
         Loaded="Window_Loaded">
     <Grid Margin="0,0,0,0" Name="PrintGrid">
         <Image Name="BarcodeImage" HorizontalAlignment="Left" Height="43" Margin="29,17,0,0" VerticalAlignment="Top" Width="155" Stretch="Uniform"/>
-        <TextBlock Name="BarcodeText" FontSize="8" HorizontalAlignment="Left" Margin="29,60,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="155"/>
+        <TextBox Name="BarcodeText" Text="" FontSize="7" FontWeight="Bold" HorizontalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderThickness="0" Margin="6,60,6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196"/>
     </Grid>
 </Window>

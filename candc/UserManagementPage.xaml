@@ -24,6 +24,11 @@
                 <DataGridTextColumn x:Name="EmailCol" Header="EMAIL" Binding="{Binding Path=Username}" Width="3*"/>
                 <DataGridCheckBoxColumn x:Name="AdminCol" Header="ADMIN" Binding="{Binding Path=IsAdmin}" Width="1*"/>
             </DataGrid.Columns>
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
         </DataGrid>
         <Button Name="EditButton" Content="Edit User" Click="EditButton_Click" HorizontalAlignment="Left" Margin="320,626,0,0" VerticalAlignment="Top" Width="161"/>
         <Button x:Name="AddButton" Content="Add New User" Click="AddButton_Click" HorizontalAlignment="Left" Margin="136,626,0,0" VerticalAlignment="Top" Width="171"/>

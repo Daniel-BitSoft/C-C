@@ -86,8 +86,8 @@
           <Property Name="AntigenId" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="AntigenGroup" Type="varchar" MaxLength="50" />
           <Property Name="Type" Type="varchar" MaxLength="1" Nullable="false" />
-          <Property Name="Min" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Max" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Min" Type="float" />
+          <Property Name="Max" Type="float" />
           <Property Name="DilutionDate" Type="datetime" />
           <Property Name="DilutionFactor" Type="varchar" MaxLength="50" />
           <Property Name="ExpirationDate" Type="datetime" Nullable="false" />
@@ -184,27 +184,6 @@
           <Property Name="ShortArrayName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="LIMArrayNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="CalibControl">
-          <Key>
-            <PropertyRef Name="CCId" />
-          </Key>
-          <Property Name="CCId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LotNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ArrayId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="AntigenId" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="AntigenGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Min" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Max" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="DilutionDate" Type="DateTime" Precision="3" />
-          <Property Name="DilutionFactor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ExpirationDate" Type="DateTime" Precision="3" Nullable="false" />
-          <Property Name="Serum" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDt" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="UserId" />
@@ -227,7 +206,6 @@
           <EntitySet Name="Antigens" EntityType="Self.Antigen" />
           <EntitySet Name="ArrayAntigens" EntityType="Self.ArrayAntigen" />
           <EntitySet Name="Arrays" EntityType="Self.Array" />
-          <EntitySet Name="CalibControls" EntityType="Self.CalibControl" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <FunctionImport Name="GetAntigensNotAssingedToBatch" ReturnType="Collection(CCModel.AntigensNotAssingedToBatch_Result)" />
           <EntitySet Name="Audits" EntityType="CCModel.Audit" />
@@ -249,6 +227,7 @@
             <Parameter Name="antigenGroup" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="Batches" EntityType="CCModel.Batch" />
+          <EntitySet Name="CalibControls" EntityType="CCModel.CalibControl" />
         </EntityContainer>
         <ComplexType Name="AntigensNotAssingedToBatch_Result">
           <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="32" />
@@ -314,8 +293,8 @@
           <Property Type="String" Name="AntigenId" Nullable="false" MaxLength="36" />
           <Property Type="String" Name="AntigenGroup" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Type" Nullable="false" MaxLength="10" />
-          <Property Type="Decimal" Name="Min" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="Max" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Double" Name="Min" Nullable="true" />
+          <Property Type="Double" Name="Max" Nullable="true" />
           <Property Type="DateTime" Name="DilutionDate" Nullable="true" Precision="23" />
           <Property Type="String" Name="DilutionFactor" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="ExpirationDate" Nullable="false" Precision="23" />
@@ -345,6 +324,27 @@
           <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
           <Property Name="BatchId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CalibControl">
+          <Key>
+            <PropertyRef Name="CCId" />
+          </Key>
+          <Property Name="CCId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="LotNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ArrayId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="AntigenId" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="AntigenGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Min" Type="Double" />
+          <Property Name="Max" Type="Double" />
+          <Property Name="DilutionDate" Type="DateTime" Precision="3" />
+          <Property Name="DilutionFactor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Serum" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDt" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -386,28 +386,6 @@
                 <ScalarProperty Name="ArrayName" ColumnName="ArrayName" />
                 <ScalarProperty Name="IsSubArray" ColumnName="IsSubArray" />
                 <ScalarProperty Name="MasterArrayId" ColumnName="MasterArrayId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CalibControls">
-            <EntityTypeMapping TypeName="CCModel.CalibControl">
-              <MappingFragment StoreEntitySet="CalibControl">
-                <ScalarProperty Name="CCId" ColumnName="CCId" />
-                <ScalarProperty Name="LotNumber" ColumnName="LotNumber" />
-                <ScalarProperty Name="ArrayId" ColumnName="ArrayId" />
-                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
-                <ScalarProperty Name="AntigenGroup" ColumnName="AntigenGroup" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Min" ColumnName="Min" />
-                <ScalarProperty Name="Max" ColumnName="Max" />
-                <ScalarProperty Name="DilutionDate" ColumnName="DilutionDate" />
-                <ScalarProperty Name="DilutionFactor" ColumnName="DilutionFactor" />
-                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
-                <ScalarProperty Name="Serum" ColumnName="Serum" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
                 <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
@@ -531,6 +509,28 @@
                 <ScalarProperty Name="BlockNumber" ColumnName="BlockNumber" />
                 <ScalarProperty Name="RunDate" ColumnName="RunDate" />
                 <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CalibControls">
+            <EntityTypeMapping TypeName="CCModel.CalibControl">
+              <MappingFragment StoreEntitySet="CalibControl">
+                <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedDt" ColumnName="CreatedDt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Serum" ColumnName="Serum" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="DilutionFactor" ColumnName="DilutionFactor" />
+                <ScalarProperty Name="DilutionDate" ColumnName="DilutionDate" />
+                <ScalarProperty Name="Max" ColumnName="Max" />
+                <ScalarProperty Name="Min" ColumnName="Min" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="AntigenGroup" ColumnName="AntigenGroup" />
+                <ScalarProperty Name="AntigenId" ColumnName="AntigenId" />
+                <ScalarProperty Name="ArrayId" ColumnName="ArrayId" />
+                <ScalarProperty Name="LotNumber" ColumnName="LotNumber" />
+                <ScalarProperty Name="CCId" ColumnName="CCId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

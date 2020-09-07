@@ -30,10 +30,10 @@ namespace CC
         public virtual DbSet<Antigen> Antigens { get; set; }
         public virtual DbSet<ArrayAntigen> ArrayAntigens { get; set; }
         public virtual DbSet<Array> Arrays { get; set; }
-        public virtual DbSet<CalibControl> CalibControls { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Audit> Audits { get; set; }
         public virtual DbSet<Batch> Batches { get; set; }
+        public virtual DbSet<CalibControl> CalibControls { get; set; }
     
         public virtual ObjectResult<AntigensNotAssingedToBatch_Result> GetAntigensNotAssingedToBatch()
         {

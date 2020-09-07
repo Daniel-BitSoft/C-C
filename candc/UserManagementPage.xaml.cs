@@ -52,18 +52,28 @@ namespace CC
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            if (UsersGrid.SelectedItem != null)
-            {
-                App.userPage.User = UsersGrid.SelectedItem as User;
-                App.userPage.IsNew = false;
-                NavigationService.Navigate(App.userPage);
-            }
+            EditUser();
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             App.userPage.IsNew = true;
             NavigationService.Navigate(App.userPage);
+        }
+
+        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            EditUser();
+        }
+
+        private void EditUser()
+        {
+            if (UsersGrid.SelectedItem != null)
+            {
+                App.userPage.User = UsersGrid.SelectedItem as User;
+                App.userPage.IsNew = false;
+                NavigationService.Navigate(App.userPage);
+            }
         }
     }
 }
