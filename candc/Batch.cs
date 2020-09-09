@@ -14,6 +14,7 @@ namespace CC
     
     public partial class Batch
     {
+        public string BatchId { get; set; }
         public string BatchName { get; set; }
         public System.DateTime RunDate { get; set; }
         public int BlockNumber { get; set; }
@@ -25,6 +26,5 @@ namespace CC
         public System.DateTime CreatedDt { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
-        public string BatchId { get; set; }
     }
 }

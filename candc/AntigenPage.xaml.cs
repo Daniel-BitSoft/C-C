@@ -39,10 +39,13 @@ namespace CC
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            SetEditMode();
-            crudMode = CrudMode.Update;
+            if (AntigensGrid.SelectedItem != null)
+            {
+                NameText.Text = (AntigensGrid.SelectedItem as Antigen).AntigenName;
 
-            NameText.Text = (AntigensGrid.SelectedItem as Antigen).AntigenName;
+                SetEditMode();
+                crudMode = CrudMode.Update;
+            }
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)

@@ -30,10 +30,10 @@ namespace CC
         public virtual DbSet<Antigen> Antigens { get; set; }
         public virtual DbSet<ArrayAntigen> ArrayAntigens { get; set; }
         public virtual DbSet<Array> Arrays { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Audit> Audits { get; set; }
         public virtual DbSet<Batch> Batches { get; set; }
         public virtual DbSet<CalibControl> CalibControls { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     
         public virtual ObjectResult<AntigensNotAssingedToBatch_Result> GetAntigensNotAssingedToBatch()
         {
@@ -72,25 +72,16 @@ namespace CC
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ActiveCCs>("GetExistingCCs", arrayIdParameter, antigenIdParameter, typeParameter);
         }
     
-        public virtual ObjectResult<Array> GetArrayByLIMNumber(string lIMArrayNumber)
+        public virtual int GetArrayByLIMNumber(string lIMArrayNumber)
         {
             var lIMArrayNumberParameter = lIMArrayNumber != null ?
                 new ObjectParameter("LIMArrayNumber", lIMArrayNumber) :
                 new ObjectParameter("LIMArrayNumber", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Array>("GetArrayByLIMNumber", lIMArrayNumberParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetArrayByLIMNumber", lIMArrayNumberParameter);
         }
     
-        public virtual ObjectResult<Array> GetArrayByLIMNumber(string lIMArrayNumber, MergeOption mergeOption)
-        {
-            var lIMArrayNumberParameter = lIMArrayNumber != null ?
-                new ObjectParameter("LIMArrayNumber", lIMArrayNumber) :
-                new ObjectParameter("LIMArrayNumber", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Array>("GetArrayByLIMNumber", mergeOption, lIMArrayNumberParameter);
-        }
-    
-        public virtual ObjectResult<Batch> GetBatchRecords(string batchName, Nullable<System.DateTime> runDate, Nullable<int> blockNumber, string antigenGroup)
+        public virtual int GetBatchRecords(string batchName, Nullable<System.DateTime> runDate, Nullable<int> blockNumber, string antigenGroup)
         {
             var batchNameParameter = batchName != null ?
                 new ObjectParameter("batchName", batchName) :
@@ -108,28 +99,7 @@ namespace CC
                 new ObjectParameter("antigenGroup", antigenGroup) :
                 new ObjectParameter("antigenGroup", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Batch>("GetBatchRecords", batchNameParameter, runDateParameter, blockNumberParameter, antigenGroupParameter);
-        }
-    
-        public virtual ObjectResult<Batch> GetBatchRecords(string batchName, Nullable<System.DateTime> runDate, Nullable<int> blockNumber, string antigenGroup, MergeOption mergeOption)
-        {
-            var batchNameParameter = batchName != null ?
-                new ObjectParameter("batchName", batchName) :
-                new ObjectParameter("batchName", typeof(string));
-    
-            var runDateParameter = runDate.HasValue ?
-                new ObjectParameter("runDate", runDate) :
-                new ObjectParameter("runDate", typeof(System.DateTime));
-    
-            var blockNumberParameter = blockNumber.HasValue ?
-                new ObjectParameter("BlockNumber", blockNumber) :
-                new ObjectParameter("BlockNumber", typeof(int));
-    
-            var antigenGroupParameter = antigenGroup != null ?
-                new ObjectParameter("antigenGroup", antigenGroup) :
-                new ObjectParameter("antigenGroup", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Batch>("GetBatchRecords", mergeOption, batchNameParameter, runDateParameter, blockNumberParameter, antigenGroupParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetBatchRecords", batchNameParameter, runDateParameter, blockNumberParameter, antigenGroupParameter);
         }
     }
 }

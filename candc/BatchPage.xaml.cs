@@ -23,7 +23,7 @@ namespace CC
     /// </summary>
     public partial class BatchPage : Page
     {
-        public Array array { get; set; } 
+        public Array array { get; set; }
 
         public BatchPage()
         {
@@ -32,7 +32,19 @@ namespace CC
 
         private void BatchIdTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var batchNumberParts = BatchIdTextBox.Text.Split('|');
+            string batchname = BatchIdTextBox.Text;
+
+            if (batchname.StartsWith("|"))
+            {
+                batchname = batchname.Substring(1, batchname.Length - 1);
+            }
+
+            if (batchname.EndsWith("|"))
+            {
+                batchname = batchname.Substring(0, batchname.Length - 1);
+            }
+
+            var batchNumberParts = batchname.Split('|');
             if (batchNumberParts.Length == 5)
             {
                 array = App.ArrayProvider.GetArrayByLIMArrayNumber(batchNumberParts[0]);
@@ -41,7 +53,7 @@ namespace CC
                 {
                     AntigenGroupCombo.SelectedIndex = -1;
 
-                    BatchIdTextBox.Text = $"{array.ArrayName} (Pts. {batchNumberParts[1]}-{batchNumberParts[2]})";
+                    BatchNameTextBox.Text = $"{array.ArrayName} (Pts. {batchNumberParts[1]}-{batchNumberParts[2]})";
                     RundatePicker.SelectedDate = Convert.ToDateTime(batchNumberParts[3]);
                     BlockNumberTextBox.Text = batchNumberParts[4];
 
@@ -54,7 +66,7 @@ namespace CC
                 else
                 {
                     MessageBox.Show($"Array was not found. Coudn't match array number '{batchNumberParts[0]}' to any of database records");
-                    BatchIdTextBox.Text = string.Empty;
+                    BatchIdTextBox.Text = BatchNameTextBox.Text = string.Empty;
                 }
             }
         }
@@ -67,7 +79,7 @@ namespace CC
                 try
                 {
                     var ExistingBatch = App.BatchProvider.GetBatchRecordsInGroup(
-                       BatchIdTextBox.Text.Trim(),
+                       BatchNameTextBox.Text.Trim(),
                        RundatePicker.SelectedDate.Value,
                        Convert.ToInt32(BlockNumberTextBox.Text.Trim()),
                        Convert.ToString(AntigenGroupCombo.SelectedValue));
@@ -202,7 +214,7 @@ namespace CC
 
             var batch = new Batch
             {
-                BatchName = BatchIdTextBox.Text.Trim(),
+                BatchName = BatchNameTextBox.Text.Trim(),
                 RunDate = RundatePicker.SelectedDate.Value,
                 BlockNumber = Convert.ToInt32(BlockNumberTextBox.Text.Trim()),
                 AntigenGroup = AntigenGroupCombo.Text
@@ -223,6 +235,15 @@ namespace CC
             }
             else
                 BatchIdLabel.BorderThickness = new Thickness(0);
+
+            if (string.IsNullOrWhiteSpace(BatchNameTextBox.Text))
+            {
+                BatchNameLbl.BorderBrush = Brushes.Red;
+                BatchNameLbl.BorderThickness = new Thickness(2);
+                isValid = false;
+            }
+            else
+                BatchNameLbl.BorderThickness = new Thickness(0);
 
             if (string.IsNullOrWhiteSpace(BlockNumberTextBox.Text))
             {
@@ -345,7 +366,14 @@ namespace CC
 
                 // validate expiration of lot numbers 
                 // Get existing calibrators, postitive controls, and negative controls that are not expired for selected array
-                var existingLotNumbers = App.CCProvider.GetExistingCC(array.ArrayId);
+
+                List<ActiveCCs> existingLotNumbers;
+
+                if (Convert.ToBoolean(array.IsSubArray))
+                {
+                    existingLotNumbers = App.CCProvider.GetExistingCC(array.MasterArrayId);
+                }
+                else existingLotNumbers = App.CCProvider.GetExistingCC(array.ArrayId);
 
                 for (int i = 0; i < NegGrid.Items.Count; i++)
                 {
@@ -402,14 +430,14 @@ namespace CC
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            CleanPage(); 
+            CleanPage();
         }
 
         private void CleanPage()
         {
             App.CCProvider.SetArrayAntigens();
 
-            BatchIdTextBox.Text = BlockNumberTextBox.Text = GenericNegLotTextBox.Text = string.Empty;
+            BatchIdTextBox.Text = BlockNumberTextBox.Text = GenericNegLotTextBox.Text = BatchNameTextBox.Text = string.Empty;
             RundatePicker.SelectedDate = null;
             AntigenGroupCombo.ItemsSource = null;
             AntigenGroupCombo.Items.Refresh();
@@ -424,5 +452,10 @@ namespace CC
             BatchIdLabel.BorderThickness = RunDateLabel.BorderThickness = BlockNumberLabel.BorderThickness = new Thickness(0);
         }
 
+        private void ExitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            CleanPage();
+            NavigationService.Content = null;
+        }
     }
 }

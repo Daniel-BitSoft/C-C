@@ -1,6 +1,7 @@
 ﻿using CC.Constants;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace CC.Providers
@@ -197,7 +198,8 @@ namespace CC.Providers
         {
             try
             {
-                var array = App.dbcontext.GetArrayByLIMNumber(LimArrayNumber).FirstOrDefault();
+                var limArray = new SqlParameter("@LIMArrayNumber", LimArrayNumber); 
+                var array = App.dbcontext.Database.SqlQuery<Array>("GetArrayByLIMNumber @LIMArrayNumber", limArray)?.FirstOrDefault(); 
                 return array;
             }
             catch (Exception ex)

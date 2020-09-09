@@ -133,12 +133,7 @@ namespace CC
         }
 
         private void PrepareEnvironment()
-        {
-            App.RefreshData();
-            Task.WaitAll(App.loadDataTasks.ToArray());
-
-            // show main page after db read rasks are done
-            NavigationService.Content = null;
+        {  
 
             if (App.LoggedInUser.IsAdmin)
                 NavigationService.Navigate(App.userMgmtPage);

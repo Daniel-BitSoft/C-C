@@ -5,26 +5,26 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CC"
       mc:Ignorable="d" 
-      d:DesignHeight="900" d:DesignWidth="1400"
+      d:DesignHeight="900" d:DesignWidth="1500"
       Title="BatchPage"
       Loaded="Page_Loaded" FontSize="16">
 
     <Grid Background="White">
         <Label Content="Assign Calibrators and Controls" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="270"/>
         <Label Name="BatchIdLabel" Content="Batch Id" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="BatchIdTextBox" HorizontalAlignment="Left" Height="25" Margin="18,103,0,0" TextWrapping="Wrap" TextChanged="BatchIdTextBox_TextChanged" Text="" VerticalAlignment="Top" Width="263"/>
-        <Label Name="RunDateLabel" Content="Run Date" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top"/>
-        <DatePicker Name="RundatePicker" HorizontalAlignment="Left" Margin="20,171,0,0" VerticalAlignment="Top" Width="201"/>
-        <Label Name="BlockNumberLabel" Content="Block Number" HorizontalAlignment="Left" Margin="10,213,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="BlockNumberTextBox" HorizontalAlignment="Left" Height="25" Margin="20,244,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="201"/>
-        <Label Name="AntigenGroupLabel" Content="Antigen Group" HorizontalAlignment="Left" Margin="10,279,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="AntigenGroupCombo" SelectionChanged="AntigenGroupCombo_SelectionChanged" HorizontalAlignment="Left" Margin="20,310,0,0" VerticalAlignment="Top" Width="201"/>
-        <CheckBox Name="AllowPartialCheckbox" Content="Allow Partial Plate Data" HorizontalAlignment="Left" Margin="20,377,0,0" VerticalAlignment="Top" Width="182"/>
+        <TextBox Name="BatchIdTextBox" HorizontalAlignment="Left" Height="25" Margin="18,103,0,0" TextWrapping="Wrap" TextChanged="BatchIdTextBox_TextChanged" Text="" VerticalAlignment="Top" Width="321"/>
+        <Label Name="RunDateLabel" Content="Run Date" HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top"/>
+        <DatePicker Name="RundatePicker" HorizontalAlignment="Left" Margin="20,243,0,0" VerticalAlignment="Top" Width="201"/>
+        <Label Name="BlockNumberLabel" Content="Block Number" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="BlockNumberTextBox" HorizontalAlignment="Left" Height="25" Margin="20,316,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="201"/>
+        <Label Name="AntigenGroupLabel" Content="Antigen Group" HorizontalAlignment="Left" Margin="10,351,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="AntigenGroupCombo" SelectionChanged="AntigenGroupCombo_SelectionChanged" HorizontalAlignment="Left" Margin="20,382,0,0" VerticalAlignment="Top" Width="201"/>
+        <CheckBox Name="AllowPartialCheckbox" Content="Allow Partial Plate Data" HorizontalAlignment="Left" Margin="20,449,0,0" VerticalAlignment="Top" Width="182"/>
         <Button Name="SaveBtn" Click="SaveBtn_Click" Content="Save" HorizontalAlignment="Left" Margin="20,0,0,80" VerticalAlignment="Bottom" Width="110"/>
         <Button Name="SaveAndNextBtn" Click="SaveAndNextBtn_Click" Content="Save and Next" HorizontalAlignment="Left" Margin="153,0,0,80" VerticalAlignment="Bottom" Width="115"/>
-        <Button Name="ExitBtn" Content="Exit Without Saving" HorizontalAlignment="Left" Margin="20,0,0,40" VerticalAlignment="Bottom" Width="248"/>
+        <Button Name="ExitBtn" Content="Exit Without Saving" HorizontalAlignment="Left" Margin="20,0,0,40" VerticalAlignment="Bottom" Width="248" Click="ExitBtn_Click"/>
         <DataGrid Name="CalibGid" HorizontalScrollBarVisibility="Hidden" BorderThickness="0,1,0,0" HeadersVisibility="None" RowBackground="White" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="False" 
-                  Background="White" AutoGenerateColumns="False" GridLinesVisibility="None" HorizontalAlignment="Left" Height="765" Margin="307,103,0,0" VerticalAlignment="Top" Width="340" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
+                  Background="White" AutoGenerateColumns="False" GridLinesVisibility="None" HorizontalAlignment="Left" Height="695" Margin="365,104,0,0" VerticalAlignment="Top" Width="340" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="CalAntigen" Binding="{Binding Path=AntigenName}" Width="115" IsReadOnly="True" >
                     <DataGridTextColumn.CellStyle>
@@ -52,7 +52,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid Name="NegGrid" RowBackground="White" HorizontalScrollBarVisibility="Hidden" HeadersVisibility="None" BorderThickness="0,1,0,0" CanUserAddRows="False" IsReadOnly="False" CanUserDeleteRows="False"
-                  Background="White" AutoGenerateColumns="False" GridLinesVisibility="None" HorizontalAlignment="Left" Height="765" Margin="670,103,0,0" VerticalAlignment="Top" Width="340" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
+                  Background="White" AutoGenerateColumns="False" GridLinesVisibility="None" HorizontalAlignment="Left" Height="695" Margin="728,104,0,0" VerticalAlignment="Top" Width="340" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=AntigenName}" Width="115" IsReadOnly="True" >
                     <DataGridTextColumn.CellStyle>
@@ -80,7 +80,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid Name="PosGrid" RowBackground="White" HeadersVisibility="None" HorizontalScrollBarVisibility="Hidden" BorderThickness="0,1,0,0" CanUserAddRows="False" IsReadOnly="False" CanUserDeleteRows="False"
-                  Background="White" AutoGenerateColumns="False" GridLinesVisibility="None" HorizontalAlignment="Left" Height="765" Margin="1035,103,0,0" VerticalAlignment="Top" Width="340" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
+                  Background="White" AutoGenerateColumns="False" GridLinesVisibility="None" HorizontalAlignment="Left" Height="695" Margin="1093,104,0,0" VerticalAlignment="Top" Width="340" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=AntigenName}" Width="115" IsReadOnly="True" >
                     <DataGridTextColumn.CellStyle>
@@ -107,12 +107,14 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="Calibrator" FontWeight="DemiBold" HorizontalAlignment="Left" Margin="307,72,0,0" VerticalAlignment="Top"/>
-        <Label Content="Negative Control" FontWeight="DemiBold" HorizontalAlignment="Left" Margin="670,72,0,0" VerticalAlignment="Top"/>
-        <Label Content="Positive Control" FontWeight="DemiBold" HorizontalAlignment="Left" Margin="1035,72,0,0" VerticalAlignment="Top"/>
-        <GridSplitter HorizontalAlignment="Left" Height="1000" Margin="285,70,0,-170" VerticalAlignment="Top" Width="14" Background="LightGray"/>
-        <TextBox Name="GenericNegLotTextBox" FontSize="14" HorizontalAlignment="Left" Height="22" Margin="821,77,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160"/>
-        <Button Name="ApplyAllBtn" Content="|" Click="ApplyAllBtn_Click" FontSize="10" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="986,79,0,0" VerticalAlignment="Top" Width="23" Height="18"/>
+        <Label Content="Calibrator" FontWeight="DemiBold" HorizontalAlignment="Left" Margin="365,76,0,0" VerticalAlignment="Top" Height="29"/>
+        <Label Content="Negative Control" FontWeight="DemiBold" HorizontalAlignment="Left" Margin="728,76,0,0" VerticalAlignment="Top" Height="29"/>
+        <Label Content="Positive Control" FontWeight="DemiBold" HorizontalAlignment="Left" Margin="1093,76,0,0" VerticalAlignment="Top" Height="29"/>
+        <GridSplitter HorizontalAlignment="Left" Height="908" Margin="343,74,0,-82" VerticalAlignment="Top" Width="14" Background="LightGray"/>
+        <TextBox Name="GenericNegLotTextBox" FontSize="14" HorizontalAlignment="Left" Height="20" Margin="879,80,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160"/>
+        <Button Name="ApplyAllBtn" Content="|" Click="ApplyAllBtn_Click" FontSize="10" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="1044,82,0,0" VerticalAlignment="Top" Width="23" Height="17"/>
+        <Label x:Name="BatchNameLbl" Content="Batch Name" HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="BatchNameTextBox"  HorizontalAlignment="Left" Height="25" Margin="20,178,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="318"/>
 
     </Grid>
 </Page>

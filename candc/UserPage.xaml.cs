@@ -61,8 +61,18 @@ namespace CC
                 if (!Validate())
                     return;
 
+                var users = App.UserProvider.GetAllUsers();
+
                 if (IsNew)
                 {
+                    if(users.Any(a => string.Equals(a.Username, EmailTextbox.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
+                    {
+                        if (MessageBox.Show($"Username '{EmailTextbox.Text.Trim()}' is already taken", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        {
+                            return;
+                        }
+                    }
+
                     var response = App.UserProvider.CreateUser(new User
                     {
                         FirstName = FirstNameTextbox.Text.Trim(),
@@ -88,9 +98,8 @@ namespace CC
                     }
 
                     if (User.IsAdmin && Convert.ToBoolean(DisabledCheckbox.IsChecked))
-                    {
-                        App.UserProvider.GetAllUsers();
-                        if (!App.UserProvider.ActiveUsers.Any(a => a.IsAdmin && a.Username != User.Username))
+                    { 
+                        if (!users.Any(a => !a.IsDisabled && a.IsAdmin && a.Username != User.Username))
                         {
                             MessageBox.Show("This user is the only admin and cannot be disabled. At least one admin is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
@@ -123,10 +132,9 @@ namespace CC
                     {
                         MessageBox.Show(response, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                }
+                } 
 
-                App.UserProvider.UpdateUsersList().Wait();
-                NavigationService.GoBack();
+                NavigationService.Navigate(App.userMgmtPage);
             }
             catch (Exception ex)
             {
@@ -223,6 +231,7 @@ namespace CC
                 if (MessageBox.Show("This will DELETE the user forever. Are you sure you want to continue?", "DELETE", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     App.UserProvider.DeleteUser(User);
+                    NavigationService.Navigate(App.userMgmtPage);
                 }
             }
             else
@@ -251,6 +260,8 @@ namespace CC
 
                 if (User.IsDisabled)
                     DeleteButton.Visibility = Visibility.Visible;
+                else
+                    DeleteButton.Visibility = Visibility.Hidden;
             }
         }
 

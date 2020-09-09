@@ -16,10 +16,10 @@ namespace CC
     {
         public string ArrayId { get; set; }
         public string AntigenId { get; set; }
+        public string Group { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDt { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
-        public string Group { get; set; }
     }
 }

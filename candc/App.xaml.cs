@@ -56,14 +56,6 @@ namespace CC
                 config.CreateMap<AntigensAssingedToArray, AntigenRange>();
                 config.CreateMap<AntigensAssingedToArray, BatchAntigen>(); 
             });
-        }
-
-        public static async Task RefreshData()
-        {
-            loadDataTasks = new List<Task>();
-
-            if (App.LoggedInUser.IsAdmin)
-                loadDataTasks.Add(App.UserProvider.UpdateUsersList());  
         } 
  
     }

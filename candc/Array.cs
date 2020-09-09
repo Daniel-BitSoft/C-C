@@ -16,13 +16,13 @@ namespace CC
     {
         public string ArrayId { get; set; }
         public string ArrayName { get; set; }
+        public string ShortArrayName { get; set; }
         public Nullable<bool> IsSubArray { get; set; }
         public string MasterArrayId { get; set; }
+        public string LIMArrayNumber { get; set; }
         public string CreatedBy { get; set; }
         public System.DateTime CreatedDt { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
-        public string ShortArrayName { get; set; }
-        public string LIMArrayNumber { get; set; }
     }
 }

@@ -22,10 +22,10 @@ namespace CC
         public bool IsAdmin { get; set; }
         public bool IsLocked { get; set; }
         public bool IsDisabled { get; set; }
+        public bool RequirePasswordChange { get; set; }
         public System.DateTime CreatedDt { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
         public string UpdatedBy { get; set; }
-        public bool RequirePasswordChange { get; set; }
     }
 }

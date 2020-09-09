@@ -7,25 +7,13 @@ using System.Threading.Tasks;
 namespace CC.Providers
 {
     public class UserProvider
-    {
-        public List<User> ActiveUsers { get; set; }
-        public List<User> DisabledUsers { get; set; }
-        public List<User> AllUsers { get; set; }
-
+    { 
         public UserProvider()
         {
         }
-
-        public async Task UpdateUsersList()
-        {
-            AllUsers = GetAllUsers();
-            DisabledUsers = AllUsers.Where(a => a.IsDisabled).ToList();
-            ActiveUsers = AllUsers.Except(DisabledUsers).ToList();
-        }
-
+         
         public User ValidateCredentials(string username, string password)
-        {
-
+        { 
             try
             {
                 var user = App.dbcontext.Users.FirstOrDefault(a => a.Username == username.Trim());
@@ -77,9 +65,7 @@ namespace CC.Providers
                     };
 
                     App.dbcontext.Audits.Add(audit);
-                    App.dbcontext.SaveChanges();
-
-                    ActiveUsers.Add(user);
+                    App.dbcontext.SaveChanges(); 
                 }
                 else
                 {
@@ -188,31 +174,6 @@ namespace CC.Providers
                 ex.Data.Add(nameof(logNumber), logNumber);
                 throw ex;
             }
-        }
-
-        public List<CC.User> GetUserByUsername(string username, bool IsActive)
-        {
-            try
-            {
-                if (IsActive)
-                {
-                    return ActiveUsers.Where(a => username.Contains(a.Username)).ToList();
-                }
-                else
-                {
-                    return DisabledUsers.Where(a => username.Contains(a.Username)).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                var logNumber = Logger.Log(nameof(GetUserByUsername), new Dictionary<string, object>
-                {
-                    { LogConsts.Exception, ex }
-                });
-
-                ex.Data.Add(nameof(logNumber), logNumber);
-                throw ex;
-            }
-        }
+        } 
     }
 }
