@@ -198,8 +198,8 @@ namespace CC.Providers
         {
             try
             {
-                var limArray = new SqlParameter("@LIMArrayNumber", LimArrayNumber); 
-                var array = App.dbcontext.Database.SqlQuery<Array>("GetArrayByLIMNumber @LIMArrayNumber", limArray)?.FirstOrDefault(); 
+                var limArray = new SqlParameter("@LIMArrayNumber", LimArrayNumber);
+                var array = App.dbcontext.Database.SqlQuery<Array>("GetArrayByLIMNumber @LIMArrayNumber", limArray)?.FirstOrDefault();
                 return array;
             }
             catch (Exception ex)

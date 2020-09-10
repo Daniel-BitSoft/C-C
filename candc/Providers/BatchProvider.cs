@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CC.Providers
 {
@@ -14,7 +12,7 @@ namespace CC.Providers
         public string UpsertBatch(Batch newBatchInfo, List<BatchAntigen> batchAntigens)
         {
             try
-            { 
+            {
                 foreach (var bA in batchAntigens)
                 {
                     var existingRecord = App.dbcontext.Batches.FirstOrDefault(a =>

@@ -2,18 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CC.Providers
 {
     public class UserProvider
-    { 
+    {
         public UserProvider()
         {
         }
-         
-        public User ValidateCredentials(string username, string password)
-        { 
+
+        public string ValidateCredentials(string username, string password)
+        {
             try
             {
                 var user = App.dbcontext.Users.FirstOrDefault(a => a.Username == username.Trim());
@@ -22,11 +21,29 @@ namespace CC.Providers
                     if (CryptoProvider.ValidatePassword(password, user.Password))
                     {
                         App.LoggedInUser = user;
-                        return user;
+
+                        user.LockCounter = 0;
+                        App.dbcontext.SaveChanges();
+
+                        return string.Empty;
+                    }
+                    else
+                    {
+                        user.LockCounter++;
+
+                        if (user.LockCounter >= 3)
+                        {
+                            user.IsLocked = true;
+                            App.dbcontext.SaveChanges();
+
+                            return "Your account is locked due to too many failed login attempts";
+                        }
+
+                        App.dbcontext.SaveChanges();
                     }
                 }
 
-                return null;
+                return "Invalid credentials";
             }
             catch (Exception ex)
             {
@@ -53,7 +70,7 @@ namespace CC.Providers
                     user.RequirePasswordChange = true;
                     user.Password = string.IsNullOrEmpty(user.Password) ? CryptoProvider.HashPassword(UsersConsts.DefaultTempPassword) : CryptoProvider.HashPassword(user.Password);
 
-                    App.dbcontext.Users.Add(user); 
+                    App.dbcontext.Users.Add(user);
 
                     Audit audit = new Audit
                     {
@@ -65,7 +82,7 @@ namespace CC.Providers
                     };
 
                     App.dbcontext.Audits.Add(audit);
-                    App.dbcontext.SaveChanges(); 
+                    App.dbcontext.SaveChanges();
                 }
                 else
                 {
@@ -96,6 +113,7 @@ namespace CC.Providers
                     user.UpdatedBy = App.LoggedInUser.UserId;
                     user.UpdatedDt = DateTime.Now;
                     user.Password = CryptoProvider.HashPassword(user.Password);
+                    user.LockCounter = App.LoggedInUser.LockCounter;
 
                     Audit audit = new Audit
                     {
@@ -106,7 +124,7 @@ namespace CC.Providers
                         UpdatedDt = DateTime.Now
                     };
 
-                    App.dbcontext.Audits.Add(audit); 
+                    App.dbcontext.Audits.Add(audit);
                     App.dbcontext.SaveChanges();
                 }
                 else
@@ -143,7 +161,7 @@ namespace CC.Providers
                     UpdatedBy = App.LoggedInUser.UserId,
                     UpdatedDt = DateTime.Now
                 };
-                App.dbcontext.Audits.Add(audit); 
+                App.dbcontext.Audits.Add(audit);
                 App.dbcontext.SaveChanges();
             }
             catch (Exception ex)
@@ -174,6 +192,6 @@ namespace CC.Providers
                 ex.Data.Add(nameof(logNumber), logNumber);
                 throw ex;
             }
-        } 
+        }
     }
 }

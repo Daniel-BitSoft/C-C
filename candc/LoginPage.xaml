@@ -18,8 +18,8 @@
             <Button Content="Save" Name="ChangePassButton" Click="ChangePassButton_Click" HorizontalAlignment="Left" Margin="357,280,0,0" VerticalAlignment="Top" Width="75"/>
             <Label Content="Password: " HorizontalAlignment="Left" Margin="221,162,0,0" VerticalAlignment="Top"/>
             <Label Content="Confirm Password: " HorizontalAlignment="Left" Margin="221,211,0,0" VerticalAlignment="Top"/>
-            <TextBox MaxLength="50" Name="PassTextbox" HorizontalAlignment="Left" Height="23" Margin="399,162,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="218"/>
-            <TextBox MaxLength="50" Name="ConfPassTextbox" HorizontalAlignment="Left" Height="23" Margin="399,215,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="218"/>
+            <PasswordBox MaxLength="50" Name="PassTextbox" HorizontalAlignment="Left" Height="23" Margin="399,162,0,0" VerticalAlignment="Top" Width="218"/>
+            <PasswordBox MaxLength="50" Name="ConfPassTextbox" HorizontalAlignment="Left" Height="23" Margin="399,215,0,0" VerticalAlignment="Top" Width="218"/>
             <Label Content="Change password" HorizontalAlignment="Left" Margin="347,70,0,0" VerticalAlignment="Top"/>
         </Grid>
         <Label Name="ErrorLabel" Foreground="Red" Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="100,330,0,0" VerticalAlignment="Top" Width="700"/>

@@ -1,5 +1,4 @@
 ﻿using CC.Constants;
-using CC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -176,6 +175,6 @@ namespace CC.Providers
                 ex.Data.Add(nameof(logNumber), logNumber);
                 throw ex;
             }
-        } 
+        }
     }
 }

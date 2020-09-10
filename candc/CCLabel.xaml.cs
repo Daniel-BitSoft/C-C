@@ -3,8 +3,6 @@ using CC.Models;
 using CC.Providers;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,7 +17,7 @@ namespace CC
     public partial class CCLabel : Window
     {
         public int NumberOfLabels;
-        public Barcode Barcode; 
+        public Barcode Barcode;
         public PrintDialog printDlg;
 
         private TechnoRiver.SmartCodeWeb.SmartCodeWebControl barcodeGenerator;
@@ -83,7 +81,7 @@ namespace CC
                     return;
                 }
             }
-             
+
             BarcodeText.Text = $"Lot: {Barcode.LotNumber} | Exp: {Barcode.ExpirationDate} | {Barcode.AntigenName}";
 
             // SET BARCODE GENERATOR FOR EACH BARCODE AND ASSING BarcodeImage SOURCE. CODE BELOW IS FOR TechnoRiver

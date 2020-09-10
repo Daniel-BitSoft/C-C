@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CC.Models
+﻿namespace CC.Models
 {
     public class User
     {

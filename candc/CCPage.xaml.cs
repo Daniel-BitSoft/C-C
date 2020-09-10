@@ -4,18 +4,11 @@ using CC.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CC
 {
@@ -100,8 +93,7 @@ namespace CC
         private void DilutionDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DilutionDatePicker.SelectedDate != null)
-            {
-                RemoveErrorBorders();
+            { 
                 ExpirationDateTextBox.Text = DilutionDatePicker.SelectedDate.Value.AddDays(90).ToShortDateString();
 
                 if (ValidatePage(true))
@@ -117,38 +109,60 @@ namespace CC
             }
         }
 
-        private bool GetMinMax(bool isValid)
+        private bool ValidateGetMinMax(List<string> errorMessages)
         {
-            var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
-            for (int i = 0; i < antigenRanges.Count; i++)
+            if (AntigensGrid.ItemsSource != null)
             {
-                // min
-                ContentPresenter minCell = AntigensGrid.Columns[1].GetCellContent(
-                    (DataGridRow)AntigensGrid.ItemContainerGenerator.ContainerFromIndex(i)) as ContentPresenter;
+                bool isValid = true;
+                bool completeError = false;
+                bool minMaxError = false;
 
-                var minTextBox = (minCell.ContentTemplate.FindName("MinCol", minCell) as TextBox);
-                antigenRanges[i].Min = minTextBox.Text;
-
-                // max
-                ContentPresenter maxCell = AntigensGrid.Columns[2].GetCellContent(
-                  (DataGridRow)AntigensGrid.ItemContainerGenerator.ContainerFromIndex(i)) as ContentPresenter;
-
-                var maxTextBox = (maxCell.ContentTemplate.FindName("MaxCol", maxCell) as TextBox);
-                antigenRanges[i].Max = maxTextBox.Text;
-
-                if (Convert.ToDouble(antigenRanges[i].Min) > Convert.ToDouble(antigenRanges[i].Max))
+                var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
+                for (int i = 0; i < antigenRanges.Count; i++)
                 {
-                    minTextBox.BorderThickness = new Thickness(2);
-                    minTextBox.BorderBrush = Brushes.Red;
+                    // min
+                    ContentPresenter minCell = AntigensGrid.Columns[1].GetCellContent(
+                        (DataGridRow)AntigensGrid.ItemContainerGenerator.ContainerFromIndex(i)) as ContentPresenter;
 
-                    maxTextBox.BorderThickness = new Thickness(2);
-                    maxTextBox.BorderBrush = Brushes.Red;
+                    var minTextBox = (minCell.ContentTemplate.FindName("MinCol", minCell) as TextBox);
+                    antigenRanges[i].Min = minTextBox.Text;
 
-                    isValid = false;
+                    // max
+                    ContentPresenter maxCell = AntigensGrid.Columns[2].GetCellContent(
+                      (DataGridRow)AntigensGrid.ItemContainerGenerator.ContainerFromIndex(i)) as ContentPresenter;
+
+                    var maxTextBox = (maxCell.ContentTemplate.FindName("MaxCol", maxCell) as TextBox);
+                    antigenRanges[i].Max = maxTextBox.Text;
+
+                    if (string.IsNullOrEmpty(antigenRanges[i].Min) || string.IsNullOrEmpty(antigenRanges[i].Max))
+                    {
+                        minTextBox.BorderThickness = maxTextBox.BorderThickness = new Thickness(2);
+                        minTextBox.BorderBrush = maxTextBox.BorderBrush = Brushes.Red;
+                        isValid = false;
+                        completeError = true;
+                    }
+                    else if (Convert.ToDouble(antigenRanges[i].Min) > Convert.ToDouble(antigenRanges[i].Max))
+                    {
+                        minTextBox.BorderThickness = maxTextBox.BorderThickness = new Thickness(2);
+                        minTextBox.BorderBrush = maxTextBox.BorderBrush = Brushes.Red;
+                        isValid = false;
+                        minMaxError = true;
+                    }
+                    else
+                    {
+                        minTextBox.BorderThickness = maxTextBox.BorderThickness = new Thickness(0); 
+                    }
                 }
-            }
 
-            return isValid;
+                if (completeError)
+                    errorMessages.Add("Please complete all min/max data");
+                if (minMaxError)
+                    errorMessages.Add("Min value needs to be smaller than max");
+
+                return isValid;
+            }
+            else
+                return true;
         }
 
         private void ClearPage()
@@ -318,25 +332,22 @@ namespace CC
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
+        { 
             if (!ValidatePage())
-            {
-                MessageBox.Show("Please complete all data");
                 return;
-            }
 
-            SaveCCs();
-            RemoveErrorBorders();
-            ClearPage();
+            var isSaved = SaveCCs();
+            if (isSaved)
+            {
+                RemoveErrorBorders();
+                ClearPage();
+            }
         }
 
         private void SaveAndNextButton_Click(object sender, RoutedEventArgs e)
-        {
+        { 
             if (!ValidatePage())
-            {
-                MessageBox.Show("Please complete all data");
                 return;
-            }
 
             SaveCCs();
             RemoveErrorBorders();
@@ -385,7 +396,7 @@ namespace CC
             }
         }
 
-        private void SaveCCs()
+        private bool SaveCCs()
         {
             try
             {
@@ -404,12 +415,12 @@ namespace CC
                     if (duplicatedAntigens != null && duplicatedAntigens.Count > 1)
                     {
                         MessageBox.Show($"Following antigens already have records that are not expired: {string.Join(",", duplicatedAntigens.Select(a => a.AntigenName))}", "Error");
-                        return;
+                        return false;
                     }
                     else if (duplicatedAntigens != null && duplicatedAntigens.Count == 1)
                     {
                         MessageBox.Show($"Selected antigen already has record that is not expired: {duplicatedAntigens.First().AntigenName}", "Error");
-                        return;
+                        return false;
                     }
                 }
 
@@ -466,16 +477,23 @@ namespace CC
 
                     printDialog = printPage.printDlg;
                 }
+
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"{ Messages.Exception} - log: {ex.Data["logNumber"]}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
         }
 
         private bool ValidatePage(bool skipPrintCountLbl = false)
         {
+            RemoveErrorBorders();
+
             bool isValid = true;
+            List<string> errorMessages = new List<string>();
+
             if (ArrayListbx.SelectedIndex == -1)
             {
                 ArrayLabel.BorderBrush = Brushes.Red;
@@ -525,23 +543,26 @@ namespace CC
                 isValid = false;
             }
 
-            isValid = GetMinMax(isValid);
-
-            if (AntigensGrid.ItemsSource != null)
-            {
-                var antigenRanges = AntigensGrid.ItemsSource as List<AntigenRange>;
-                if (antigenRanges.Any(a => string.IsNullOrEmpty(a.Max) || string.IsNullOrEmpty(a.Min)))
-                {
-                    AntigensGrid.BorderBrush = Brushes.Red;
-                    AntigensGrid.BorderThickness = new Thickness(2);
-                    isValid = false;
-                }
-            }
-            else
+            if (AntigensGrid.ItemsSource == null)
             {
                 AntigensGrid.BorderBrush = Brushes.Red;
                 AntigensGrid.BorderThickness = new Thickness(2);
                 isValid = false;
+            }
+
+            if (!isValid)
+                errorMessages.Add("Please complete missing fields");
+             
+            if (!ValidateGetMinMax(errorMessages))
+                isValid = false;
+
+            if (!isValid)
+            {
+                ErrorMessages.Text = " * " + string.Join("\r\n * ", errorMessages);
+            }
+            else
+            {
+                ErrorMessages.Text = string.Empty;
             }
 
             return isValid;
@@ -558,6 +579,8 @@ namespace CC
             AntigensGrid.BorderThickness =
             ExpirationLabel.BorderThickness =
             QtyLabel.BorderThickness = new Thickness(0);
+
+            ErrorMessages.Text = string.Empty;
         }
 
         private void QuantityLabelTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -627,6 +650,9 @@ namespace CC
             }
         }
 
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Content = null;
+        }
     }
 }

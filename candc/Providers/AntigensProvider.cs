@@ -49,7 +49,7 @@ namespace CC.Providers
                     {
                         RecordId = antigen.AntigenId,
                         Type = AuditTypes.Antigen.ToString(),
-                        Description = AuditEvents.AntigenUpdated.ToString(), 
+                        Description = AuditEvents.AntigenUpdated.ToString(),
                         UpdatedBy = App.LoggedInUser.UserId,
                         UpdatedDt = DateTime.Now
                     };
@@ -83,13 +83,13 @@ namespace CC.Providers
             catch (Exception ex)
             {
                 var logNumber = Logger.Log(nameof(CreateAntigen), new Dictionary<string, object>
-                { 
+                {
                     { LogConsts.Exception, ex }
                 });
 
                 return new AntigensResponse { ErrorMessage = $"{ Messages.Exception} - log: {logNumber}" };
             }
-        } 
+        }
 
         public AntigensResponse GetAntigensAssignedToArray()
         {

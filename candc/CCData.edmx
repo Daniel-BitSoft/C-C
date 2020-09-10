@@ -114,6 +114,7 @@
           <Property Name="CreatedBy" Type="varchar" MaxLength="36" Nullable="false" />
           <Property Name="UpdatedDt" Type="datetime" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="36" />
+          <Property Name="LockCounter" Type="int" Nullable="false" />
         </EntityType>
         <Function Name="GetAntigensAssingedToArray" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetAntigensNotAssingedToArray" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -345,6 +346,7 @@
           <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedDt" Type="DateTime" Precision="3" />
           <Property Name="UpdatedBy" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="LockCounter" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -518,6 +520,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CCModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="LockCounter" ColumnName="LockCounter" />
                 <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
                 <ScalarProperty Name="UpdatedDt" ColumnName="UpdatedDt" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />

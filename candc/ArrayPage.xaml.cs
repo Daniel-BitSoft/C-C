@@ -1,9 +1,7 @@
 ﻿using CC.Constants;
-using CC.Models;
 using CC.Providers;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Windows.Media;
 using System.Linq;
 using System.Windows;
@@ -27,11 +25,6 @@ namespace CC
 
             for (int i = 0; i < antigenGroupCount; i++)
                 AntigenGroupDropdown.Items.Add($"Group{i + 1}");
-        }
-
-        private void GroupDropdown_Selected(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void SubArrayCheckbox_Checked(object sender, RoutedEventArgs e)
@@ -233,10 +226,10 @@ namespace CC
                     else
                     {
                         MessageBox.Show("Successfully saved");
-                    }
 
-                    ResetPage();
-                    LoadPageData();
+                        ResetPage();
+                        LoadPageData();
+                    }
                 }
                 else
                 {
@@ -302,7 +295,20 @@ namespace CC
                 MasterArrayLbl.BorderThickness = new Thickness(0);
             }
 
-            if (!antigensGroups.Any())
+            var existingArrays = App.ArrayProvider.GetAllArrays(false);
+            if (existingArrays.Any(a => a.ArrayName == ArrayNameText.Text.Trim()))
+            {
+                return "Array name must be unique";
+            }
+            else if (existingArrays.Any(a => a.ShortArrayName == ArrayCodeTextbx.Text.Trim()))
+            {
+                return "Array Code must be unique";
+            }
+            else if (existingArrays.Any(a => a.LIMArrayNumber == QRArrayCodeTextBx.Text.Trim()))
+            {
+                return "QR Array Code must be unique";
+            }
+            else if (!antigensGroups.Any())
             {
                 return "Please add at least one antigen in one antigen group before saving";
             }
@@ -316,10 +322,7 @@ namespace CC
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            if (NavigationService.CanGoBack)
-                NavigationService.GoBack();
-            else
-                NavigationService.Content = null;
+            NavigationService.Content = null;
         }
 
         private void ArrayNameText_GotFocus(object sender, RoutedEventArgs e)
@@ -340,31 +343,6 @@ namespace CC
                 ArrayCodeTextbx.Foreground = Brushes.Black;
                 ArrayCodeTextbx.FontStyle = FontStyles.Normal;
             }
-        }
-
-        private void RemoveAntigenGroup1_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void RemoveAntigenGroup2_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void RemoveAntigenGroup3_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void RemoveAntigenGroup4_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void RemoveAntigenGroup5_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void RemoveAntigenGroup6_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void AntigenSearchText_TextChanged(object sender, TextChangedEventArgs e)

@@ -7,7 +7,7 @@ namespace CC.Models
     {
         public string AntigenId { get; set; }
         public string AntigenName { get; set; }
-        public string LotNumber { get; set; } 
+        public string LotNumber { get; set; }
         public CCType Type { get; set; }
 
         // view model

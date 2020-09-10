@@ -27,5 +27,6 @@ namespace CC
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedDt { get; set; }
         public string UpdatedBy { get; set; }
+        public int LockCounter { get; set; }
     }
 }

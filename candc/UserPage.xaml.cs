@@ -2,17 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using CC.Providers;
 using System.Text.RegularExpressions;
 
@@ -47,11 +40,12 @@ namespace CC
             DisabledCheckbox.IsChecked = false;
             DisabledCheckbox.Visibility = Visibility.Hidden;
 
-            TemporaryPassTextBox.Visibility = Visibility.Visible;
+            TemporaryPassTextBox.Visibility = TempPassLabel.Visibility = Visibility.Visible;
             TemporaryPassTextBox.Text = UsersConsts.DefaultTempPassword;
 
             DeleteButton.Visibility = Visibility.Hidden;
             ResetPasswordButton.Visibility = Visibility.Hidden;
+            LockCheckbox.Visibility = Visibility.Hidden;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -65,7 +59,7 @@ namespace CC
 
                 if (IsNew)
                 {
-                    if(users.Any(a => string.Equals(a.Username, EmailTextbox.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
+                    if (users.Any(a => string.Equals(a.Username, EmailTextbox.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
                     {
                         if (MessageBox.Show($"Username '{EmailTextbox.Text.Trim()}' is already taken", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                         {
@@ -91,14 +85,14 @@ namespace CC
                 {
                     if (Convert.ToBoolean(DisabledCheckbox.IsChecked))
                     {
-                        if(MessageBox.Show("You are about to disable this user which will revoke the permision to use this software. Would you like to continue?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        if (MessageBox.Show("You are about to disable this user which will revoke the permision to use this software. Would you like to continue?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                         {
                             return;
                         }
                     }
 
-                    if (User.IsAdmin && Convert.ToBoolean(DisabledCheckbox.IsChecked))
-                    { 
+                    if (User.IsAdmin && (Convert.ToBoolean(DisabledCheckbox.IsChecked) || Convert.ToBoolean(UserRadioBtn.IsChecked)))
+                    {
                         if (!users.Any(a => !a.IsDisabled && a.IsAdmin && a.Username != User.Username))
                         {
                             MessageBox.Show("This user is the only admin and cannot be disabled. At least one admin is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -132,7 +126,7 @@ namespace CC
                     {
                         MessageBox.Show(response, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                } 
+                }
 
                 NavigationService.Navigate(App.userMgmtPage);
             }
@@ -258,6 +252,10 @@ namespace CC
                 TemporaryPassTextBox.Visibility = Visibility.Hidden;
                 TempPassLabel.Visibility = Visibility.Hidden;
 
+                DisabledCheckbox.Visibility = Visibility.Visible;
+                LockCheckbox.Visibility = Visibility.Visible;
+                ResetPasswordButton.Visibility = Visibility.Visible;
+
                 if (User.IsDisabled)
                     DeleteButton.Visibility = Visibility.Visible;
                 else
@@ -279,6 +277,7 @@ namespace CC
                 User.Password = UsersConsts.DefaultTempPassword;
                 User.IsLocked = false;
                 User.RequirePasswordChange = true;
+                User.LockCounter = 0;
             }
         }
 

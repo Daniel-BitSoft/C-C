@@ -2,7 +2,7 @@
 
 namespace CC.Models
 {
-   public class AntigensResponse : BaseModel
+    public class AntigensResponse : BaseModel
     {
         public List<Antigen> Antigens { get; set; }
     }

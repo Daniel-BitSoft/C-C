@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using CC.Providers;
-using CC.Models;
 using CC.Constants;
 using System.Text.RegularExpressions;
 
@@ -49,7 +38,6 @@ namespace CC
                     case "WrongPass":
                         MainGrid.Visibility = Visibility.Visible;
                         LoadingLabel.Visibility = Visibility.Hidden;
-                        ErrorLabel.Content = "Invalid Credentials";
                         break;
                     case "ChangePass":
                         ChangePassGrid.Visibility = Visibility.Hidden;
@@ -59,9 +47,7 @@ namespace CC
                         ChangePassGrid.Visibility = Visibility.Visible;
                         LoadingLabel.Visibility = Visibility.Hidden;
                         break;
-
                 }
-
             }
         }
 
@@ -76,7 +62,7 @@ namespace CC
         {
             Mode = "Login";
             ErrorLabel.Content = string.Empty;
-            userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Password.Trim());
+            var errorMessage = userProvider.ValidateCredentials(UserNameTxt.Text.Trim(), PasswordTxt.Password.Trim());
 
             if (App.LoggedInUser != null)
             {
@@ -90,18 +76,19 @@ namespace CC
             else
             {
                 Mode = "WrongPass";
+                ErrorLabel.Content = errorMessage;
             }
         }
 
         private void ChangePassButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PassTextbox.Text.Trim() != ConfPassTextbox.Text.Trim())
+            if (PassTextbox.Password.Trim() != ConfPassTextbox.Password.Trim())
             {
                 ErrorLabel.Content = "Password does not match in text boxes above";
                 return;
             }
 
-            if (!Regex.IsMatch(PassTextbox.Text.Trim(), UsersConsts.PasswordRegex))
+            if (!Regex.IsMatch(PassTextbox.Password.Trim(), UsersConsts.PasswordRegex))
             {
                 ErrorLabel.Content = "Password must be between 6 to 25 characters and contain both letters and numbers";
                 return;
@@ -113,7 +100,7 @@ namespace CC
             // update password
             try
             {
-                App.LoggedInUser.Password = PassTextbox.Text.Trim();
+                App.LoggedInUser.Password = PassTextbox.Password.Trim();
                 App.LoggedInUser.RequirePasswordChange = false;
                 var response = userProvider.UpdateUser(App.LoggedInUser, AuditEvents.PasswordChanged.ToString());
 
@@ -133,7 +120,7 @@ namespace CC
         }
 
         private void PrepareEnvironment()
-        {  
+        {
 
             if (App.LoggedInUser.IsAdmin)
                 NavigationService.Navigate(App.userMgmtPage);
