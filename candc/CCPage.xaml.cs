@@ -85,15 +85,14 @@ namespace CC
             {
                 AntigensGrid.ItemsSource = new List<AntigenRange> { App.mapper.Map<AntigenRange>(AntigenListbx.SelectedItem as AntigensAssingedToArray) };
                 AntigensGrid.Items.Refresh();
-
-                AntigensGrid.Focus();
+                 
             }
         }
 
         private void DilutionDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DilutionDatePicker.SelectedDate != null)
-            { 
+            {
                 ExpirationDateTextBox.Text = DilutionDatePicker.SelectedDate.Value.AddDays(90).ToShortDateString();
 
                 if (ValidatePage(true))
@@ -150,7 +149,7 @@ namespace CC
                     }
                     else
                     {
-                        minTextBox.BorderThickness = maxTextBox.BorderThickness = new Thickness(0); 
+                        minTextBox.BorderThickness = maxTextBox.BorderThickness = new Thickness(0);
                     }
                 }
 
@@ -218,13 +217,23 @@ namespace CC
             {
                 ClearPage();
 
+                ArrayListbx.TabIndex = 1; GroupListbx.TabIndex = 2;
+
                 if (App.ccPageType == CCType.N)
                 {
                     AntigenListbx.Visibility = AntigenLabel.Visibility = Visibility.Hidden;
                     PageNameLabel.Content = "Create Negative Control";
+
+                    //AntigenListbx.TabIndex = -1; AntigensGrid.TabIndex = 3; SerumTextBox.TabIndex = 4; AddSerumBtn.TabIndex = 5; SerumRefGrid.TabIndex = 6;
+                    //RemoveSerum.TabIndex = 7; DilutionFactorTextBox.TabIndex = 8; DilutionDatePicker.TabIndex = 9; ExpirationDateTextBox.TabIndex = 10;
+                    //QuantityLabelTextBox.TabIndex = 11;
                 }
                 else
                 {
+                    //AntigenListbx.TabIndex = 3; AntigensGrid.TabIndex = 4; SerumTextBox.TabIndex = 5; AddSerumBtn.TabIndex = 6; SerumRefGrid.TabIndex = 7;
+                    //RemoveSerum.TabIndex = 8; DilutionFactorTextBox.TabIndex = 9; DilutionDatePicker.TabIndex = 10; ExpirationDateTextBox.TabIndex = 11;
+                    //QuantityLabelTextBox.TabIndex = 12;
+
                     AntigenListbx.Visibility = AntigenLabel.Visibility = Visibility.Visible;
 
                     if (App.ccPageType == CCType.C)
@@ -332,7 +341,7 @@ namespace CC
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
-        { 
+        {
             if (!ValidatePage())
                 return;
 
@@ -345,7 +354,7 @@ namespace CC
         }
 
         private void SaveAndNextButton_Click(object sender, RoutedEventArgs e)
-        { 
+        {
             if (!ValidatePage())
                 return;
 
@@ -552,7 +561,7 @@ namespace CC
 
             if (!isValid)
                 errorMessages.Add("Please complete missing fields");
-             
+
             if (!ValidateGetMinMax(errorMessages))
                 isValid = false;
 
@@ -654,5 +663,18 @@ namespace CC
         {
             NavigationService.Content = null;
         }
+
+        private void GroupListbx_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (AntigensGrid.ItemsSource != null)
+            {
+                AntigensGrid.Focus();
+            }
+        }
+
+        private void ExistButton_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            ArrayListbx.Focus();
+        } 
     }
 }
