@@ -1,0 +1,8 @@
+candc/obj/Debug/
+candc/bin/Debug/
+.vs/
+/candc/bin/Release
+/candc/obj/Release
+/PreRelease.zip
+/Generate_DB_Script.sql
+/CAndC-source code.zip
