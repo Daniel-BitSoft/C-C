@@ -10,6 +10,10 @@
         Loaded="Window_Loaded" FontSize="16">
     <Grid>
         <Menu VerticalAlignment="Top" Name="MainMenu" Visibility="Hidden" HorizontalAlignment='Stretch' Height="30" Margin="0,0,0,0" Foreground="Black" FontSize="14">
+            <MenuItem Header="View" IsTabStop="False">
+                <MenuItem Name="ViewArrays" Header="Arrays" IsTabStop="False" Click="ViewArrays_Click"/>
+                <MenuItem Name="ViewCC" Header="Calibrator and Controls" IsTabStop="False" Click="ViewCC_Click"/> 
+            </MenuItem>
             <MenuItem Header="Create" IsTabStop="False">
                 <MenuItem Name="CalibMenuButton" Header="Calibrator" IsTabStop="False" Click="CalibMenuButton_Click"/>
                 <MenuItem Name="NegMenuButton" Header="Negative" IsTabStop="False" Click="NegMenuButton_Click"/>

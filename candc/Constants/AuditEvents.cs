@@ -11,6 +11,7 @@
         UserDeleted,
         ArrayDeleted,
         ArrayUpdated,
+        ArrayAntigenDeleted,
         BatchRecordUpdated,
         AntigenUpdated,
         CCExpired

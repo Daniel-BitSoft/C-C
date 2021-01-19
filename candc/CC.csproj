@@ -123,6 +123,9 @@
     <Compile Include="ArrayAntigenRelations_Result.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
+    <Compile Include="EditArrayPage.xaml.cs">
+      <DependentUpon>EditArrayPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ArrayPage.xaml.cs">
       <DependentUpon>ArrayPage.xaml</DependentUpon>
     </Compile>
@@ -165,7 +168,28 @@
     <Compile Include="Constants\LogConsts.cs" />
     <Compile Include="Constants\Messages.cs" />
     <Compile Include="Constants\UsersConsts.cs" />
+    <Compile Include="GetAntigensAssingedToArray1_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetAntigensNotAssingedToArray1_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetArrayAntigenRelations1_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetArrayAntigens1_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetArrayAntigens_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetArrayByLIMNumber1_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetBatchRecords1_Result.cs">
+      <DependentUpon>CCData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetExistingCCs1_Result.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AntigenRange.cs" />
@@ -204,12 +228,19 @@
     <Compile Include="UserManagementPage.xaml.cs">
       <DependentUpon>UserManagementPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewArray.xaml.cs">
+      <DependentUpon>ViewArray.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewCCPage.xaml.cs">
       <DependentUpon>ViewCCPage.xaml</DependentUpon>
     </Compile>
     <Page Include="AntigenPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditArrayPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ArrayPage.xaml">
       <SubType>Designer</SubType>
@@ -252,6 +283,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserManagementPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewArray.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

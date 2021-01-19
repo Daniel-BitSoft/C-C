@@ -95,6 +95,5 @@ namespace CC
                 NavigationService.Navigate(App.userPage);
             }
         }
-
     }
 }

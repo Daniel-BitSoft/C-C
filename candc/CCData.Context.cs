@@ -110,5 +110,76 @@ namespace CC
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetArrayAntigens_Result>("GetArrayAntigens", arrayIdParameter);
         }
+    
+        public virtual ObjectResult<GetAntigensAssingedToArray1_Result> GetAntigensAssingedToArray1()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAntigensAssingedToArray1_Result>("GetAntigensAssingedToArray1");
+        }
+    
+        public virtual ObjectResult<GetAntigensNotAssingedToArray1_Result> GetAntigensNotAssingedToArray1()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAntigensNotAssingedToArray1_Result>("GetAntigensNotAssingedToArray1");
+        }
+    
+        public virtual ObjectResult<GetArrayAntigenRelations1_Result> GetArrayAntigenRelations1()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetArrayAntigenRelations1_Result>("GetArrayAntigenRelations1");
+        }
+    
+        public virtual ObjectResult<GetArrayByLIMNumber1_Result> GetArrayByLIMNumber1(string lIMArrayNumber)
+        {
+            var lIMArrayNumberParameter = lIMArrayNumber != null ?
+                new ObjectParameter("LIMArrayNumber", lIMArrayNumber) :
+                new ObjectParameter("LIMArrayNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetArrayByLIMNumber1_Result>("GetArrayByLIMNumber1", lIMArrayNumberParameter);
+        }
+    
+        public virtual ObjectResult<GetBatchRecords1_Result> GetBatchRecords1(string batchName, Nullable<System.DateTime> runDate, Nullable<int> blockNumber, string antigenGroup)
+        {
+            var batchNameParameter = batchName != null ?
+                new ObjectParameter("batchName", batchName) :
+                new ObjectParameter("batchName", typeof(string));
+    
+            var runDateParameter = runDate.HasValue ?
+                new ObjectParameter("runDate", runDate) :
+                new ObjectParameter("runDate", typeof(System.DateTime));
+    
+            var blockNumberParameter = blockNumber.HasValue ?
+                new ObjectParameter("BlockNumber", blockNumber) :
+                new ObjectParameter("BlockNumber", typeof(int));
+    
+            var antigenGroupParameter = antigenGroup != null ?
+                new ObjectParameter("antigenGroup", antigenGroup) :
+                new ObjectParameter("antigenGroup", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchRecords1_Result>("GetBatchRecords1", batchNameParameter, runDateParameter, blockNumberParameter, antigenGroupParameter);
+        }
+    
+        public virtual ObjectResult<GetExistingCCs1_Result> GetExistingCCs1(string arrayId, string antigenId, string type)
+        {
+            var arrayIdParameter = arrayId != null ?
+                new ObjectParameter("arrayId", arrayId) :
+                new ObjectParameter("arrayId", typeof(string));
+    
+            var antigenIdParameter = antigenId != null ?
+                new ObjectParameter("antigenId", antigenId) :
+                new ObjectParameter("antigenId", typeof(string));
+    
+            var typeParameter = type != null ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetExistingCCs1_Result>("GetExistingCCs1", arrayIdParameter, antigenIdParameter, typeParameter);
+        }
+    
+        public virtual ObjectResult<GetArrayAntigens1_Result> GetArrayAntigens1(string arrayId)
+        {
+            var arrayIdParameter = arrayId != null ?
+                new ObjectParameter("arrayId", arrayId) :
+                new ObjectParameter("arrayId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetArrayAntigens1_Result>("GetArrayAntigens1", arrayIdParameter);
+        }
     }
 }

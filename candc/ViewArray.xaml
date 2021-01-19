@@ -1,0 +1,42 @@
+﻿<Page x:Class="CC.ViewArray"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CC"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="ViewArrayPage" Background="White"
+      Loaded="Page_Loaded" FontSize="16">
+
+    <Grid>
+        <DataGrid x:Name="ArrayGrid" HorizontalAlignment="Left" Height="569" Margin="147,82,0,0" VerticalAlignment="Top" Width="747" CanUserAddRows="False" AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="ArrayNameCol" Header="Array Name" Binding="{Binding Path=ArrayName}" Width="2*" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="IsTabStop" Value="False" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn x:Name="ShortArrNameCol" Header="Short Name" Binding="{Binding Path=ShortArrayName}" Width="2*" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="IsTabStop" Value="False" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridCheckBoxColumn x:Name="SubArrayCol" Header="Sub Array" Binding="{Binding Path=IsSubArray}" Width="2*" IsReadOnly="True">
+                    <DataGridCheckBoxColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="IsTabStop" Value="False" />
+                        </Style>
+                    </DataGridCheckBoxColumn.CellStyle>
+                </DataGridCheckBoxColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Content="View Array" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="EditArrayBtn" Content="Edit" HorizontalAlignment="Left" Margin="772,701,0,0" VerticalAlignment="Top" Width="122" Click="EditArrayBtn_Click"/>
+
+    </Grid>
+</Page>

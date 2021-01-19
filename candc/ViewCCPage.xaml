@@ -16,7 +16,7 @@
         <Label x:Name="AntigenLabel" Content="Antigen" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" Width="71"/>
         <ComboBox x:Name="ArrayListbx" DisplayMemberPath="ArrayName" SelectedValuePath="ArrayId" SelectedValue="{Binding Array}" SelectionChanged="ArrayListbx_SelectionChanged" HorizontalAlignment="Left" Height="27" Margin="81,78,0,0" VerticalAlignment="Top" Width="136" />
         <ComboBox x:Name="AntigenListbx" DisplayMemberPath="AntigenName" SelectedValuePath="AntigenId" SelectedValue="{Binding AntigensAssingedToArray}" SelectionChanged="AntigenListbx_SelectionChanged" HorizontalAlignment="Left" Height="27" Margin="81,170,0,0" VerticalAlignment="Top" Width="136"/>
-        <DataGrid Name="LotsGrid" RowBackground="LightGray" CanUserAddRows="False" IsReadOnly="True" IsTabStop="False" Background="White" AutoGenerateColumns="False" BorderThickness="0" HorizontalAlignment="Left" Margin="252,75,0,70" VerticalAlignment="Stretch" Width="852">
+        <DataGrid Name="LotsGrid" RowBackground="LightGray" CanUserAddRows="False" IsReadOnly="True" IsTabStop="False" Background="White" AutoGenerateColumns="False" BorderThickness="0" HorizontalAlignment="Left" Margin="252,75,0,70" VerticalAlignment="Stretch" Width="852" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="LotNumber" Header="Lot Number" Binding="{Binding Path=LotNumber}" Width="2*" IsReadOnly="True">
                     <DataGridTextColumn.CellStyle>
@@ -27,7 +27,7 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Edit" HorizontalAlignment="Left" Margin="956,754,0,0" VerticalAlignment="Top" Width="148" Height="36"/>
+        <Button Name="EditButton" Content="Mark as Expired" HorizontalAlignment="Left" Margin="956,754,0,0" VerticalAlignment="Top" Width="148" Height="36" Click="EditButton_Click"/>
         <Label x:Name="TypeLabel" Content="Type" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Width="71"/>
         <ComboBox x:Name="TypeListbx" DisplayMemberPath="Type" SelectedValuePath="AntigenId" HorizontalAlignment="Left" Height="27" Margin="81,125,0,0" VerticalAlignment="Top" Width="136">
             <ComboBoxItem>Negative</ComboBoxItem>
@@ -35,6 +35,6 @@
             <ComboBoxItem>Calibrator</ComboBoxItem>
             <ComboBoxItem>All</ComboBoxItem>
         </ComboBox>
-        <Button Content="Search" HorizontalAlignment="Left" Margin="106,257,0,0" VerticalAlignment="Top" Width="111" Height="28" Click="Button_Click"/>
+        <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="106,257,0,0" VerticalAlignment="Top" Width="111" Height="28" Click="SearchButton_Click"/>
     </Grid>
 </Page>
