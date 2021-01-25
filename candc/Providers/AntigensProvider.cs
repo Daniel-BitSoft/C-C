@@ -92,12 +92,12 @@ namespace CC.Providers
             }
         }
 
-        public AntigensResponse GetAntigensAssignedToArray()
+        public AntigensResponse GetAntigensAssignedToArray(string arrayId = null)
         {
             try
             {
-                var antigens = App.dbcontext.Database.SqlQuery<Antigen>("GetAntigensAssingedToArray")?.ToList();
-                return new AntigensResponse { Antigens = antigens };
+                var assignedAntigens = App.dbcontext.GetAntigensAssingedToArray(arrayId)?.ToList();
+                return new AntigensResponse { Antigens = App.mapper.Map<List<Antigen>>(assignedAntigens) };
             }
             catch (Exception ex)
             {

@@ -42,16 +42,24 @@ namespace CC
         {
             if (AntigenGroupDropdown.SelectedIndex != -1)
             {
+                var selectedAntigen = AntigensGrid.SelectedItem as Antigen;
+
+                if (antigensGroups.Any(a => a.Value.Any(b => b.AntigenId == selectedAntigen.AntigenId)))
+                {
+                    MessageBox.Show("Antigen is already added to a group");
+                    return;
+                }
+
                 var selectedGroup = AntigenGroupDropdown.SelectedItem.ToString();
                 if (antigensGroups.ContainsKey(selectedGroup))
                 {
                     // for existing groups with antigens in them
-                    antigensGroups[selectedGroup].Add(AntigensGrid.SelectedItem as Antigen);
+                    antigensGroups[selectedGroup].Add(selectedAntigen);
                 }
                 else
                 {
                     // first time a group is being assigned antigens
-                    antigensGroups.Add(selectedGroup, new List<Antigen> { AntigensGrid.SelectedItem as Antigen });
+                    antigensGroups.Add(selectedGroup, new List<Antigen> { selectedAntigen });
                 }
 
                 LoadGroupGrids(selectedGroup, antigensGroups[selectedGroup]);

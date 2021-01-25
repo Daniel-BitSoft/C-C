@@ -11,7 +11,7 @@ namespace CC.Providers
 
         public void SetArrayAntigens()
         {
-            ArrayAntigens = App.dbcontext.GetAntigensAssingedToArray()?.ToList(); // Database.SqlQuery<ArrayAntigenRelation>("GetAntigensAssingedToArray")?.ToList();
+            ArrayAntigens = App.dbcontext.GetAntigensAssingedToArray(null)?.ToList(); // Database.SqlQuery<ArrayAntigenRelation>("GetAntigensAssingedToArray")?.ToList();
         }
 
         public void CreateCalibControl(List<CalibControl> calibControls)

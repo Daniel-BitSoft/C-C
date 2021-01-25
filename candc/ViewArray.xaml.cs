@@ -50,7 +50,8 @@ namespace CC
             if(ArrayGrid.SelectedItem != null)
             {
                 var selectedArray = ArrayGrid.SelectedItem as Array;
-                // go to edit page
+                var page = new EditArrayPage { SelectedArray = selectedArray };
+                NavigationService.Navigate(page);
             }
         }
     }

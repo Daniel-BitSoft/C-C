@@ -29,11 +29,11 @@
         </DataGrid>
         <Button Name="EditButton" Content="Mark as Expired" HorizontalAlignment="Left" Margin="956,754,0,0" VerticalAlignment="Top" Width="148" Height="36" Click="EditButton_Click"/>
         <Label x:Name="TypeLabel" Content="Type" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Width="71"/>
-        <ComboBox x:Name="TypeListbx" DisplayMemberPath="Type" SelectedValuePath="AntigenId" HorizontalAlignment="Left" Height="27" Margin="81,125,0,0" VerticalAlignment="Top" Width="136">
+        <ComboBox x:Name="TypeListbx" HorizontalAlignment="Left" Height="27" Margin="81,125,0,0" VerticalAlignment="Top" Width="136">
+            <ComboBoxItem>All</ComboBoxItem>
             <ComboBoxItem>Negative</ComboBoxItem>
             <ComboBoxItem>Positive</ComboBoxItem>
             <ComboBoxItem>Calibrator</ComboBoxItem>
-            <ComboBoxItem>All</ComboBoxItem>
         </ComboBox>
         <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="106,257,0,0" VerticalAlignment="Top" Width="111" Height="28" Click="SearchButton_Click"/>
     </Grid>

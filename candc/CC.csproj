@@ -168,28 +168,7 @@
     <Compile Include="Constants\LogConsts.cs" />
     <Compile Include="Constants\Messages.cs" />
     <Compile Include="Constants\UsersConsts.cs" />
-    <Compile Include="GetAntigensAssingedToArray1_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetAntigensNotAssingedToArray1_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetArrayAntigenRelations1_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetArrayAntigens1_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
     <Compile Include="GetArrayAntigens_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetArrayByLIMNumber1_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetBatchRecords1_Result.cs">
-      <DependentUpon>CCData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetExistingCCs1_Result.cs">
       <DependentUpon>CCData.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AntigenRange.cs" />

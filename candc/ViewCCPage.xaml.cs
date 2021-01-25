@@ -40,7 +40,10 @@ namespace CC
             {
                 var selectedArray = ArrayListbx.SelectedItem as Array;
 
-                AntigenListbx.ItemsSource = App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).ToList();
+                var assignedAntigens = new List<AntigensAssingedToArray>() { new AntigensAssingedToArray { AntigenId = "0", AntigenName = "All Antigens" } };
+                assignedAntigens.AddRange(App.CCProvider.ArrayAntigens.Where(a => a.ArrayId == selectedArray.ArrayId).ToList());
+
+                AntigenListbx.ItemsSource = assignedAntigens;
                 AntigenListbx.Items.Refresh();
 
             }
@@ -55,7 +58,33 @@ namespace CC
         {
             if (ArrayListbx.SelectedValue != null && AntigenListbx.SelectedValue != null && TypeListbx.SelectedValue != null)
             {
-                var lotNumbers = App.CCProvider.GetExistingCC(ArrayListbx.SelectedValue.ToString(), AntigenListbx.SelectedValue.ToString(), TypeListbx.SelectedValue.ToString());
+                string ccType = null;
+                string antigenId = null;
+
+                if (AntigenListbx.SelectedValue.ToString() != "0")
+                {
+                    antigenId = AntigenListbx.SelectedValue.ToString();
+                }
+
+                switch (TypeListbx.SelectedValue.ToString())
+                {
+                    case "Negative":
+                        ccType = "N";
+                        break;
+                    case "Positive":
+                        ccType = "P";
+                        break;
+                    case "Calibrator":
+                        ccType = "C";
+                        break;
+
+                    default:
+                        ccType = null;
+                        break;
+                }
+
+
+                var lotNumbers = App.CCProvider.GetExistingCC(ArrayListbx.SelectedValue.ToString(), antigenId, ccType);
 
                 LotsGrid.ItemsSource = lotNumbers;
                 LotsGrid.Items.Refresh();

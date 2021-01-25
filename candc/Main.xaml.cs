@@ -86,7 +86,7 @@ namespace CC
 
         private void ViewArrays_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(new CCPage());
+            frame.Navigate(new ViewArray());
         }
 
         private void ViewCC_Click(object sender, RoutedEventArgs e)

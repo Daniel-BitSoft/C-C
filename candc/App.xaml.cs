@@ -55,6 +55,7 @@ namespace CC
             {
                 config.CreateMap<AntigensAssingedToArray, AntigenRange>();
                 config.CreateMap<AntigensAssingedToArray, BatchAntigen>();
+                config.CreateMap<AntigensAssingedToArray, Antigen>();
             });
         }
 

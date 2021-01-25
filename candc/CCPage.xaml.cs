@@ -260,7 +260,7 @@ namespace CC
                 }
 
                 App.CCProvider.SetArrayAntigens();
-                ArrayListbx.ItemsSource = App.ArrayProvider.GetAllArrays(true);
+                ArrayListbx.ItemsSource = App.ArrayProvider.GetAllArrays(true).OrderBy(a=>a.ArrayName);
                 ArrayListbx.Items.Refresh();
             }
             catch (Exception ex)
@@ -422,7 +422,7 @@ namespace CC
 
                 if (activeCCs != null && activeCCs.Any())
                 {
-                    var antigensIds = activeCCs.Where(a => a.DilutionDate == DilutionDatePicker.SelectedDate.Value.Date).Select(a => a.AntigenId).ToList();
+                    var antigensIds = activeCCs.Where(a => a.DilutionDate >= DilutionDatePicker.SelectedDate.Value.Date).Select(a => a.AntigenId).ToList();
                     var duplicatedAntigens = antigenRanges.Where(a => antigensIds.Contains(a.AntigenId)).ToList();
 
                     if (duplicatedAntigens != null && duplicatedAntigens.Count > 1)
