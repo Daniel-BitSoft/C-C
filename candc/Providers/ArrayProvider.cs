@@ -160,9 +160,9 @@ namespace CC.Providers
             try
             {
                 if (returnOnlyMaster)
-                    return App.dbcontext.Arrays.Where(a => string.IsNullOrEmpty(a.MasterArrayId)).ToList();
+                    return App.dbcontext.Arrays.Where(a => string.IsNullOrEmpty(a.MasterArrayId)).OrderBy(a=>a.ArrayName).ToList();
                 else
-                    return App.dbcontext.Arrays.ToList();
+                    return App.dbcontext.Arrays.OrderBy(a => a.ArrayName).ToList();
             }
             catch (Exception ex)
             {

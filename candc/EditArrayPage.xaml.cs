@@ -17,6 +17,7 @@ namespace CC
     {
         public Array SelectedArray = null;
         Dictionary<string, List<Antigen>> antigensGroupsAdditions = new Dictionary<string, List<Antigen>>();
+        Dictionary<string, List<Antigen>> antigensGroups = null;
 
         List<AntigensAssingedToArray> selectedArrayAntigens;
         List<ArrayAntigen> antigensToDelete = new List<ArrayAntigen>();
@@ -40,7 +41,7 @@ namespace CC
             {
                 var selectedAntigen = AntigensGrid.SelectedItem as Antigen;
 
-                var selectedGroup = AntigenGroupDropdown.SelectedItem.ToString(); 
+                var selectedGroup = AntigenGroupDropdown.SelectedItem.ToString();
 
                 if (!selectedArrayAntigens.Any(a => a.AntigenId == selectedAntigen.AntigenId && a.Group == selectedGroup))
                 {
@@ -56,7 +57,22 @@ namespace CC
                     }
                 }
 
+                if (antigensGroups.ContainsKey(selectedGroup))
+                {
+                    // for existing groups with antigens in them
+                    antigensGroups[selectedGroup].Add(selectedAntigen);
+                }
+                else
+                {
+                    // first time a group is being assigned antigens
+                    antigensGroups.Add(selectedGroup, new List<Antigen> { selectedAntigen });
+                }
+
                 LoadGroupGrids(selectedGroup, antigensGroups[selectedGroup]);
+
+                antigenList.Remove(antigenList.First(a => a.AntigenId == selectedAntigen.AntigenId));
+                AntigensGrid.ItemsSource = antigenList;
+                AntigensGrid.Items.Refresh();
 
                 // remove from deleted antigens
                 var antigenToDelete = antigensToDelete.FirstOrDefault(a => a.AntigenId == selectedAntigen.AntigenId);
@@ -64,6 +80,7 @@ namespace CC
                 {
                     antigensToDelete.Remove(antigenToDelete);
                 }
+
             }
             else
             {
@@ -122,35 +139,78 @@ namespace CC
                 selectedArrayAntigens = App.dbcontext.GetAntigensAssingedToArray(SelectedArray.ArrayId).ToList();
 
                 // split into groups to show in group grids
-                var g1 = selectedArrayAntigens.Where(a => a.Group == "Group1").ToList();
+                var g1 = App.mapper.Map<List<Antigen>>(selectedArrayAntigens.Where(a => a.Group == "Group1").ToList());
                 Group1.ItemsSource = g1;
                 Group1.Items.Refresh();
                 antigensGroups.Add("Group1", App.mapper.Map<List<Antigen>>(g1));
 
-                var g2 = selectedArrayAntigens.Where(a => a.Group == "Group2").ToList();
+                var g2 = App.mapper.Map<List<Antigen>>(selectedArrayAntigens.Where(a => a.Group == "Group2").ToList());
                 Group2.ItemsSource = g2;
                 Group2.Items.Refresh();
                 antigensGroups.Add("Group2", App.mapper.Map<List<Antigen>>(g2));
 
-                var g3 = selectedArrayAntigens.Where(a => a.Group == "Group3").ToList();
+                var g3 = App.mapper.Map<List<Antigen>>(selectedArrayAntigens.Where(a => a.Group == "Group3").ToList());
                 Group3.ItemsSource = g3;
                 Group3.Items.Refresh();
                 antigensGroups.Add("Group3", App.mapper.Map<List<Antigen>>(g3));
 
-                var g4 = selectedArrayAntigens.Where(a => a.Group == "Group4").ToList();
+                var g4 = App.mapper.Map<List<Antigen>>(selectedArrayAntigens.Where(a => a.Group == "Group4").ToList());
                 Group4.ItemsSource = g4;
                 Group4.Items.Refresh();
                 antigensGroups.Add("Group4", App.mapper.Map<List<Antigen>>(g4));
 
-                var g5 = selectedArrayAntigens.Where(a => a.Group == "Group5").ToList();
+                var g5 = App.mapper.Map<List<Antigen>>(selectedArrayAntigens.Where(a => a.Group == "Group5").ToList());
                 Group5.ItemsSource = g5;
                 Group5.Items.Refresh();
                 antigensGroups.Add("Group5", App.mapper.Map<List<Antigen>>(g5));
 
-                var g6 = selectedArrayAntigens.Where(a => a.Group == "Group6").ToList();
+                var g6 = App.mapper.Map<List<Antigen>>(selectedArrayAntigens.Where(a => a.Group == "Group6").ToList());
                 Group6.ItemsSource = g6;
                 Group6.Items.Refresh();
                 antigensGroups.Add("Group6", App.mapper.Map<List<Antigen>>(g6));
+
+                if (!Convert.ToBoolean(SelectedArray.IsSubArray))
+                {
+                    var antigens = App.AntigensProvider.GetAntigensNotAssigned();
+                    if (string.IsNullOrEmpty(antigens.ErrorMessage))
+                    {
+                        antigenList = antigens.Antigens;
+                        AntigensGrid.ItemsSource = antigens.Antigens;
+                        AntigensGrid.Items.Refresh();
+                    }
+                    else if (antigens.Antigens == null || !antigens.Antigens.Any())
+                    {
+                        MessageBox.Show(Messages.UnassignedAntigensNotFound, "Note", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (NavigationService.CanGoBack)
+                            NavigationService.GoBack();
+                    }
+                    else
+                    {
+                        MessageBox.Show(antigens.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (NavigationService.CanGoBack)
+                            NavigationService.GoBack();
+                    }
+                }
+                else
+                {
+                    var masterarray = App.dbcontext.Arrays.First(a => a.ArrayId == SelectedArray.MasterArrayId);
+                    MasterArrayDropdown.Text = masterarray.ArrayName;
+                    var result = App.AntigensProvider.GetArrayAntigens(masterarray.ArrayId);
+
+                    if (string.IsNullOrEmpty(result.ErrorMessage))
+                    {
+                        var antigenIds = selectedArrayAntigens.Select(a => a.AntigenId).ToList();
+
+                        antigenList = result.Antigens.Where(a=> !antigenIds.Contains(a.AntigenId)).ToList();
+                        AntigensGrid.ItemsSource = antigenList;
+                        AntigensGrid.Items.Refresh();
+                    }
+                    else
+                    {
+                        MessageBox.Show(result.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+
+                }
             }
             catch (Exception ex)
             {
@@ -171,9 +231,9 @@ namespace CC
             if (Group1.IsMouseOver)
             {
                 group = nameof(Group1);
-                antigen = App.mapper.Map<Antigen>(Group1.SelectedItem as AntigensAssingedToArray);
-                antigensGroups[group].Remove(antigensGroups[group].First(a=>a.AntigenId == antigen.AntigenId));
-                
+                antigen = Group1.SelectedItem as Antigen;
+                antigensGroups[group].Remove(antigensGroups[group].First(a => a.AntigenId == antigen.AntigenId));
+
                 Group1.ItemsSource = antigensGroups[group];
                 Group1.Items.Refresh();
 
@@ -189,8 +249,7 @@ namespace CC
             if (Group2.IsMouseOver)
             {
                 group = nameof(Group2);
-
-                antigen = App.mapper.Map<Antigen>(Group2.SelectedItem as AntigensAssingedToArray);
+                antigen = Group2.SelectedItem as Antigen;
                 antigensGroups[group].Remove(antigensGroups[group].First(a => a.AntigenId == antigen.AntigenId));
 
                 Group2.ItemsSource = antigensGroups[group];
@@ -208,10 +267,10 @@ namespace CC
             if (Group3.IsMouseOver)
             {
                 group = nameof(Group3);
+                antigen = Group3.SelectedItem as Antigen;
 
-                antigen = App.mapper.Map<Antigen>(Group3.SelectedItem as AntigensAssingedToArray);
                 antigensGroups[group].Remove(antigensGroups[group].First(a => a.AntigenId == antigen.AntigenId));
-                
+
                 Group3.ItemsSource = antigensGroups[group];
                 Group3.Items.Refresh();
 
@@ -227,8 +286,8 @@ namespace CC
             if (Group4.IsMouseOver)
             {
                 group = nameof(Group4);
+                antigen = Group4.SelectedItem as Antigen;
 
-                antigen = App.mapper.Map<Antigen>(Group4.SelectedItem as AntigensAssingedToArray);
                 antigensGroups[group].Remove(antigensGroups[group].First(a => a.AntigenId == antigen.AntigenId));
 
                 Group4.ItemsSource = antigensGroups[group];
@@ -247,7 +306,8 @@ namespace CC
             {
                 group = nameof(Group5);
 
-                antigen = App.mapper.Map<Antigen>(Group5.SelectedItem as AntigensAssingedToArray);
+                antigen = Group5.SelectedItem as Antigen;
+
                 antigensGroups[group].Remove(antigensGroups[group].First(a => a.AntigenId == antigen.AntigenId));
 
                 Group5.ItemsSource = antigensGroups[group];
@@ -265,8 +325,8 @@ namespace CC
             if (Group6.IsMouseOver)
             {
                 group = nameof(Group6);
+                antigen = Group6.SelectedItem as Antigen;
 
-                antigen = App.mapper.Map<Antigen>(Group6.SelectedItem as AntigensAssingedToArray);
                 antigensGroups[group].Remove(antigensGroups[group].First(a => a.AntigenId == antigen.AntigenId));
 
                 Group6.ItemsSource = antigensGroups[group];
@@ -368,8 +428,21 @@ namespace CC
                     {
                         foreach (var antigen in group.Value)
                         {
-                            var aa = App.dbcontext.ArrayAntigens.First(a => a.AntigenId == antigen.AntigenId && a.ArrayId == SelectedArray.ArrayId);
-                            aa.Group = group.Key;
+                            var aa = App.dbcontext.ArrayAntigens.FirstOrDefault(a => a.AntigenId == antigen.AntigenId && a.ArrayId == SelectedArray.ArrayId);
+
+                            if (aa != null)
+                                aa.Group = group.Key;
+                            else
+                            {
+                                App.dbcontext.ArrayAntigens.Add(new ArrayAntigen
+                                {
+                                    AntigenId = antigen.AntigenId,
+                                    ArrayId = array.ArrayId,
+                                    Group = group.Key,
+                                    CreatedBy = App.LoggedInUser.UserId,
+                                    CreatedDt = DateTime.Now
+                                });
+                            }
                         }
                     }
 
@@ -432,23 +505,37 @@ namespace CC
             }
 
             var existingArrays = App.ArrayProvider.GetAllArrays(false);
-            if (existingArrays.Any(a => a.ArrayName == ArrayNameText.Text.Trim()))
+
+            if (ArrayNameText.Text.Trim() != SelectedArray.ArrayName)
             {
-                return "Array name must be unique";
+                if (existingArrays.Any(a => a.ArrayName == ArrayNameText.Text.Trim()))
+                {
+                    return "Array name must be unique";
+                }
             }
-            else if (existingArrays.Any(a => a.ShortArrayName == ArrayCodeTextbx.Text.Trim()))
+
+            if (ArrayCodeTextbx.Text.Trim() != SelectedArray.ShortArrayName)
             {
-                return "Array Code must be unique";
+                if (existingArrays.Any(a => a.ShortArrayName == ArrayCodeTextbx.Text.Trim()))
+                {
+                    return "Array Code must be unique";
+                }
             }
-            else if (existingArrays.Any(a => a.LIMArrayNumber == QRArrayCodeTextBx.Text.Trim()))
+
+            if (QRArrayCodeTextBx.Text.Trim() != SelectedArray.LIMArrayNumber)
             {
-                return "QR Array Code must be unique";
+                if (existingArrays.Any(a => a.LIMArrayNumber == QRArrayCodeTextBx.Text.Trim()))
+                {
+                    return "QR Array Code must be unique";
+                }
             }
-            else if (!antigensGroups.Any())
+
+            if (!antigensGroups.Any())
             {
                 return "Please add at least one antigen in one antigen group before saving";
             }
-            else if (!isValid)
+
+            if (!isValid)
             {
                 return "Please complete required fields marked with red before saving";
             }

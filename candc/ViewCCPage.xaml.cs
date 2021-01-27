@@ -56,39 +56,7 @@ namespace CC
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ArrayListbx.SelectedValue != null && AntigenListbx.SelectedValue != null && TypeListbx.SelectedValue != null)
-            {
-                string ccType = null;
-                string antigenId = null;
-
-                if (AntigenListbx.SelectedValue.ToString() != "0")
-                {
-                    antigenId = AntigenListbx.SelectedValue.ToString();
-                }
-
-                switch (TypeListbx.SelectedValue.ToString())
-                {
-                    case "Negative":
-                        ccType = "N";
-                        break;
-                    case "Positive":
-                        ccType = "P";
-                        break;
-                    case "Calibrator":
-                        ccType = "C";
-                        break;
-
-                    default:
-                        ccType = null;
-                        break;
-                }
-
-
-                var lotNumbers = App.CCProvider.GetExistingCC(ArrayListbx.SelectedValue.ToString(), antigenId, ccType);
-
-                LotsGrid.ItemsSource = lotNumbers;
-                LotsGrid.Items.Refresh();
-            }
+            SearchCC();
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -134,6 +102,9 @@ namespace CC
                         App.dbcontext.Audits.Add(auditRecord);
 
                         App.dbcontext.SaveChanges();
+
+                        MessageBox.Show($"Lotnumber {selectedLot.LotNumber} is marked as expired");
+                        SearchCC();
                     }
                     catch (Exception ex)
                     {
@@ -149,6 +120,51 @@ namespace CC
             else
             {
                 MessageBox.Show("Please select from table above before clicking mark as expired");
+            }
+        }
+
+
+        private void SearchCC()
+        {
+            if (ArrayListbx.SelectedValue != null)
+            {
+                string ccType = null;
+                string antigenId = null;
+
+                if (AntigenListbx.SelectedValue != null && AntigenListbx.SelectedValue.ToString() != "0")
+                {
+                    antigenId = AntigenListbx.SelectedValue.ToString();
+                }
+
+                if (TypeListbx.SelectedValue != null)
+                {
+                    switch (TypeListbx.Text)
+                    {
+                        case "Negative":
+                            ccType = "N";
+                            break;
+                        case "Positive":
+                            ccType = "P";
+                            break;
+                        case "Calibrator":
+                            ccType = "C";
+                            break;
+
+                        default:
+                            ccType = null;
+                            break;
+                    }
+                }
+
+
+                var lotNumbers = App.CCProvider.GetExistingCC(ArrayListbx.SelectedValue.ToString(), antigenId, ccType);
+
+                LotsGrid.ItemsSource = lotNumbers;
+                LotsGrid.Items.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("Please select an Array first");
             }
         }
     }
